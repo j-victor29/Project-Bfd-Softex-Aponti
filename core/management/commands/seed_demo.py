@@ -120,21 +120,31 @@ class Command(BaseCommand):
         )
         self._log("Coleção: Natureza Viva", created)
 
+        colecao2, created2 = Colecao.objects.get_or_create(
+            artista=artista,
+            nome="Urbano & Moderno",
+            defaults={"descricao": "Arte com estética urbana e minimalista.", "ativa": True},
+        )
+        self._log("Coleção: Urbano & Moderno", created2)
+
         artes_data = [
-            {"nome": "Flores do Campo", "arquivo": "artes/flores_campo.jpg", "ativa": True},
-            {"nome": "Oceano Azul", "arquivo": "artes/oceano_azul.jpg", "ativa": True},
-            {"nome": "Floresta Tropical", "arquivo": "artes/floresta_tropical.jpg", "ativa": True},
+            {"nome": "Flores do Campo",     "arquivo": "artes/flores_campo.jpg",     "ativa": True, "colecao": colecao},
+            {"nome": "Oceano Azul",         "arquivo": "artes/oceano_azul.jpg",      "ativa": True, "colecao": colecao},
+            {"nome": "Floresta Tropical",   "arquivo": "artes/floresta_tropical.jpg","ativa": True, "colecao": colecao},
+            {"nome": "Cidade Neon",         "arquivo": "artes/cidade_neon.jpg",      "ativa": True, "colecao": colecao2},
+            {"nome": "Linhas Geométricas",  "arquivo": "artes/linhas_geometricas.jpg","ativa": True, "colecao": colecao2},
         ]
         artes = []
         for data in artes_data:
             arte, created = Arte.objects.get_or_create(
                 artista=artista,
-                colecao=colecao,
+                colecao=data["colecao"],
                 nome=data["nome"],
                 defaults={"arquivo": data["arquivo"], "ativa": data["ativa"]},
             )
             artes.append(arte)
             self._log(f"Arte: {arte.nome}", created)
+
 
         # ─── 5. Personalização de exemplo ──────────────────────────────────────
         self.stdout.write("\n✏️  Criando personalização de exemplo...")
@@ -314,7 +324,7 @@ class Command(BaseCommand):
         self.stdout.write(f"  - Usuários criados/verificados: 3")
         self.stdout.write(f"  - Artistas: 1")
         self.stdout.write(f"  - Produtos: {len(produtos)}")
-        self.stdout.write(f"  - Coleções: 1")
+        self.stdout.write(f"  - Coleções: 2")
         self.stdout.write(f"  - Artes: {len(artes)}")
         self.stdout.write(f"  - Pedidos: 2 (1 criado + 1 pago)")
         self.stdout.write(f"  - Impressoras: 1")

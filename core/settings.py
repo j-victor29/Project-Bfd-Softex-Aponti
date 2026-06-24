@@ -61,6 +61,7 @@ INSTALLED_APPS = [
     'gamification',
     'printing',
     'cart',
+    'core',
 ]
 
 MIDDLEWARE = [

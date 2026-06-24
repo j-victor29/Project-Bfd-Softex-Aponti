@@ -1,0 +1,165 @@
+{% extends "base.html" %}
+
+{% block title %}Minhas Artes — Painel do Artista — Capinha{% endblock %}
+
+{% block content %}
+<style>
+    .painel-table-card {
+        background: rgba(22, 28, 45, 0.7);
+        backdrop-filter: blur(8px);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        border-radius: 16px;
+        overflow: hidden;
+    }
+    .painel-table-card .card-header-custom {
+        padding: 1.2rem 1.5rem;
+        font-weight: 700;
+        font-size: 1rem;
+        display: flex;
+        align-items: center;
+        gap: 0.6rem;
+        background: rgba(255,255,255,0.02);
+        border-bottom: 1px solid rgba(255,255,255,0.06);
+    }
+    .painel-table-card th {
+        color: #9ca3af;
+        font-size: 0.78rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.06em;
+        border-color: rgba(255,255,255,0.06) !important;
+        background: rgba(255,255,255,0.02);
+        padding: 0.8rem 1.2rem;
+    }
+    .painel-table-card td {
+        color: #e2e8f0;
+        border-color: rgba(255,255,255,0.05) !important;
+        padding: 0.85rem 1.2rem;
+        vertical-align: middle;
+        font-size: 0.9rem;
+    }
+    .painel-table-card tr:hover td {
+        background: rgba(99, 102, 241, 0.06);
+    }
+    .art-thumb {
+        width: 48px;
+        height: 48px;
+        border-radius: 10px;
+        object-fit: cover;
+        border: 1px solid rgba(99,102,241,0.3);
+    }
+    .art-thumb-placeholder {
+        width: 48px;
+        height: 48px;
+        border-radius: 10px;
+        background: linear-gradient(135deg, rgba(99,102,241,0.3), rgba(168,85,247,0.3));
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #818cf8;
+        font-size: 1.2rem;
+        border: 1px solid rgba(99,102,241,0.3);
+    }
+    .back-btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        color: #818cf8;
+        text-decoration: none;
+        font-weight: 600;
+        font-size: 0.9rem;
+        margin-bottom: 1.5rem;
+        transition: all 0.2s ease;
+    }
+    .back-btn:hover { color: #a78bfa; }
+    .uso-badge {
+        background: rgba(99,102,241,0.2);
+        color: #818cf8;
+        border-radius: 999px;
+        padding: 0.2rem 0.6rem;
+        font-weight: 700;
+        font-size: 0.82rem;
+    }
+</style>
+
+<div class="container py-5">
+    <a href="{% url 'painel-principal' %}" class="back-btn">
+        <i class="fas fa-arrow-left"></i> Voltar ao Painel
+    </a>
+
+    <div class="d-flex align-items-center justify-content-between mb-4">
+        <h1 class="mb-0" style="font-size:1.7rem; font-weight:800;">
+            <i class="fas fa-images me-2" style="color:#818cf8;"></i> Minhas Artes
+        </h1>
+        {% if artista %}
+        <span style="color:#9ca3af; font-size:0.9rem;">
+            {{ artes.count }} arte{{ artes.count|pluralize }} cadastrada{{ artes.count|pluralize }}
+        </span>
+        {% endif %}
+    </div>
+
+    <div class="painel-table-card">
+        <div class="card-header-custom">
+            <i class="fas fa-palette" style="color:#a855f7;"></i>
+            {% if artista %}{{ artista.nome_artistico }} — Portfólio{% else %}Artes{% endif %}
+        </div>
+        <div class="table-responsive">
+            <table class="table table-borderless mb-0" id="tabela-artes">
+                <thead>
+                    <tr>
+                        <th>Imagem</th>
+                        <th>Nome</th>
+                        <th>Coleção</th>
+                        <th>Status</th>
+                        <th>Utilizações</th>
+                        <th>Criado em</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for arte in artes %}
+                    <tr>
+                        <td>
+                            {% if arte.arquivo %}
+                                <img src="{{ arte.arquivo.url }}" alt="{{ arte.nome }}" class="art-thumb">
+                            {% else %}
+                                <div class="art-thumb-placeholder"><i class="fas fa-image"></i></div>
+                            {% endif %}
+                        </td>
+                        <td style="font-weight:600;">{{ arte.nome }}</td>
+                        <td>
+                            {% if arte.colecao %}
+                                <span style="color:#818cf8;">{{ arte.colecao.nome }}</span>
+                            {% else %}
+                                <span style="color:#4b5563;">— Sem coleção</span>
+                            {% endif %}
+                        </td>
+                        <td>
+                            {% if arte.ativa %}
+                                <span style="background:rgba(16,185,129,0.15);color:#10b981;padding:0.2rem 0.7rem;border-radius:999px;font-size:0.78rem;font-weight:600;">
+                                    <i class="fas fa-circle" style="font-size:0.4rem;vertical-align:middle;"></i> Ativa
+                                </span>
+                            {% else %}
+                                <span style="background:rgba(107,114,128,0.15);color:#6b7280;padding:0.2rem 0.7rem;border-radius:999px;font-size:0.78rem;font-weight:600;">
+                                    <i class="fas fa-circle" style="font-size:0.4rem;vertical-align:middle;"></i> Inativa
+                                </span>
+                            {% endif %}
+                        </td>
+                        <td>
+                            <span class="uso-badge">{{ arte.total_uso }}</span>
+                        </td>
+                        <td style="color:#9ca3af;">{{ arte.criado_em|date:"d/m/Y" }}</td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="6" class="text-center py-5" style="color:#6b7280;">
+                            <i class="fas fa-palette fa-3x mb-3 d-block" style="color:#374151;"></i>
+                            Nenhuma arte cadastrada ainda.
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}

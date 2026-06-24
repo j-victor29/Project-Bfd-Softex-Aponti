@@ -199,6 +199,15 @@
                                 <i class="fas fa-shopping-cart me-1"></i> Carrinho
                             </a>
                         </li>
+                        {% with perfil=request.user.perfil_artista %}
+                        {% if perfil and perfil.status_aprovacao == 'aprovado' %}
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'painel-principal' %}">
+                                <i class="fas fa-chart-line me-1"></i> Painel do Artista
+                            </a>
+                        </li>
+                        {% endif %}
+                        {% endwith %}
                         <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown">
                                 <i class="fas fa-box-open me-1"></i> Pedidos

@@ -1,0 +1,156 @@
+{% extends "base.html" %}
+
+{% block title %}Minhas Coleções — Painel do Artista — Capinha{% endblock %}
+
+{% block content %}
+<style>
+    .painel-table-card {
+        background: rgba(22, 28, 45, 0.7);
+        backdrop-filter: blur(8px);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        border-radius: 16px;
+        overflow: hidden;
+    }
+    .painel-table-card .card-header-custom {
+        padding: 1.2rem 1.5rem;
+        font-weight: 700;
+        font-size: 1rem;
+        display: flex;
+        align-items: center;
+        gap: 0.6rem;
+        background: rgba(255,255,255,0.02);
+        border-bottom: 1px solid rgba(255,255,255,0.06);
+    }
+    .painel-table-card th {
+        color: #9ca3af;
+        font-size: 0.78rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.06em;
+        border-color: rgba(255,255,255,0.06) !important;
+        background: rgba(255,255,255,0.02);
+        padding: 0.8rem 1.2rem;
+    }
+    .painel-table-card td {
+        color: #e2e8f0;
+        border-color: rgba(255,255,255,0.05) !important;
+        padding: 0.85rem 1.2rem;
+        vertical-align: middle;
+        font-size: 0.9rem;
+    }
+    .painel-table-card tr:hover td {
+        background: rgba(99, 102, 241, 0.06);
+    }
+    .back-btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        color: #818cf8;
+        text-decoration: none;
+        font-weight: 600;
+        font-size: 0.9rem;
+        margin-bottom: 1.5rem;
+        transition: all 0.2s ease;
+    }
+    .back-btn:hover { color: #a78bfa; }
+    .colecao-icon {
+        width: 44px;
+        height: 44px;
+        border-radius: 10px;
+        background: linear-gradient(135deg, rgba(168,85,247,0.25), rgba(99,102,241,0.25));
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #a855f7;
+        font-size: 1.1rem;
+        border: 1px solid rgba(168,85,247,0.3);
+    }
+    .artes-count-badge {
+        background: rgba(168,85,247,0.2);
+        color: #c084fc;
+        border-radius: 999px;
+        padding: 0.2rem 0.65rem;
+        font-weight: 700;
+        font-size: 0.82rem;
+    }
+</style>
+
+<div class="container py-5">
+    <a href="{% url 'painel-principal' %}" class="back-btn">
+        <i class="fas fa-arrow-left"></i> Voltar ao Painel
+    </a>
+
+    <div class="d-flex align-items-center justify-content-between mb-4">
+        <h1 class="mb-0" style="font-size:1.7rem; font-weight:800;">
+            <i class="fas fa-layer-group me-2" style="color:#a855f7;"></i> Minhas Coleções
+        </h1>
+        {% if artista %}
+        <span style="color:#9ca3af; font-size:0.9rem;">
+            {{ colecoes.count }} coleção/coleções
+        </span>
+        {% endif %}
+    </div>
+
+    <div class="painel-table-card">
+        <div class="card-header-custom">
+            <i class="fas fa-layer-group" style="color:#a855f7;"></i>
+            {% if artista %}{{ artista.nome_artistico }} — Coleções{% else %}Coleções{% endif %}
+        </div>
+        <div class="table-responsive">
+            <table class="table table-borderless mb-0" id="tabela-colecoes">
+                <thead>
+                    <tr>
+                        <th></th>
+                        <th>Nome</th>
+                        <th>Descrição</th>
+                        <th>Qtd. de Artes</th>
+                        <th>Status</th>
+                        <th>Criado em</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for colecao in colecoes %}
+                    <tr>
+                        <td>
+                            <div class="colecao-icon">
+                                <i class="fas fa-layer-group"></i>
+                            </div>
+                        </td>
+                        <td style="font-weight:700;">{{ colecao.nome }}</td>
+                        <td style="color:#9ca3af; max-width:250px;">
+                            {% if colecao.descricao %}
+                                {{ colecao.descricao|truncatechars:60 }}
+                            {% else %}
+                                <span style="color:#4b5563;">—</span>
+                            {% endif %}
+                        </td>
+                        <td>
+                            <span class="artes-count-badge">{{ colecao.total_artes_count }}</span>
+                        </td>
+                        <td>
+                            {% if colecao.ativa %}
+                                <span style="background:rgba(16,185,129,0.15);color:#10b981;padding:0.2rem 0.7rem;border-radius:999px;font-size:0.78rem;font-weight:600;">
+                                    <i class="fas fa-circle" style="font-size:0.4rem;vertical-align:middle;"></i> Ativa
+                                </span>
+                            {% else %}
+                                <span style="background:rgba(107,114,128,0.15);color:#6b7280;padding:0.2rem 0.7rem;border-radius:999px;font-size:0.78rem;font-weight:600;">
+                                    <i class="fas fa-circle" style="font-size:0.4rem;vertical-align:middle;"></i> Inativa
+                                </span>
+                            {% endif %}
+                        </td>
+                        <td style="color:#9ca3af;">{{ colecao.criado_em|date:"d/m/Y" }}</td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="6" class="text-center py-5" style="color:#6b7280;">
+                            <i class="fas fa-layer-group fa-3x mb-3 d-block" style="color:#374151;"></i>
+                            Nenhuma coleção cadastrada ainda.
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}

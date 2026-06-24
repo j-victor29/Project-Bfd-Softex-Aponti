@@ -208,6 +208,7 @@ class CarrinhoTestCase(TestCase):
             'preco_extra': '10.00'
         })
         self.assertEqual(response_salvar.status_code, 302)
+        response_salvar = self.client.get(response_salvar["Location"], follow=True)
 
         # 2. Verificar que foi criado no carrinho
         carrinho = Carrinho.objects.get(usuario=self.usuario, status='aberto')
@@ -222,7 +223,8 @@ class CarrinhoTestCase(TestCase):
         self.assertEqual(pedido.status_pedido, 'criado')
 
         # 4. Simular pagamento
-        from payments.services import SimulaçãoPagamentoService
-        SimulaçãoPagamentoService.processar_pagamento_simulado(pedido, "pix")
+        url_pagamento = reverse('payments:simular-pagamento', kwargs={'pedido_id': pedido.pk})
+        response_pagamento = self.client.post(url_pagamento, {'method': 'pix'})
+        self.assertEqual(response_pagamento.status_code, 302)
         pedido.refresh_from_db()
         self.assertEqual(pedido.status_pedido, 'pago')

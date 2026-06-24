@@ -355,11 +355,73 @@ python manage.py migrate
 # Rodar todos os testes
 python manage.py test
 
+# Rodar testes do Painel do Artista
+python manage.py test artists --verbosity=2
+
 # Popular dados de demonstração
 python manage.py seed_demo
 
 # Rodar servidor de desenvolvimento
 python manage.py runserver
+```
+
+---
+
+## 🎨 Painel do Artista
+
+O **Painel do Artista** é uma área restrita que permite ao artista acompanhar suas criações, métricas de vendas e comissões estimadas.
+
+### Rotas
+
+| Rota | Descrição |
+|---|---|
+| `/artists/painel/` | Painel principal com métricas e últimos pedidos |
+| `/artists/painel/artes/` | Gerenciamento de artes cadastradas |
+| `/artists/painel/colecoes/` | Gerenciamento de coleções |
+
+### Permissões
+
+| Perfil | Acesso |
+|---|---|
+| Usuário anônimo | Redirecionado para `/login/` |
+| Usuário comum (cliente) | `403 Forbidden` |
+| Artista pendente ou bloqueado | `403 Forbidden` |
+| Artista aprovado | ✅ Acessa apenas seus próprios dados |
+| Superuser | ✅ Acessa (painel vazio se não tiver perfil de artista) |
+
+### Métricas exibidas
+
+- Total de artes cadastradas
+- Total de coleções
+- Total de itens vendidos (que usaram suas artes)
+- **Comissão estimada** = 10% do subtotal de todos os itens de pedido que usam suas artes
+- Últimos 5 pedidos com suas artes
+- Top 5 artes mais utilizadas
+
+### Como testar manualmente
+
+```bash
+# 1. Popular dados de demonstração
+python manage.py seed_demo
+
+# 2. Iniciar o servidor
+python manage.py runserver
+
+# 3. Fazer login com o artista aprovado
+#    Email: artista@capinha.com | Senha: capinha123
+
+# 4. Clicar em "Painel do Artista" na barra de navegação
+#    ou acessar diretamente: http://127.0.0.1:8000/artists/painel/
+```
+
+### Como rodar os testes do painel
+
+```bash
+# Testes específicos do Painel do Artista
+python manage.py test artists --verbosity=2
+
+# Todos os testes do projeto
+python manage.py test --verbosity=2
 ```
 
 ---

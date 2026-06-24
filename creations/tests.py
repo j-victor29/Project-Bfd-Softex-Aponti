@@ -153,9 +153,9 @@ class PersonalizacaoSalvarViewTest(TestCase):
             "cor": "#FF0000",
             "preco_extra": "0",
         })
-        # Deve redirecionar para criação de pedido
+        # Deve redirecionar para adição ao carrinho
         self.assertEqual(response.status_code, 302)
-        self.assertIn("criar-do-item", response["Location"])
+        self.assertIn("/carrinho/adicionar/", response["Location"])
 
     def test_salvamento_persiste_campos(self):
         self.client.force_login(self.usuario)
