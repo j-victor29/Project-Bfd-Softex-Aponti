@@ -1,5 +1,7 @@
 from django.db.models import Q
 from django.views.generic import TemplateView
+from django.shortcuts import render, get_object_or_404
+from django.contrib.auth.decorators import login_required
 from rest_framework import viewsets, status
 from rest_framework.decorators import action
 from rest_framework.response import Response
@@ -109,3 +111,39 @@ class PrintingUIView(TemplateView):
     Sem autenticação, sem reverse(), URLs hardcoded.
     """
     template_name = 'printing/ui.html'
+
+
+@login_required
+def impressora_list_view(request):
+    impressoras = Impressora.objects.all()
+    total_ativas = impressoras.filter(status='ativo').count()
+    total_manutencao = impressoras.filter(status='manutencao').count()
+    total_inativas = impressoras.filter(status='inativo').count()
+    
+    return render(request, 'printing/impressora_list.html', {
+        'impressoras': impressoras,
+        'total_ativas': total_ativas,
+        'total_manutencao': total_manutencao,
+        'total_inativas': total_inativas,
+    })
+
+
+@login_required
+def impressora_detail_view(request, pk):
+    impressora = get_object_or_404(Impressora, pk=pk)
+    return render(request, 'printing/impressora_detail.html', {'impressora': impressora})
+
+
+@login_required
+def fila_lista_view(request):
+    fila = FilaImpressao.objects.all().order_by('posicao')
+    aguardando = fila.filter(status='aguardando').count()
+    imprimindo = fila.filter(status='imprimindo').count()
+    erro = fila.filter(status='erro').count()
+    
+    return render(request, 'printing/fila_lista.html', {
+        'fila': fila,
+        'aguardando': aguardando,
+        'imprimindo': imprimindo,
+        'erro': erro,
+    })

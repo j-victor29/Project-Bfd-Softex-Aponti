@@ -18,7 +18,7 @@ class userSerializer(serializers.ModelSerializer):
             'id',
             'nome',
             'email',
-            'status',
+            'is_active',
             'data_cadastro',
             'tipo_usuario',
         ]
@@ -31,7 +31,7 @@ class UserListSerializer(serializers.ModelSerializer):
             'id',
             'nome',
             'email',
-            'status',
+            'is_active',
         ]
 
 class UserDetailSerializer(serializers.ModelSerializer):
@@ -45,7 +45,7 @@ class UserDetailSerializer(serializers.ModelSerializer):
             'id',
             'nome',
             'email',
-            'status',
+            'is_active',
             'data_cadastro',
             'tipo_usuario',
             'telefones',
@@ -62,7 +62,7 @@ class UserCreateSerializer(serializers.ModelSerializer):
         fields = [
             'nome',
             'email',
-            'status',
+            'is_active',
             'tipo_usuario',
         ]
 

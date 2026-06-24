@@ -1,4 +1,5 @@
 from django.shortcuts import render
+from django.contrib.auth.decorators import login_required
 from rest_framework import viewsets, status
 from rest_framework.decorators import action
 from rest_framework.response import Response
@@ -69,12 +70,17 @@ class UserViewSet(viewsets.ModelViewSet):
                 status=status.HTTP_400_BAD_REQUEST
             )
         
-        if not check_password(senha_atual, usuario.senha):
+        if not usuario.check_password(senha_atual):
             return Response(
                 {'erro': 'Senha atual incorreta'},
                 status=status.HTTP_400_BAD_REQUEST
             )
         
-        usuario.senha = make_password(senha_nova)
+        usuario.set_password(senha_nova)
         usuario.save()
         return Response({'mensagem': 'Senha alterada com sucesso'})
+
+
+@login_required
+def perfil_view(request):
+    return render(request, 'users/perfil.html', {'user': request.user})

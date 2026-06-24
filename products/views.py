@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
 from rest_framework import viewsets, filters
 from rest_framework.decorators import action
 from rest_framework.response import Response
@@ -53,5 +53,5 @@ def produto_list_view(request):
 
 
 def produto_detail_view(request, pk):
-    produto = Produto.objects.get(pk=pk, ativo=True)
+    produto = get_object_or_404(Produto, pk=pk, ativo=True)
     return render(request, 'products/produto_detail.html', {'produto': produto})

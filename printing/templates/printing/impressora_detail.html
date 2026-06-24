@@ -10,7 +10,7 @@
             <p class="text-muted">{{ impressora.get_tipo_display }}</p>
         </div>
         <div class="col-md-4 text-end">
-            <a href="{% url 'impressora-list' %}" class="btn btn-secondary">
+            <a href="{% url 'printing:impressora-list' %}" class="btn btn-secondary">
                 <i class="fas fa-arrow-left"></i> Voltar
             </a>
             <a href="/admin/printing/impressora/{{ impressora.id }}/change/" class="btn btn-warning">

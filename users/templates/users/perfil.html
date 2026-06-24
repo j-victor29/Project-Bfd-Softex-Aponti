@@ -1,0 +1,63 @@
+{% extends "base.html" %}
+
+{% block title %}Meu Perfil - Capinha{% endblock %}
+
+{% block content %}
+<div class="container my-5 text-start">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <h1 class="mb-4">
+                <i class="fas fa-user-circle me-2"></i>Meu Perfil
+            </h1>
+            
+            <div class="card mb-4 shadow">
+                <div class="card-header bg-dark py-3">
+                    <h5 class="mb-0 text-white"><i class="fas fa-info-circle me-2"></i>Informações Pessoais</h5>
+                </div>
+                <div class="card-body p-4">
+                    <div class="row mb-3">
+                        <div class="col-sm-4 text-muted font-weight-bold">Nome Completo:</div>
+                        <div class="col-sm-8"><strong>{{ user.nome }}</strong></div>
+                    </div>
+                    <hr style="border-top: 1px solid rgba(255,255,255,0.1)">
+                    <div class="row mb-3">
+                        <div class="col-sm-4 text-muted">E-mail:</div>
+                        <div class="col-sm-8">{{ user.email }}</div>
+                    </div>
+                    <hr style="border-top: 1px solid rgba(255,255,255,0.1)">
+                    <div class="row mb-3">
+                        <div class="col-sm-4 text-muted">Documento (CPF/CNPJ):</div>
+                        <div class="col-sm-8">{{ user.documento|default:"Não cadastrado" }}</div>
+                    </div>
+                    <hr style="border-top: 1px solid rgba(255,255,255,0.1)">
+                    <div class="row mb-3">
+                        <div class="col-sm-4 text-muted">Tipo de Usuário:</div>
+                        <div class="col-sm-8">
+                            <span class="badge bg-primary px-3 py-2">
+                                {{ user.tipo_usuario.nome|default:"Cliente" }}
+                            </span>
+                        </div>
+                    </div>
+                    <hr style="border-top: 1px solid rgba(255,255,255,0.1)">
+                    <div class="row mb-3">
+                        <div class="col-sm-4 text-muted">Data de Cadastro:</div>
+                        <div class="col-sm-8">{{ user.data_cadastro|date:"d/m/Y H:i" }}</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="card shadow">
+                <div class="card-header bg-dark py-3">
+                    <h5 class="mb-0 text-white"><i class="fas fa-key me-2"></i>Segurança</h5>
+                </div>
+                <div class="card-body p-4">
+                    <p class="text-muted">Deseja alterar sua senha? Use o botão abaixo para redefinir as credenciais de acesso.</p>
+                    <a href="/admin/password_change/" class="btn btn-secondary">
+                        <i class="fas fa-lock-open me-2"></i>Alterar Senha Administrativa
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

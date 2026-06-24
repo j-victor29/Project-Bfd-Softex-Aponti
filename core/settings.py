@@ -11,6 +11,18 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 """
 
 from pathlib import Path
+import os
+
+try:
+    from decouple import config
+except ImportError:
+    def config(key, default=None, cast=str):
+        val = os.getenv(key, default)
+        if val is None:
+            return default
+        if cast is bool:
+            return str(val).lower() in ('true', '1', 't', 'y', 'yes')
+        return cast(val)
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -20,12 +32,13 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-xu$n4wnzil)8apc&x6@(ur_v!630(0ajda5ambt-kscakx34i='
+SECRET_KEY = config('SECRET_KEY', default='django-insecure-xu$n4wnzil)8apc&x6@(ur_v!630(0ajda5ambt-kscakx34i=')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = config('DEBUG', default=True, cast=bool)
 
-ALLOWED_HOSTS = ['*']
+# Parse hosts from a comma-separated string
+ALLOWED_HOSTS = [host.strip() for host in config('ALLOWED_HOSTS', default='*').split(',') if host.strip()]
 
 
 # Application definition
@@ -154,6 +167,5 @@ REST_FRAMEWORK = {
     'EXCEPTION_HANDLER': 'rest_framework.views.exception_handler',
 }
 
-# Desabilita redirecionamento para página de login HTML
-# Garante que API retorna JSON com status 401 quando autenticação falha
-LOGIN_URL = None
+# Configura redirecionamento para página de login HTML do aplicativo
+LOGIN_URL = 'login'

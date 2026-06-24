@@ -30,7 +30,4 @@ urlpatterns = [
     
     # API REST
     path('api/', include(router.urls)),
-    
-    # Compatibilidade com rotas antigas (sem /api/)
-    path('', include(router.urls)),
 ]

@@ -1,4 +1,5 @@
-from django.shortcuts import get_object_or_404
+from django.shortcuts import get_object_or_404, render
+from django.contrib.auth.decorators import login_required
 from django.views.generic import TemplateView
 from rest_framework import viewsets, status, mixins
 from rest_framework.decorators import action
@@ -262,4 +263,16 @@ class OrdersUIView(TemplateView):
     Sem autenticação, sem reverse(), URLs hardcoded.
     """
     template_name = 'orders/ui.html'
+
+
+@login_required
+def order_list_html(request):
+    pedidos = Pedido.objects.filter(usuario=request.user).order_by('-data_pedido')
+    return render(request, 'orders/pedido_list.html', {'pedidos': pedidos})
+
+
+@login_required
+def order_detail_html(request, pk):
+    pedido = get_object_or_404(Pedido, pk=pk, usuario=request.user)
+    return render(request, 'orders/pedido_detail.html', {'pedido': pedido})
 

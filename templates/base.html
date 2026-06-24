@@ -3,23 +3,200 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% block title %}Capinha{% endblock %}</title>
+    <title>{% block title %}Capinha - Custom Marketplace{% endblock %}</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- Bootstrap & FontAwesome -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
+    <style>
+        :root {
+            --bg-color: #0b0f19;
+            --card-bg: rgba(22, 28, 45, 0.7);
+            --border-color: rgba(255, 255, 255, 0.08);
+            --primary-gradient: linear-gradient(135deg, #6366f1 0%, #a855f7 100%);
+            --accent-color: #00f2fe;
+            --text-main: #f3f4f6;
+            --text-muted: #9ca3af;
+        }
+
+        body {
+            font-family: 'Outfit', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            background-image: 
+                radial-gradient(at 0% 0%, rgba(99, 102, 241, 0.15) 0px, transparent 50%),
+                radial-gradient(at 100% 100%, rgba(168, 85, 247, 0.15) 0px, transparent 50%);
+            background-attachment: fixed;
+        }
+
+        /* Glassmorphism Navbar */
+        .navbar {
+            background: rgba(11, 15, 25, 0.8) !important;
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-bottom: 1px solid var(--border-color);
+            padding: 0.8rem 0;
+        }
+
+        .navbar-brand {
+            font-weight: 800;
+            font-size: 1.6rem;
+            letter-spacing: -0.5px;
+            background: var(--primary-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .nav-link {
+            font-weight: 500;
+            color: #d1d5db !important;
+            transition: all 0.3s ease;
+            padding: 0.5rem 1rem !important;
+            border-radius: 8px;
+        }
+
+        .nav-link:hover, .nav-link.active {
+            color: #ffffff !important;
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        /* Dropdown Menu styling */
+        .dropdown-menu {
+            background-color: #0f172a;
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            padding: 0.5rem;
+        }
+
+        .dropdown-item {
+            color: #d1d5db;
+            font-weight: 500;
+            padding: 0.6rem 1.2rem;
+            border-radius: 8px;
+            transition: all 0.2s ease;
+        }
+
+        .dropdown-item:hover {
+            background: var(--primary-gradient);
+            color: #ffffff;
+        }
+
+        /* Footer */
+        footer {
+            background: rgba(15, 23, 42, 0.9) !important;
+            border-top: 1px solid var(--border-color);
+            margin-top: auto !important;
+        }
+
+        /* Cards & Buttons global aesthetics */
+        .card {
+            background: var(--card-bg) !important;
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            border: 1px solid var(--border-color) !important;
+            border-radius: 16px !important;
+            color: var(--text-main);
+            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 30px rgba(99, 102, 241, 0.2);
+            border-color: rgba(99, 102, 241, 0.3) !important;
+        }
+
+        .card-header {
+            background: rgba(255, 255, 255, 0.02) !important;
+            border-bottom: 1px solid var(--border-color) !important;
+            border-top-left-radius: 16px !important;
+            border-top-right-radius: 16px !important;
+            font-weight: 600;
+        }
+
+        .btn-primary {
+            background: var(--primary-gradient) !important;
+            border: none !important;
+            font-weight: 600;
+            padding: 0.6rem 1.5rem;
+            border-radius: 10px;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary:hover {
+            opacity: 0.9;
+            transform: scale(1.02);
+            box-shadow: 0 4px 15px rgba(99, 102, 241, 0.4);
+        }
+
+        .btn-secondary {
+            background: rgba(255, 255, 255, 0.08) !important;
+            border: 1px solid rgba(255, 255, 255, 0.1) !important;
+            color: var(--text-main) !important;
+            font-weight: 600;
+            padding: 0.6rem 1.5rem;
+            border-radius: 10px;
+            transition: all 0.3s ease;
+        }
+
+        .btn-secondary:hover {
+            background: rgba(255, 255, 255, 0.15) !important;
+        }
+
+        /* Custom scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: var(--bg-color);
+        }
+        ::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+    </style>
 </head>
 <body>
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
         <div class="container">
-            <a class="navbar-brand" href="/">Capinha</a>
+            <a class="navbar-brand" href="/"><i class="fas fa-mobile-alt me-2"></i>Capinha</a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav ms-auto">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0 ms-lg-4">
+                    <li class="nav-item">
+                        <a class="nav-link" href="/products/"><i class="fas fa-tags me-1"></i> Produtos</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/artists/"><i class="fas fa-palette me-1"></i> Artistas</a>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarCreations" role="button" data-bs-toggle="dropdown">
+                            <i class="fas fa-paint-brush me-1"></i> Criações
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="/creations/colecoes/">Coleções</a></li>
+                            <li><a class="dropdown-item" href="/creations/artes/">Artes</a></li>
+                            <li><a class="dropdown-item" href="/creations/personalizacoes/">Personalizações</a></li>
+                        </ul>
+                    </li>
+                </ul>
+                <ul class="navbar-nav ms-auto align-items-lg-center">
                     {% if user.is_authenticated %}
                         <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown">
-                                <i class="fas fa-shopping-cart"></i> Pedidos
+                                <i class="fas fa-shopping-cart me-1"></i> Pedidos
                             </a>
                             <ul class="dropdown-menu">
                                 <li><a class="dropdown-item" href="/orders/">Meus Pedidos</a></li>
@@ -28,7 +205,7 @@
                         </li>
                         <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle" href="#" id="navbarGameDropdown" role="button" data-bs-toggle="dropdown">
-                                <i class="fas fa-trophy"></i> Gamificação
+                                <i class="fas fa-trophy me-1"></i> Gamificação
                             </a>
                             <ul class="dropdown-menu">
                                 <li><a class="dropdown-item" href="/gamification/">Dashboard</a></li>
@@ -38,7 +215,7 @@
                         </li>
                         <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle" href="#" id="navbarPrintingDropdown" role="button" data-bs-toggle="dropdown">
-                                <i class="fas fa-print"></i> Impressão
+                                <i class="fas fa-print me-1"></i> Impressão
                             </a>
                             <ul class="dropdown-menu">
                                 <li><a class="dropdown-item" href="/printing/">Impressoras</a></li>
@@ -46,14 +223,14 @@
                             </ul>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="/admin/">Admin</a>
+                            <a class="nav-link" href="/admin/"><i class="fas fa-cog me-1"></i> Admin</a>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="/logout/">Sair</a>
+                        <li class="nav-item ms-lg-2">
+                            <a class="nav-link btn btn-secondary py-1 px-3 text-white" href="/logout/"><i class="fas fa-sign-out-alt me-1"></i> Sair</a>
                         </li>
                     {% else %}
                         <li class="nav-item">
-                            <a class="nav-link" href="/login/">Login</a>
+                            <a class="nav-link btn btn-primary py-1 px-4 text-white" href="/login/"><i class="fas fa-sign-in-alt me-1"></i> Login</a>
                         </li>
                     {% endif %}
                 </ul>
@@ -61,13 +238,13 @@
         </div>
     </nav>
 
-    <main>
+    <main class="flex-grow-1">
         {% block content %}{% endblock %}
     </main>
 
     <footer class="bg-dark text-white mt-5 py-4">
         <div class="container text-center">
-            <p>&copy; 2026 Capinha. Todos os direitos reservados.</p>
+            <p class="mb-0 text-muted">&copy; 2026 Capinha. Todos os direitos reservados. Feito com <i class="fas fa-heart text-danger"></i> para você.</p>
         </div>
     </footer>
 

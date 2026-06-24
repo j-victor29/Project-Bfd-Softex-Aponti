@@ -12,7 +12,7 @@
             <p class="text-muted">Gerencie a fila de produção</p>
         </div>
         <div class="col-md-4 text-end">
-            <a href="{% url 'impressora-list' %}" class="btn btn-secondary">
+            <a href="{% url 'printing:impressora-list' %}" class="btn btn-secondary">
                 <i class="fas fa-print"></i> Voltar para Impressoras
             </a>
         </div>
@@ -73,13 +73,13 @@
                                         <strong>#{{ forloop.counter }}</strong>
                                     </td>
                                     <td>
-                                        <a href="/orders/{{ item.pedido.id }}/">
+                                        <a href="{% url 'orders:pedido-detail' item.pedido.id %}">
                                             Pedido #{{ item.pedido.id }}
                                         </a>
                                     </td>
                                     <td>
                                         {% if item.impressora %}
-                                            <a href="{% url 'impressora-detail' item.impressora.id %}">
+                                            <a href="{% url 'printing:impressora-detail' item.impressora.id %}">
                                                 {{ item.impressora.nome }}
                                             </a>
                                         {% else %}

@@ -96,7 +96,7 @@
                             {% endif %}
                         </div>
                         <div class="card-footer bg-light">
-                            <a href="{% url 'impressora-detail' impressora.id %}" class="btn btn-sm btn-info">
+                            <a href="{% url 'printing:impressora-detail' impressora.id %}" class="btn btn-sm btn-info">
                                 <i class="fas fa-eye"></i> Ver Detalhes
                             </a>
                             <a href="/admin/printing/impressora/{{ impressora.id }}/change/" class="btn btn-sm btn-warning">
@@ -144,7 +144,7 @@
 
     <!-- Link para Fila -->
     <div class="mt-5">
-        <a href="{% url 'fila-lista' %}" class="btn btn-primary btn-lg">
+        <a href="{% url 'printing:fila-lista' %}" class="btn btn-primary btn-lg">
             <i class="fas fa-tasks"></i> Ver Fila de Impressão
         </a>
     </div>

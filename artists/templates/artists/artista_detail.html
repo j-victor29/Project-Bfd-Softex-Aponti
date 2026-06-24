@@ -1,0 +1,92 @@
+{% extends "base.html" %}
+
+{% block title %}{{ artista.nome_artistico }} - Capinha{% endblock %}
+
+{% block content %}
+<div class="container my-5 text-start">
+    <div class="row mb-4">
+        <div class="col-md-8">
+            <h1 class="mb-1">
+                <i class="fas fa-palette me-2 text-primary"></i>{{ artista.nome_artistico }}
+            </h1>
+            <p class="text-muted">Conheça o artista e suas obras na plataforma</p>
+        </div>
+        <div class="col-md-4 text-end">
+            <a href="{% url 'artista-list' %}" class="btn btn-secondary">
+                <i class="fas fa-arrow-left me-2"></i>Voltar para a Lista
+            </a>
+        </div>
+    </div>
+
+    <div class="row">
+        <!-- Coluna da Esquerda: Biografia e Informações -->
+        <div class="col-md-8 mb-4">
+            <div class="card shadow-lg mb-4 h-100">
+                <div class="card-header bg-dark py-3">
+                    <h5 class="mb-0 text-white"><i class="fas fa-info-circle me-2"></i>Sobre o Artista</h5>
+                </div>
+                <div class="card-body p-4">
+                    {% if artista.biografia %}
+                        <p class="lead" style="line-height: 1.8;">{{ artista.biografia }}</p>
+                    {% else %}
+                        <p class="text-muted italic">Este artista ainda não adicionou uma biografia.</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        <!-- Coluna da Direita: Métricas e Links -->
+        <div class="col-md-4 mb-4">
+            <div class="card shadow-lg h-100">
+                <div class="card-header bg-dark py-3">
+                    <h5 class="mb-0 text-white"><i class="fas fa-chart-line me-2"></i>Estatísticas</h5>
+                </div>
+                <div class="card-body p-4">
+                    <!-- Rating -->
+                    <div class="text-center mb-4">
+                        <h2 class="text-warning mb-1">
+                            {{ artista.rating|floatformat:1 }} <i class="fas fa-star"></i>
+                        </h2>
+                        <small class="text-muted">Baseado em {{ artista.total_avaliacoes }} avaliações</small>
+                    </div>
+                    
+                    <hr style="border-top: 1px solid rgba(255,255,255,0.1)">
+                    
+                    <!-- Vendas & Pedidos -->
+                    <div class="row text-center my-4">
+                        <div class="col-6 border-end" style="border-color: rgba(255,255,255,0.1) !important;">
+                            <h4 class="mb-0 text-success">{{ artista.total_vendas }}</h4>
+                            <small class="text-muted">Itens Ganhos</small>
+                        </div>
+                        <div class="col-6">
+                            <h4 class="mb-0 text-info">{{ artista.total_pedidos }}</h4>
+                            <small class="text-muted">Pedidos</small>
+                        </div>
+                    </div>
+                    
+                    <hr style="border-top: 1px solid rgba(255,255,255,0.1)">
+
+                    <!-- Redes Sociais / Portfolio -->
+                    <h6 class="mb-3"><i class="fas fa-link me-2"></i>Links Externos</h6>
+                    
+                    {% if artista.instagram %}
+                        <a href="{{ artista.instagram }}" target="_blank" class="btn btn-outline-danger w-100 mb-2 py-2">
+                            <i class="fab fa-instagram me-2"></i>Instagram
+                        </a>
+                    {% endif %}
+                    
+                    {% if artista.portfolio_url %}
+                        <a href="{{ artista.portfolio_url }}" target="_blank" class="btn btn-outline-info w-100 py-2">
+                            <i class="fas fa-briefcase me-2"></i>Portfolio
+                        </a>
+                    {% endif %}
+                    
+                    {% if not artista.instagram and not artista.portfolio_url %}
+                        <p class="text-muted italic">Nenhum link cadastrado.</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
