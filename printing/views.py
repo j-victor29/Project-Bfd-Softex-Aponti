@@ -1,10 +1,11 @@
-from django.views.generic import ListView, DetailView
-from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db.models import Q
+from django.views.generic import TemplateView
 from rest_framework import viewsets, status
 from rest_framework.decorators import action
 from rest_framework.response import Response
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import IsAuthenticated, AllowAny
+from rest_framework.views import APIView
+from rest_framework.reverse import reverse
 from .models import Impressora, FilaImpressao
 from .serializers import ImpressoraListSerializer, ImpressoraDetailSerializer, ImpressoraCreateUpdateSerializer
 
@@ -46,56 +47,65 @@ class ImpressoraViewSet(viewsets.ModelViewSet):
         return Response(serializer.data)
 
 
-# ===== VIEWS BASEADAS EM CLASSE PARA TEMPLATES =====
+class PrintingRootAPIView(APIView):
+    """
+    API Root customizada para o módulo de Printing.
+    Exibe descrição do módulo e lista de endpoints disponíveis.
+    """
+    permission_classes = [AllowAny]
+    
+    def get(self, request, format=None):
+        """Retorna informações sobre o módulo de impressoras e endpoints disponíveis"""
+        return Response({
+            'module': 'Printing',
+            'description': 'Gerenciamento de impressoras e filas de impressão',
+            'version': '1.0',
+            'endpoints': {
+                'impressoras': {
+                    'url': reverse('printing:impressora-list', request=request),
+                    'description': 'Lista todas as impressoras cadastradas',
+                    'methods': ['GET', 'POST'],
+                    'details': 'GET retorna lista paginada; POST cria nova impressora'
+                },
+                'impressoras-detail': {
+                    'url': reverse('printing:impressora-detail', request=request, kwargs={'pk': '{id}'}),
+                    'description': 'Detalhes, atualização e exclusão de uma impressora',
+                    'methods': ['GET', 'PUT', 'PATCH', 'DELETE'],
+                    'details': 'Substitua {id} pelo ID da impressora'
+                },
+                'impressoras-ativas': {
+                    'url': reverse('printing:impressora-ativas', request=request),
+                    'description': 'Lista apenas impressoras em status ativo',
+                    'methods': ['GET'],
+                    'details': 'Útil para encontrar impressoras disponíveis'
+                },
+                'impressoras-marcar-manutencao': {
+                    'url': reverse('printing:impressora-marcar-manutencao', request=request, kwargs={'pk': '{id}'}),
+                    'description': 'Marca uma impressora como em manutenção',
+                    'methods': ['POST'],
+                    'details': 'Substitua {id} pelo ID da impressora'
+                },
+                'impressoras-ativar': {
+                    'url': reverse('printing:impressora-ativar', request=request, kwargs={'pk': '{id}'}),
+                    'description': 'Ativa uma impressora',
+                    'methods': ['POST'],
+                    'details': 'Substitua {id} pelo ID da impressora'
+                },
+            },
+            'printer_statuses': ['ativo', 'manutencao', 'inativo'],
+            'authentication': 'Token/JWT required (optional for API Root)',
+            'pagination': 'Suportado para listagens',
+            'use_cases': {
+                'check_availability': 'Use /impressoras/ativas/ para encontrar impressoras disponíveis',
+                'schedule_printing': 'POST para /orders/ para criar pedidos e associar impressoras',
+                'maintenance': 'Use /impressoras/{id}/marcar-manutencao/ quando precisar fazer manutenção'
+            }
+        })
 
-class ImpressoraListView(LoginRequiredMixin, ListView):
-    """Lista de todas as impressoras"""
-    model = Impressora
-    template_name = 'printing/impressora_list.html'
-    context_object_name = 'impressoras'
-    paginate_by = 10
 
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        # Estatísticas
-        context['total_ativas'] = Impressora.objects.filter(status='ativo').count()
-        context['total_manutencao'] = Impressora.objects.filter(status='manutencao').count()
-        context['total_inativas'] = Impressora.objects.filter(status='inativo').count()
-        return context
-
-
-class ImpressoraDetailView(LoginRequiredMixin, DetailView):
-    """Detalhes de uma impressora"""
-    model = Impressora
-    template_name = 'printing/impressora_detail.html'
-    context_object_name = 'impressora'
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        # Filas relacionadas
-        context['filas'] = FilaImpressao.objects.filter(
-            impressora=self.object
-        ).order_by('-prioridade', 'criado_em')
-        return context
-
-
-class FilaImpressaoListView(LoginRequiredMixin, ListView):
-    """Lista de fila de impressão"""
-    model = FilaImpressao
-    template_name = 'printing/fila_lista.html'
-    context_object_name = 'fila'
-    paginate_by = 20
-
-    def get_queryset(self):
-        # Status para mostrar
-        return FilaImpressao.objects.filter(
-            ~Q(status='concluido')
-        ).order_by('-prioridade', 'criado_em')
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        # Estatísticas da fila
-        context['aguardando'] = FilaImpressao.objects.filter(status='aguardando').count()
-        context['imprimindo'] = FilaImpressao.objects.filter(status='imprimindo').count()
-        context['erro'] = FilaImpressao.objects.filter(status='erro').count()
-        return context
+class PrintingUIView(TemplateView):
+    """
+    View para renderizar documentação HTML da API Printing.
+    Sem autenticação, sem reverse(), URLs hardcoded.
+    """
+    template_name = 'printing/ui.html'

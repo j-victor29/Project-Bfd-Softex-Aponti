@@ -1,10 +1,12 @@
-from django.views.generic import TemplateView, ListView
-from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db.models import Sum, Count
+from django.views.generic import TemplateView
 from rest_framework import viewsets
 from rest_framework.decorators import action
 from rest_framework.response import Response
 from rest_framework import status
+from rest_framework.views import APIView
+from rest_framework.reverse import reverse
+from rest_framework.permissions import AllowAny
 from .models import (
     Recompensa, UsuarioRecompensa, Pontos, Nivel, Badge, Ranking
 )
@@ -31,94 +33,65 @@ class UsuarioRecompensaViewSet(viewsets.ModelViewSet):
         return Response(serializer.data)
 
 
-# ===== VIEWS BASEADAS EM CLASSE PARA TEMPLATES =====
-
-class GamificationDashboardView(LoginRequiredMixin, TemplateView):
-    """Dashboard de gamificação do usuário"""
-    template_name = 'gamification/dashboard.html'
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        usuario = self.request.user
-
-        # Pontos do usuário
-        try:
-            pontos = Pontos.objects.get(usuario=usuario)
-        except Pontos.DoesNotExist:
-            pontos = Pontos.objects.create(usuario=usuario)
-
-        # Badges desbloqueados
-        badges = UsuarioRecompensa.objects.filter(usuario=usuario).select_related('badge')
-
-        # Nível do usuário
-        nivel = None
-        niveis = Nivel.objects.all().order_by('numero')
-        for n in niveis:
-            if pontos.saldo >= n.pontos_minimos:
-                nivel = n
-
-        # Ranking
-        ranking = Ranking.objects.filter(
-            usuario=usuario,
-            tipo='usuarios'
-        ).first()
-
-        # Estatísticas
-        stats = {
-            'pontos_saldo': pontos.saldo,
-            'pontos_total': pontos.total_acumulado,
-            'badges_desbloqueados': badges.count(),
-            'nivel_atual': nivel,
-            'posicao_ranking': ranking.posicao if ranking else 'N/A',
-        }
-
-        context.update({
-            'stats': stats,
-            'badges': badges,
-            'nivel': nivel,
-            'niveis': niveis,
-            'ranking': ranking,
+class GamificationRootAPIView(APIView):
+    """
+    API Root customizada para o módulo de Gamification.
+    Exibe descrição do módulo e lista de endpoints disponíveis.
+    """
+    permission_classes = [AllowAny]
+    
+    def get(self, request, format=None):
+        """Retorna informações sobre o módulo de gamificação e endpoints disponíveis"""
+        return Response({
+            'module': 'Gamification',
+            'description': 'Sistema de recompensas, pontos, níveis, badges e ranking do usuário',
+            'version': '1.0',
+            'endpoints': {
+                'recompensas': {
+                    'url': reverse('gamification:recompensa-list', request=request),
+                    'description': 'Lista todas as recompensas disponíveis',
+                    'methods': ['GET', 'POST'],
+                    'details': 'GET retorna lista de todas as recompensas; POST cria nova recompensa (admin)'
+                },
+                'recompensas-detail': {
+                    'url': reverse('gamification:recompensa-detail', request=request, kwargs={'pk': '{id}'}),
+                    'description': 'Detalhes, atualização e exclusão de uma recompensa',
+                    'methods': ['GET', 'PUT', 'PATCH', 'DELETE'],
+                    'details': 'Substitua {id} pelo ID da recompensa'
+                },
+                'usuario-recompensas': {
+                    'url': reverse('gamification:usuario-recompensa-list', request=request),
+                    'description': 'Lista recompensas conquistadas pelo usuário',
+                    'methods': ['GET', 'POST'],
+                    'details': 'GET retorna recompensas do usuário autenticado'
+                },
+                'usuario-recompensas-por-usuario': {
+                    'url': reverse('gamification:usuario-recompensa-por-usuario', request=request),
+                    'description': 'Lista recompensas de um usuário específico',
+                    'methods': ['GET'],
+                    'details': 'Query param: usuario_id (obrigatório)'
+                },
+                'usuario-recompensas-detail': {
+                    'url': reverse('gamification:usuario-recompensa-detail', request=request, kwargs={'pk': '{id}'}),
+                    'description': 'Detalhes de uma recompensa conquistada',
+                    'methods': ['GET', 'PUT', 'PATCH', 'DELETE'],
+                    'details': 'Substitua {id} pelo ID do registro'
+                },
+            },
+            'features': {
+                'points': 'Acúmulo de pontos por ações do usuário',
+                'levels': 'Progressão de níveis baseada em pontos',
+                'badges': 'Conquistas desbloqueáveis por ações específicas',
+                'ranking': 'Posicionamento do usuário entre todos os usuários'
+            },
+            'authentication': 'Opcional para listagens públicas, recomendado para usuário',
+            'pagination': 'Suportado para listagens',
         })
 
-        return context
 
-
-class BadgesListView(LoginRequiredMixin, ListView):
-    """Lista de todos os badges disponíveis"""
-    model = Badge
-    template_name = 'gamification/badges_list.html'
-    context_object_name = 'badges'
-    paginate_by = 12
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        usuario = self.request.user
-        
-        # Badges desbloqueados por este usuário
-        desbloqueados = UsuarioRecompensa.objects.filter(
-            usuario=usuario
-        ).values_list('badge_id', flat=True)
-        
-        context['badges_desbloqueados'] = desbloqueados
-        return context
-
-
-class RankingListView(LoginRequiredMixin, ListView):
-    """Ranking de usuários"""
-    model = Ranking
-    template_name = 'gamification/ranking_list.html'
-    context_object_name = 'ranking'
-    paginate_by = 20
-
-    def get_queryset(self):
-        return Ranking.objects.filter(tipo='usuarios').order_by('posicao')
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        # Posição do usuário atual
-        posicao_usuario = Ranking.objects.filter(
-            usuario=self.request.user,
-            tipo='usuarios'
-        ).first()
-        context['posicao_usuario'] = posicao_usuario
-        return context
+class GamificationUIView(TemplateView):
+    """
+    View para renderizar documentação HTML da API Gamification.
+    Sem autenticação, sem reverse(), URLs hardcoded.
+    """
+    template_name = 'gamification/ui.html'

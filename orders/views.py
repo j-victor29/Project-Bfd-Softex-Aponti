@@ -1,10 +1,11 @@
 from django.shortcuts import get_object_or_404
-from django.views.generic import ListView, DetailView
-from django.contrib.auth.mixins import LoginRequiredMixin
+from django.views.generic import TemplateView
 from rest_framework import viewsets, status, mixins
 from rest_framework.decorators import action
 from rest_framework.response import Response
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import IsAuthenticated, AllowAny
+from rest_framework.views import APIView
+from rest_framework.reverse import reverse
 
 from .models import Pedido, ItemPedido
 from .serializers import (
@@ -193,29 +194,72 @@ class ItemPedidoViewSet(mixins.UpdateModelMixin,
         return Response(status=status.HTTP_204_NO_CONTENT)
 
 
-# ===== VIEWS BASEADAS EM CLASSE PARA TEMPLATES =====
+class OrdersRootAPIView(APIView):
+    """
+    API Root customizada para o módulo de Pedidos.
+    Exibe descrição do módulo e lista de endpoints disponíveis.
+    """
+    permission_classes = [AllowAny]
+    
+    def get(self, request, format=None):
+        """Retorna informações sobre o módulo de pedidos e endpoints disponíveis"""
+        return Response({
+            'module': 'Orders',
+            'description': 'Gerenciamento de pedidos e itens de pedido',
+            'version': '1.0',
+            'endpoints': {
+                'orders': {
+                    'url': reverse('orders:orders-list', request=request),
+                    'description': 'Lista todos os pedidos do usuário',
+                    'methods': ['GET', 'POST'],
+                    'details': 'GET retorna lista paginada; POST cria novo pedido'
+                },
+                'orders-detail': {
+                    'url': reverse('orders:orders-detail', request=request, kwargs={'pk': '{id}'}),
+                    'description': 'Detalhes, atualização e exclusão de um pedido específico',
+                    'methods': ['GET', 'PUT', 'PATCH', 'DELETE'],
+                    'details': 'Substitua {id} pelo ID do pedido'
+                },
+                'orders-status': {
+                    'url': reverse('orders:orders-status', request=request, kwargs={'pk': '{id}'}),
+                    'description': 'Atualiza o status do pedido',
+                    'methods': ['PATCH'],
+                    'details': 'Aceita: pago, em_producao, impresso, enviado, concluido, cancelado'
+                },
+                'orders-marcar-impresso': {
+                    'url': reverse('orders:orders-marcar-impresso', request=request, kwargs={'pk': '{id}'}),
+                    'description': 'Marca o pedido como impresso',
+                    'methods': ['PATCH'],
+                    'details': ''
+                },
+                'orders-marcar-enviado': {
+                    'url': reverse('orders:orders-marcar-enviado', request=request, kwargs={'pk': '{id}'}),
+                    'description': 'Marca o pedido como enviado',
+                    'methods': ['PATCH'],
+                    'details': ''
+                },
+                'orders-finalizar': {
+                    'url': reverse('orders:orders-finalizar', request=request, kwargs={'pk': '{id}'}),
+                    'description': 'Finaliza o pedido',
+                    'methods': ['PATCH'],
+                    'details': ''
+                },
+                'order-items': {
+                    'url': reverse('orders:order-item-detail', request=request, kwargs={'pk': '1'}).replace('/1', '/{item_id}'),
+                    'description': 'Atualiza e remove itens de um pedido',
+                    'methods': ['PUT', 'PATCH', 'DELETE'],
+                    'details': 'Substitua {item_id} pelo ID do item'
+                },
+            },
+            'authentication': 'Token/JWT required',
+            'pagination': 'Suportado para listagens',
+        })
 
-class PedidoListView(LoginRequiredMixin, ListView):
-    """Lista todos os pedidos do usuário logado"""
-    model = Pedido
-    template_name = 'orders/pedido_list.html'
-    context_object_name = 'pedidos'
-    paginate_by = 10
 
-    def get_queryset(self):
-        return Pedido.objects.filter(usuario=self.request.user).order_by('-data_pedido')
+class OrdersUIView(TemplateView):
+    """
+    View para renderizar documentação HTML da API Orders.
+    Sem autenticação, sem reverse(), URLs hardcoded.
+    """
+    template_name = 'orders/ui.html'
 
-
-class PedidoDetailView(LoginRequiredMixin, DetailView):
-    """Detalhes de um pedido específico"""
-    model = Pedido
-    template_name = 'orders/pedido_detail.html'
-    context_object_name = 'pedido'
-
-    def get_queryset(self):
-        return Pedido.objects.filter(usuario=self.request.user)
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context['itens'] = self.object.itens.all()
-        return context

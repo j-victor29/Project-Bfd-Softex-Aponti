@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Orders API - Documentação</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif; background: #f5f5f5; padding: 20px; }
+        .container { max-width: 900px; margin: 0 auto; background: white; padding: 40px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+        h1 { color: #333; margin-bottom: 10px; }
+        .subtitle { color: #666; margin-bottom: 30px; font-size: 16px; }
+        .section { margin: 30px 0; padding: 20px; border-left: 4px solid #FF9800; background: #f9f9f9; border-radius: 4px; }
+        .section h2 { color: #333; margin-bottom: 15px; font-size: 20px; }
+        .endpoints { list-style: none; }
+        .endpoints li { padding: 12px 0; border-bottom: 1px solid #eee; }
+        .endpoints li:last-child { border-bottom: none; }
+        .endpoint-link { display: inline-block; padding: 8px 16px; background: #FF9800; color: white; text-decoration: none; border-radius: 4px; margin-right: 10px; }
+        .endpoint-link:hover { background: #e68900; }
+        .method { display: inline-block; width: 60px; padding: 4px 8px; border-radius: 3px; font-weight: bold; font-size: 12px; margin-right: 10px; }
+        .method.get { background: #e3f2fd; color: #1976d2; }
+        .method.post { background: #f3e5f5; color: #7b1fa2; }
+        .description { color: #666; margin-left: 90px; font-size: 14px; }
+        .info-box { background: #fff3e0; border: 1px solid #ffe0b2; padding: 15px; border-radius: 4px; margin: 20px 0; }
+        .info-box strong { color: #e65100; }
+        code { background: #f4f4f4; padding: 2px 6px; border-radius: 3px; font-family: 'Courier New', monospace; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>📦 Orders API</h1>
+        <p class="subtitle">Gerenciamento de Pedidos e Itens</p>
+
+        <div class="info-box">
+            <strong>ℹ️ Informações:</strong> Esta é uma interface de documentação. Para usar a API, faça requisições aos endpoints abaixo usando Token Authentication ou Basic Auth.
+        </div>
+
+        <!-- Pedidos -->
+        <div class="section">
+            <h2>Pedidos</h2>
+            <ul class="endpoints">
+                <li>
+                    <span class="method get">GET</span>
+                    <a href="/orders/orders/" class="endpoint-link">Listar Pedidos</a>
+                    <span class="description">Lista paginada de todos os pedidos</span>
+                </li>
+                <li>
+                    <span class="method post">POST</span>
+                    <a href="/orders/orders/" class="endpoint-link">Criar Pedido</a>
+                    <span class="description">Criar um novo pedido (autenticação necessária)</span>
+                </li>
+            </ul>
+        </div>
+
+        <!-- Operações em Pedidos -->
+        <div class="section">
+            <h2>Operações em Pedidos</h2>
+            <ul class="endpoints">
+                <li>
+                    <span class="method post">POST</span>
+                    <span class="endpoint-link">Adicionar Item</span>
+                    <span class="description">Rota: <code>/orders/orders/{id}/items/</code> - Adicionar artigo ao pedido</span>
+                </li>
+                <li>
+                    <span class="method post">POST</span>
+                    <span class="endpoint-link">Finalizar Pedido</span>
+                    <span class="description">Rota: <code>/orders/orders/{id}/finalizar/</code> - Completar o pedido</span>
+                </li>
+                <li>
+                    <span class="method post">POST</span>
+                    <span class="endpoint-link">Marcar como Enviado</span>
+                    <span class="description">Rota: <code>/orders/orders/{id}/marcar-enviado/</code> - Atualizar status para enviado</span>
+                </li>
+                <li>
+                    <span class="method post">POST</span>
+                    <span class="endpoint-link">Marcar como Impresso</span>
+                    <span class="description">Rota: <code>/orders/orders/{id}/marcar-impresso/</code> - Registrar impressão</span>
+                </li>
+                <li>
+                    <span class="method get">GET</span>
+                    <span class="endpoint-link">Status do Pedido</span>
+                    <span class="description">Rota: <code>/orders/orders/{id}/status/</code> - Consultar status atual</span>
+                </li>
+            </ul>
+        </div>
+
+        <!-- Instruções de Autenticação -->
+        <div class="section">
+            <h2>Autenticação</h2>
+            <p style="margin-bottom: 15px;">Para acessar endpoints, use um dos seguintes métodos:</p>
+            <ul class="endpoints">
+                <li>
+                    <strong>Token Authentication:</strong>
+                    <p style="margin: 10px 0; font-size: 14px; color: #666;">
+                        <code>Authorization: Token seu_token_aqui</code>
+                    </p>
+                </li>
+                <li>
+                    <strong>Basic Authentication:</strong>
+                    <p style="margin: 10px 0; font-size: 14px; color: #666;">
+                        <code>Authorization: Basic base64(username:password)</code>
+                    </p>
+                </li>
+                <li>
+                    <strong>Session Authentication:</strong>
+                    <p style="margin: 10px 0; font-size: 14px; color: #666;">
+                        Disponível quando acessado via navegador com usuário logado
+                    </p>
+                </li>
+            </ul>
+        </div>
+
+        <!-- Status -->
+        <div class="section">
+            <h2>Status da API</h2>
+            <p style="color: #666; margin-bottom: 15px;">
+                <strong>Status:</strong> <span style="color: #FF9800;">✓ Online</span>
+            </p>
+            <p style="color: #666; margin-bottom: 15px;">
+                <strong>Versão:</strong> 1.0
+            </p>
+            <p style="color: #666;">
+                <strong>Formato de Resposta:</strong> JSON
+            </p>
+        </div>
+    </div>
+</body>
+</html>

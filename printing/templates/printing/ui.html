@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Printing API - Documentação</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif; background: #f5f5f5; padding: 20px; }
+        .container { max-width: 900px; margin: 0 auto; background: white; padding: 40px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+        h1 { color: #333; margin-bottom: 10px; }
+        .subtitle { color: #666; margin-bottom: 30px; font-size: 16px; }
+        .section { margin: 30px 0; padding: 20px; border-left: 4px solid #2196F3; background: #f9f9f9; border-radius: 4px; }
+        .section h2 { color: #333; margin-bottom: 15px; font-size: 20px; }
+        .endpoints { list-style: none; }
+        .endpoints li { padding: 12px 0; border-bottom: 1px solid #eee; }
+        .endpoints li:last-child { border-bottom: none; }
+        .endpoint-link { display: inline-block; padding: 8px 16px; background: #2196F3; color: white; text-decoration: none; border-radius: 4px; margin-right: 10px; }
+        .endpoint-link:hover { background: #0b7dda; }
+        .method { display: inline-block; width: 60px; padding: 4px 8px; border-radius: 3px; font-weight: bold; font-size: 12px; margin-right: 10px; }
+        .method.get { background: #e3f2fd; color: #1976d2; }
+        .method.post { background: #f3e5f5; color: #7b1fa2; }
+        .description { color: #666; margin-left: 90px; font-size: 14px; }
+        .info-box { background: #e3f2fd; border: 1px solid #90caf9; padding: 15px; border-radius: 4px; margin: 20px 0; }
+        .info-box strong { color: #1565c0; }
+        code { background: #f4f4f4; padding: 2px 6px; border-radius: 3px; font-family: 'Courier New', monospace; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🖨️ Printing API</h1>
+        <p class="subtitle">Gerenciamento de Impressoras e Filas de Impressão</p>
+
+        <div class="info-box">
+            <strong>ℹ️ Informações:</strong> Esta é uma interface de documentação. Para usar a API, faça requisições aos endpoints abaixo usando Token Authentication ou Basic Auth.
+        </div>
+
+        <!-- Impressoras -->
+        <div class="section">
+            <h2>Impressoras</h2>
+            <ul class="endpoints">
+                <li>
+                    <span class="method get">GET</span>
+                    <a href="/printing/impressoras/" class="endpoint-link">Listar Impressoras</a>
+                    <span class="description">Lista paginada de todas as impressoras cadastradas</span>
+                </li>
+                <li>
+                    <span class="method post">POST</span>
+                    <a href="/printing/impressoras/" class="endpoint-link">Criar Impressora</a>
+                    <span class="description">Registrar uma nova impressora no sistema</span>
+                </li>
+            </ul>
+        </div>
+
+        <!-- Impressoras Ativas -->
+        <div class="section">
+            <h2>Impressoras Ativas</h2>
+            <ul class="endpoints">
+                <li>
+                    <span class="method get">GET</span>
+                    <a href="/printing/impressoras/ativas/" class="endpoint-link">Listar Impressoras Ativas</a>
+                    <span class="description">Apenas impressoras em status <code>ativo</code></span>
+                </li>
+            </ul>
+        </div>
+
+        <!-- Manutenção -->
+        <div class="section">
+            <h2>Gerenciamento de Status</h2>
+            <ul class="endpoints">
+                <li>
+                    <span class="method post">POST</span>
+                    <span class="endpoint-link">Marcar Manutenção</span>
+                    <span class="description">Rota: <code>/printing/impressoras/{id}/marcar_manutencao/</code> - Mudar status para manutenção</span>
+                </li>
+                <li>
+                    <span class="method post">POST</span>
+                    <span class="endpoint-link">Ativar Impressora</span>
+                    <span class="description">Rota: <code>/printing/impressoras/{id}/ativar/</code> - Restaurar status para ativo</span>
+                </li>
+            </ul>
+        </div>
+
+        <!-- Instruções de Autenticação -->
+        <div class="section">
+            <h2>Autenticação</h2>
+            <p style="margin-bottom: 15px;">Para acessar endpoints, use um dos seguintes métodos:</p>
+            <ul class="endpoints">
+                <li>
+                    <strong>Token Authentication:</strong>
+                    <p style="margin: 10px 0; font-size: 14px; color: #666;">
+                        <code>Authorization: Token seu_token_aqui</code>
+                    </p>
+                </li>
+                <li>
+                    <strong>Basic Authentication:</strong>
+                    <p style="margin: 10px 0; font-size: 14px; color: #666;">
+                        <code>Authorization: Basic base64(username:password)</code>
+                    </p>
+                </li>
+                <li>
+                    <strong>Session Authentication:</strong>
+                    <p style="margin: 10px 0; font-size: 14px; color: #666;">
+                        Disponível quando acessado via navegador com usuário logado
+                    </p>
+                </li>
+            </ul>
+        </div>
+
+        <!-- Status -->
+        <div class="section">
+            <h2>Status da API</h2>
+            <p style="color: #666; margin-bottom: 15px;">
+                <strong>Status:</strong> <span style="color: #2196F3;">✓ Online</span>
+            </p>
+            <p style="color: #666; margin-bottom: 15px;">
+                <strong>Versão:</strong> 1.0
+            </p>
+            <p style="color: #666;">
+                <strong>Formato de Resposta:</strong> JSON
+            </p>
+        </div>
+    </div>
+</body>
+</html>

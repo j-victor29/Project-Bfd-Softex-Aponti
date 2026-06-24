@@ -25,7 +25,7 @@ SECRET_KEY = 'django-insecure-xu$n4wnzil)8apc&x6@(ur_v!630(0ajda5ambt-kscakx34i=
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -137,3 +137,23 @@ MEDIA_ROOT = BASE_DIR / 'media'
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+# Django REST Framework Configuration
+# API-Only Configuration: Retorna JSON em vez de redirecionar para login HTML
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework.authentication.TokenAuthentication',  # Token-based auth para clients API
+        'rest_framework.authentication.SessionAuthentication',  # Session para desenvolvimento/admin
+        'rest_framework.authentication.BasicAuthentication',    # Basic auth alternativo
+    ],
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.IsAuthenticated',
+    ],
+    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
+    'PAGE_SIZE': 20,
+    'EXCEPTION_HANDLER': 'rest_framework.views.exception_handler',
+}
+
+# Desabilita redirecionamento para página de login HTML
+# Garante que API retorna JSON com status 401 quando autenticação falha
+LOGIN_URL = None
