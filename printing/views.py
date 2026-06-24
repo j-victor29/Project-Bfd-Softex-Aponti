@@ -64,31 +64,31 @@ class PrintingRootAPIView(APIView):
             'version': '1.0',
             'endpoints': {
                 'impressoras': {
-                    'url': reverse('printing:impressora-list', request=request),
+                    'url': reverse('printing:api-impressora-list', request=request),
                     'description': 'Lista todas as impressoras cadastradas',
                     'methods': ['GET', 'POST'],
                     'details': 'GET retorna lista paginada; POST cria nova impressora'
                 },
                 'impressoras-detail': {
-                    'url': reverse('printing:impressora-detail', request=request, kwargs={'pk': '{id}'}),
+                    'url': reverse('printing:api-impressora-detail', request=request, kwargs={'pk': '{id}'}),
                     'description': 'Detalhes, atualização e exclusão de uma impressora',
                     'methods': ['GET', 'PUT', 'PATCH', 'DELETE'],
                     'details': 'Substitua {id} pelo ID da impressora'
                 },
                 'impressoras-ativas': {
-                    'url': reverse('printing:impressora-ativas', request=request),
+                    'url': reverse('printing:api-impressora-ativas', request=request),
                     'description': 'Lista apenas impressoras em status ativo',
                     'methods': ['GET'],
                     'details': 'Útil para encontrar impressoras disponíveis'
                 },
                 'impressoras-marcar-manutencao': {
-                    'url': reverse('printing:impressora-marcar-manutencao', request=request, kwargs={'pk': '{id}'}),
+                    'url': reverse('printing:api-impressora-marcar-manutencao', request=request, kwargs={'pk': '{id}'}),
                     'description': 'Marca uma impressora como em manutenção',
                     'methods': ['POST'],
                     'details': 'Substitua {id} pelo ID da impressora'
                 },
                 'impressoras-ativar': {
-                    'url': reverse('printing:impressora-ativar', request=request, kwargs={'pk': '{id}'}),
+                    'url': reverse('printing:api-impressora-ativar', request=request, kwargs={'pk': '{id}'}),
                     'description': 'Ativa uma impressora',
                     'methods': ['POST'],
                     'details': 'Substitua {id} pelo ID da impressora'
@@ -115,6 +115,10 @@ class PrintingUIView(TemplateView):
 
 @login_required
 def impressora_list_view(request):
+    if not (request.user.is_staff or request.user.is_superuser):
+        from django.http import HttpResponseForbidden
+        return HttpResponseForbidden("Acesso restrito a funcionários da produção.")
+        
     impressoras = Impressora.objects.all()
     total_ativas = impressoras.filter(status='ativo').count()
     total_manutencao = impressoras.filter(status='manutencao').count()
@@ -130,12 +134,20 @@ def impressora_list_view(request):
 
 @login_required
 def impressora_detail_view(request, pk):
+    if not (request.user.is_staff or request.user.is_superuser):
+        from django.http import HttpResponseForbidden
+        return HttpResponseForbidden("Acesso restrito a funcionários da produção.")
+        
     impressora = get_object_or_404(Impressora, pk=pk)
     return render(request, 'printing/impressora_detail.html', {'impressora': impressora})
 
 
 @login_required
 def fila_lista_view(request):
+    if not (request.user.is_staff or request.user.is_superuser):
+        from django.http import HttpResponseForbidden
+        return HttpResponseForbidden("Acesso restrito a funcionários da produção.")
+        
     fila = FilaImpressao.objects.all().order_by('-prioridade', 'criado_em')
     aguardando = fila.filter(status='aguardando').count()
     imprimindo = fila.filter(status='imprimindo').count()
@@ -151,25 +163,53 @@ def fila_lista_view(request):
 
 @login_required
 def fila_status_update_view(request, pk):
+    if not (request.user.is_staff or request.user.is_superuser):
+        from django.http import HttpResponseForbidden
+        return HttpResponseForbidden("Acesso restrito a funcionários da produção.")
+        
     from django.contrib import messages
     from django.utils import timezone
+    from django.db import transaction
     from orders.services import PedidoService
     
+    try:
+        pk = int(pk)
+    except (ValueError, TypeError):
+        messages.error(request, "ID de item da fila inválido.")
+        return redirect('printing:fila-lista')
+        
     item = get_object_or_404(FilaImpressao, pk=pk)
     
     if request.method == 'POST':
         novo_status = request.POST.get('status')
-        if novo_status in ['aguardando', 'imprimindo', 'concluido', 'erro', 'cancelado']:
-            item.status = novo_status
-            if novo_status == 'imprimindo':
-                item.iniciado_em = timezone.now()
-            elif novo_status == 'concluido':
-                item.concluido_em = timezone.now()
-                try:
+        current_status = item.status
+        
+        valid_transitions = {
+            'aguardando': ['imprimindo', 'cancelado'],
+            'imprimindo': ['concluido', 'erro', 'cancelado'],
+            'erro': ['imprimindo', 'cancelado'],
+            'concluido': [],
+            'cancelado': [],
+        }
+        
+        if novo_status not in valid_transitions.get(current_status, []):
+            messages.error(
+                request, 
+                f"Transição de status inválida: não é permitido mudar de '{item.get_status_display()}' para '{novo_status}'."
+            )
+            return redirect('printing:fila-lista')
+            
+        try:
+            with transaction.atomic():
+                item.status = novo_status
+                if novo_status == 'imprimindo':
+                    item.iniciado_em = timezone.now()
+                elif novo_status == 'concluido':
+                    item.concluido_em = timezone.now()
                     PedidoService.marcar_como_impresso(item.pedido)
-                except Exception as e:
-                    messages.error(request, f"Erro ao atualizar status do pedido: {str(e)}")
-            item.save()
+                item.save()
             messages.success(request, f"Status da fila atualizado para: {item.get_status_display()}")
+        except Exception as e:
+            messages.error(request, f"Erro ao atualizar status da fila/pedido: {str(e)}")
             
     return redirect('printing:fila-lista')

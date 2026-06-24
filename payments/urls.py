@@ -3,7 +3,9 @@ from rest_framework.routers import DefaultRouter
 from .views import PaymentViewSet, payment_list_view, payment_detail_view, simular_pagamento_view
 
 router = DefaultRouter()
-router.register(r"payments", PaymentViewSet, basename="payments")
+router.register(r"payments", PaymentViewSet, basename="api-payments")
+
+app_name = "payments"
 
 urlpatterns = [
     # Rotas HTML (templates)

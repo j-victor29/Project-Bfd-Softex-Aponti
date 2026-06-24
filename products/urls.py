@@ -3,7 +3,7 @@ from rest_framework.routers import DefaultRouter
 from .views import ProdutoViewSet, produto_list_view, produto_detail_view
 
 router = DefaultRouter()
-router.register(r'produtos', ProdutoViewSet, basename='produto')
+router.register(r'produtos', ProdutoViewSet, basename='api-produto')
 
 urlpatterns = [
     # Rotas HTML (templates)

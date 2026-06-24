@@ -13,7 +13,7 @@ from .views import (
 app_name = 'printing'
 
 router = DefaultRouter()
-router.register(r'impressoras', ImpressoraViewSet, basename='impressora')
+router.register(r'impressoras', ImpressoraViewSet, basename='api-impressora')
 
 urlpatterns = [
     # HTML Templates

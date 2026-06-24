@@ -15,9 +15,9 @@ from .views import (
 )
 
 router = DefaultRouter()
-router.register(r'colecoes', ColecaoViewSet, basename='colecao')
-router.register(r'artes', ArteViewSet, basename='arte')
-router.register(r'personalizacoes', PersonalizacaoViewSet, basename='personalizacao')
+router.register(r'artes', ArteViewSet, basename='api-arte')
+router.register(r'colecoes', ColecaoViewSet, basename='api-colecao')
+router.register(r'personalizacoes', PersonalizacaoViewSet, basename='api-personalizacao')
 
 urlpatterns = [
     # Página inicial (API Root)

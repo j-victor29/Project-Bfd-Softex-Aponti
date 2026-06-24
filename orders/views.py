@@ -279,57 +279,89 @@ def order_detail_html(request, pk):
 
 @login_required
 def criar_pedido_do_item_view(request):
+    from django.contrib import messages
+    from django.db import transaction
+    
     personalizacao_id = request.GET.get('personalizacao')
+    if not personalizacao_id:
+        messages.error(request, "Identificador de personalização não informado.")
+        return redirect('produto-list')
+        
+    try:
+        personalizacao_id = int(personalizacao_id)
+    except (ValueError, TypeError):
+        messages.error(request, "Identificador de personalização inválido.")
+        return redirect('produto-list')
+        
     from creations.models import Personalizacao
     personalizacao = get_object_or_404(Personalizacao, id=personalizacao_id)
     
-    # Check that the user owns the customization (or just create the order)
-    # Since Personalizacao does not have a user field directly, we trust the flow.
+    # Evita duplicidade se o usuário já tem um pedido em aberto (criado) contendo essa personalização
+    pedido_existente = Pedido.objects.filter(
+        usuario=request.user,
+        status_pedido='criado',
+        itens__personalizacao_id=personalizacao.id
+    ).first()
+    if pedido_existente:
+        return redirect('orders:pedido-detail', pk=pedido_existente.id)
+        
     artista = personalizacao.arte.artista
     
-    # Ensure artist is active (simulated fallback)
-    if not artista.ativa: # type: ignore
-        artista.ativa = True
-        artista.save()
+    with transaction.atomic():
+        # Ensure artist is active (simulated fallback)
+        if not artista.ativo: # type: ignore
+            artista.ativo = True
+            artista.save()
 
-    pedido = PedidoService.criar_pedido(request.user, artista)
-    
-    preco_unitario = personalizacao.produto.preco_base + personalizacao.preco_extra
-    PedidoService.adicionar_item(
-        pedido=pedido,
-        produto=personalizacao.produto,
-        personalizacao=personalizacao,
-        quantidade=1,
-        preco_unitario=preco_unitario
-    )
+        pedido = PedidoService.criar_pedido(request.user, artista)
+        
+        preco_unitario = personalizacao.produto.preco_base + personalizacao.preco_extra
+        PedidoService.adicionar_item(
+            pedido=pedido,
+            produto=personalizacao.produto,
+            personalizacao=personalizacao,
+            quantidade=1,
+            preco_unitario=preco_unitario
+        )
     
     return redirect('orders:pedido-detail', pk=pedido.id)
 
 
 @login_required
 def enviar_impressao_view(request, pk):
+    from django.db import transaction
+    from django.contrib import messages
+    
+    try:
+        pk = int(pk)
+    except (ValueError, TypeError):
+        messages.error(request, "ID de pedido inválido.")
+        return redirect('orders:pedido-list')
+        
     pedido = get_object_or_404(Pedido, pk=pk, usuario=request.user)
     
     if pedido.status_pedido != 'pago':
-        from django.contrib import messages
         messages.error(request, "Apenas pedidos pagos podem ser enviados para a fila de impressão.")
         return redirect('orders:pedido-detail', pk=pedido.id)
         
     from printing.models import FilaImpressao
     if hasattr(pedido, 'fila_impressao'):
-        from django.contrib import messages
         messages.warning(request, "Este pedido já está na fila de impressão.")
         return redirect('orders:pedido-detail', pk=pedido.id)
         
-    FilaImpressao.objects.create(
-        pedido=pedido,
-        status='aguardando',
-        prioridade=0
-    )
+    with transaction.atomic():
+        # Double check inside transaction locks
+        if FilaImpressao.objects.filter(pedido=pedido).exists():
+            messages.warning(request, "Este pedido já está na fila de impressão.")
+            return redirect('orders:pedido-detail', pk=pedido.id)
+            
+        FilaImpressao.objects.create(
+            pedido=pedido,
+            status='aguardando',
+            prioridade=0
+        )
+        PedidoService.enviar_para_producao(pedido)
     
-    PedidoService.enviar_para_producao(pedido)
-    
-    from django.contrib import messages
     messages.success(request, "Pedido enviado com sucesso para a fila de impressão!")
     return redirect('orders:pedido-detail', pk=pedido.id)
 

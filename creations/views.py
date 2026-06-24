@@ -155,10 +155,23 @@ def personalizacao_list_view(request):
 
 @login_required
 def personalizacao_criar_view(request):
+    from django.contrib import messages
+    from products.models import Produto
+    
     produto_id = request.GET.get('produto')
     arte_id = request.GET.get('arte')
     
-    from products.models import Produto
+    if not produto_id or not arte_id:
+        messages.error(request, "Produto e Arte devem ser especificados.")
+        return redirect('produto-list') # Or fallback URL
+        
+    try:
+        produto_id = int(produto_id)
+        arte_id = int(arte_id)
+    except ValueError:
+        messages.error(request, "Identificadores de Produto ou Arte inválidos.")
+        return redirect('produto-list')
+
     produto = get_object_or_404(Produto, id=produto_id, ativo=True)
     arte = get_object_or_404(Arte, id=arte_id, ativa=True)
     
@@ -170,6 +183,9 @@ def personalizacao_criar_view(request):
 
 @login_required
 def personalizacao_salvar_view(request):
+    from django.contrib import messages
+    from products.models import Produto
+    
     if request.method == 'POST':
         produto_id = request.POST.get('produto_id')
         arte_id = request.POST.get('arte_id')
@@ -178,13 +194,25 @@ def personalizacao_salvar_view(request):
         cor = request.POST.get('cor', '')
         preco_extra_str = request.POST.get('preco_extra', '0')
         
-        from products.models import Produto
+        if not produto_id or not arte_id:
+            messages.error(request, "Dados insuficientes para criar personalização.")
+            return redirect('produto-list')
+            
+        try:
+            produto_id = int(produto_id)
+            arte_id = int(arte_id)
+        except ValueError:
+            messages.error(request, "Identificadores inválidos.")
+            return redirect('produto-list')
+            
         produto = get_object_or_404(Produto, id=produto_id, ativo=True)
         arte = get_object_or_404(Arte, id=arte_id, ativa=True)
         
         from decimal import Decimal
         try:
             preco_extra = Decimal(preco_extra_str)
+            if preco_extra < 0:
+                preco_extra = Decimal('0.00')
         except:
             preco_extra = Decimal('0.00')
             
