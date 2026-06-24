@@ -60,7 +60,7 @@ INSTALLED_APPS = [
     'payments',
     'gamification',
     'printing',
-    
+    'cart',
 ]
 
 MIDDLEWARE = [

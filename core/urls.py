@@ -34,6 +34,7 @@ urlpatterns = [
     path('gamification/', include('gamification.urls')),
     path('users/', include('users.urls')),
     path('printing/', include('printing.urls')),
+    path('carrinho/', include('cart.urls')),
 ]
 
 # Servir media files em desenvolvimento

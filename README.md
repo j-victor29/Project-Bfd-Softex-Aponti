@@ -43,17 +43,19 @@
 ## 🔄 Fluxo Principal do MVP
 
 ```
-Produto → Arte → Personalização → Pedido → Pagamento Simulado → Fila de Impressão → Produção → Impresso
+Produto → Arte → Personalização → Carrinho → Pedido → Pagamento Simulado → Fila de Impressão → Produção → Impresso
 ```
 
 1. **Produto** – Cliente escolhe o modelo de capinha em `/products/`
 2. **Arte** – Cliente escolhe uma arte de um artista em `/creations/artes/`
 3. **Personalização** – Cliente adiciona texto, fonte e cor em `/creations/personalizar/`
-4. **Pedido** – Sistema cria automaticamente um pedido para a personalização
-5. **Pagamento** – Cliente simula o pagamento em `/payments/pagar/<id>/`
-6. **Fila de Impressão** – Pedido pago é enviado para `/printing/fila/`
-7. **Produção** – Staff inicia e conclui a impressão
-8. **Impresso** – Pedido muda para status `impresso`
+4. **Carrinho** – A personalização é adicionada ao carrinho de compras em `/carrinho/`
+5. **Pedido** – Ao finalizar o carrinho, o sistema cria o pedido correspondente
+6. **Pagamento** – Cliente simula o pagamento em `/payments/pagar/<id>/`
+7. **Fila de Impressão** – Pedido pago é enviado para `/printing/fila/`
+8. **Produção** – Staff inicia e conclui a impressão
+9. **Impresso** – Pedido muda para status `impresso`
+
 
 ---
 
@@ -149,6 +151,7 @@ python manage.py test
 # Testes por app específico
 python manage.py test products
 python manage.py test creations
+python manage.py test cart
 python manage.py test orders
 python manage.py test payments
 python manage.py test printing
@@ -183,6 +186,11 @@ python manage.py makemigrations --check
 | `/creations/colecoes/` | Lista de coleções | Não |
 | `/creations/personalizar/` | Criar personalização | **Sim** |
 | `/creations/personalizar/salvar/` | Salvar personalização (POST) | **Sim** |
+| `/carrinho/` | Visualizar carrinho | **Sim** |
+| `/carrinho/adicionar/<personalizacao_id>/` | Adicionar personalização ao carrinho | **Sim** |
+| `/carrinho/atualizar/<item_id>/` | Atualizar quantidade (POST) | **Sim** |
+| `/carrinho/remover/<item_id>/` | Remover item | **Sim** |
+| `/carrinho/finalizar/` | Finalizar carrinho e criar pedido | **Sim** |
 | `/orders/` | Lista de pedidos do usuário | **Sim** |
 | `/orders/<id>/` | Detalhe do pedido | **Sim** |
 | `/orders/criar-do-item/` | Criar pedido da personalização | **Sim** |
@@ -198,6 +206,8 @@ python manage.py makemigrations --check
 
 | Rota | Descrição |
 |---|---|
+| `/carrinho/api/carrinho/` | Ver/finalizar carrinho atual |
+| `/carrinho/api/itens/` | CRUD dos itens do carrinho |
 | `/products/api/produtos/` | CRUD de produtos |
 | `/creations/api/artes/` | CRUD de artes |
 | `/creations/api/colecoes/` | CRUD de coleções |
@@ -239,49 +249,58 @@ Siga este roteiro para validar o fluxo completo do MVP:
 **3.** Escolha uma arte e clique **"Personalizar com esta Arte"**
 - Deve abrir o formulário de personalização
 
-**4.** Preencha texto, fonte e cor e clique **"Salvar Personalização"**
-- Deve criar a personalização e redirecionar para o detalhe do pedido
+**4.** Preencha texto, fonte e cor e clique **"Salvar e Criar Pedido"** (ou Adicionar ao Carrinho)
+- Deve criar a personalização, adicioná-la ao carrinho de compras e redirecionar para a tela do carrinho (`/carrinho/`)
+- Deve exibir a mensagem de sucesso: *"Personalização adicionada ao carrinho com sucesso."*
 
-**5.** Verifique o **detalhe do pedido** (`/orders/<id>/`)
+**5.** Na tela do carrinho (`/carrinho/`):
+- Altere a quantidade de um item e clique no botão de atualizar (ícone de recarregar). Verifique se o subtotal e o total foram recalculados
+- Se quiser, adicione outra personalização para ver ambos os itens juntos no carrinho
+- Clique em **"Finalizar Pedido"**
+- Deve criar o pedido correspondente e redirecionar para o detalhe do pedido (`/orders/<id>/`)
+
+**6.** Verifique o **detalhe do pedido** (`/orders/<id>/`)
 - Status deve ser `Criado`
-- Item do pedido deve exibir o produto e arte corretos
+- Itens do pedido devem exibir os produtos e artes corretos
 
-**6.** Clique em **"Pagar"** e vá para a tela de pagamento (`/payments/pagar/<id>/`)
-- Deve exibir o valor do pedido e opções de método
+**7.** Clique em **"Pagar"** e vá para a tela de pagamento (`/payments/pagar/<id>/`)
+- Deve exibir o valor total do pedido e opções de método
 
-**7.** Selecione **PIX** e clique **"Confirmar Pagamento"**
-- Deve redirecionar para detalhe do pedido
-- Status deve mudar para `Pago`
+**8.** Selecione **PIX** e clique **"Confirmar Pagamento"**
+- Deve redirecionar para o detalhe do pedido com status `Pago`
 
-**8.** Clique em **"Enviar para Impressão"**
+**9.** Clique em **"Enviar para Impressão"**
 - Deve criar uma entrada na fila de impressão
 - Status do pedido muda para `Em Produção`
 
 ### Fluxo do Staff
 
-**9.** Faça logout e login com `staff@capinha.com` / `capinha123`
+**10.** Faça logout e login com `staff@capinha.com` / `capinha123`
 
-**10.** Acesse `http://127.0.0.1:8000/printing/fila/`
+**11.** Acesse `http://127.0.0.1:8000/printing/fila/`
 - Deve ver o pedido na fila com status `Aguardando`
 
-**11.** Clique em **"Iniciar Produção"** (status → `imprimindo`)
+**12.** Clique em **"Iniciar Produção"** (status → `imprimindo`)
 - O campo `iniciado_em` deve ser preenchido
 
-**12.** Clique em **"Concluir Impressão"** (status → `concluído`)
+**13.** Clique em **"Concluir Impressão"** (status → `concluído`)
 - O campo `concluido_em` deve ser preenchido
 
-**13.** Volte ao detalhe do pedido (`/orders/<id>/`)
+**14.** Volte ao detalhe do pedido (`/orders/<id>/`)
 - Status do pedido deve ser `Impresso` ✅
 
 ### Validações de Segurança
 
-**14.** Tente acessar `/printing/fila/` com usuário comum
+**15.** Tente acessar `/printing/fila/` com usuário comum
 - Deve receber **403 Forbidden**
 
-**15.** Tente acessar `/orders/<id>/` de outro usuário
+**16.** Tente acessar `/orders/<id>/` de outro usuário
 - Deve receber **404 Not Found**
 
-**16.** Tente acessar `/creations/personalizar/` sem login
+**17.** Tente acessar `/creations/personalizar/` sem login
+- Deve ser redirecionado para `/login/`
+
+**18.** Tente acessar `/carrinho/` sem login
 - Deve ser redirecionado para `/login/`
 
 ---
@@ -294,17 +313,17 @@ Siga este roteiro para validar o fluxo completo do MVP:
 | Catálogo de produtos | ✅ Completo |
 | Galeria de artes e coleções | ✅ Completo |
 | Sistema de personalização | ✅ Completo |
+| Carrinho de compras | ✅ Completo |
 | Criação e gestão de pedidos | ✅ Completo |
 | Simulação de pagamentos | ✅ Completo |
 | Fila de impressão | ✅ Completo |
 | Proteção de rotas e permissões | ✅ Completo |
 | Prevenção de pedidos duplicados | ✅ Completo |
-| Testes automatizados (35+) | ✅ Completo |
+| Testes automatizados (45+) | ✅ Completo |
 | Seed de dados de demonstração | ✅ Completo |
 | Painel administrativo (admin) | ✅ Completo |
 | Sistema de gamificação | 🔄 Em desenvolvimento |
 | Painel do artista | 🔜 Futuro |
-| Carrinho de compras | 🔜 Futuro |
 
 ---
 

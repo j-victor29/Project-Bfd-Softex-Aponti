@@ -148,6 +148,56 @@ class Command(BaseCommand):
         )
         self._log("Personalização: iPhone 15 + Flores do Campo + 'João Silva'", created)
 
+        # ─── 5b. Carrinho de Compras ───────────────────────────────────────────
+        self.stdout.write("\n🛒 Criando carrinhos de compras...")
+        from cart.models import Carrinho, ItemCarrinho
+
+        # Carrinho aberto para o cliente comum
+        carrinho_aberto, created = Carrinho.objects.get_or_create(
+            usuario=usuario_comum,
+            status="aberto",
+        )
+        if created:
+            # Criar uma personalização extra para o carrinho
+            pers_cart = Personalizacao.objects.create(
+                produto=produtos[1],
+                arte=artes[1],
+                texto="Meu Carrinho",
+                fonte="Courier New",
+                cor="#ff00ff",
+                preco_extra=Decimal("10.00")
+            )
+            # Adicionar item ao carrinho
+            ItemCarrinho.objects.create(
+                carrinho=carrinho_aberto,
+                personalizacao=pers_cart,
+                quantidade=2,
+                preco_unitario=produtos[1].preco_base + pers_cart.preco_extra
+            )
+        self._log(f"Carrinho aberto para cliente@capinha.com (Total: R$ {carrinho_aberto.total:.2f})", created)
+
+        # Carrinho finalizado para o staff
+        carrinho_finalizado, created = Carrinho.objects.get_or_create(
+            usuario=usuario_staff,
+            status="finalizado",
+        )
+        if created:
+            pers_cart_finalizado = Personalizacao.objects.create(
+                produto=produtos[2],
+                arte=artes[2],
+                texto="Finalizado",
+                fonte="Arial",
+                cor="#000000"
+            )
+            ItemCarrinho.objects.create(
+                carrinho=carrinho_finalizado,
+                personalizacao=pers_cart_finalizado,
+                quantidade=1,
+                preco_unitario=produtos[2].preco_base + pers_cart_finalizado.preco_extra
+            )
+        self._log(f"Carrinho finalizado para staff@capinha.com", created)
+
+
         # ─── 6. Impressora ─────────────────────────────────────────────────────
         self.stdout.write("\n🖨️  Criando impressora...")
         from printing.models import Impressora

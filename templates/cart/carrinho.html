@@ -1,0 +1,140 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Meu Carrinho - Capinha{% endblock %}
+
+{% block content %}
+<div class="container my-5">
+    <div class="row">
+        <div class="col-12">
+            <!-- Messages -->
+            {% if messages %}
+                {% for message in messages %}
+                    <div class="alert alert-{% if message.tags == 'error' %}danger{% else %}{{ message.tags }}{% endif %} alert-dismissible fade show bg-dark text-light border-secondary" role="alert">
+                        {{ message }}
+                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                {% endfor %}
+            {% endif %}
+
+            <div class="glass-card p-4" style="background: rgba(22, 28, 45, 0.7); backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 16px;">
+                <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-3">
+                    <div>
+                        <h1 class="h2 mb-1" style="background: var(--primary-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; font-weight: 800;">Meu Carrinho</h1>
+                        <p class="text-muted mb-0">Olá, <strong>{{ request.user.nome }}</strong>. Gerencie suas personalizações antes de fechar o pedido.</p>
+                    </div>
+                    <div>
+                        <span class="badge bg-secondary py-2 px-3 fs-6">Status: {{ carrinho.get_status_display }}</span>
+                    </div>
+                </div>
+
+                <hr class="border-secondary mb-4">
+
+                {% if carrinho.itens.exists %}
+                    <div class="table-responsive mb-4">
+                        <table class="table table-dark table-hover align-middle border-secondary" style="background: transparent;">
+                            <thead>
+                                <tr class="text-muted border-secondary">
+                                    <th>Produto & Arte</th>
+                                    <th>Personalização</th>
+                                    <th style="width: 150px;">Quantidade</th>
+                                    <th class="text-end">Preço Unitário</th>
+                                    <th class="text-end">Subtotal</th>
+                                    <th class="text-center" style="width: 100px;">Ações</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for item in carrinho.itens.all %}
+                                    <tr class="border-secondary">
+                                        <td>
+                                            <div class="d-flex align-items-center gap-3">
+                                                {% if item.personalizacao.produto.imagem %}
+                                                    <img src="{{ item.personalizacao.produto.imagem.url }}" alt="{{ item.personalizacao.produto.nome }}" class="rounded shadow-sm" style="width: 50px; height: 50px; object-fit: cover;">
+                                                {% else %}
+                                                    <div class="bg-secondary rounded d-flex align-items-center justify-content-center text-light shadow-sm" style="width: 50px; height: 50px;">
+                                                        <i class="fas fa-box"></i>
+                                                    </div>
+                                                {% endif %}
+                                                <div>
+                                                    <div class="fw-bold text-light">{{ item.personalizacao.produto.nome }}</div>
+                                                    <div class="text-muted small">Arte: {{ item.personalizacao.arte.nome }} (por {{ item.personalizacao.arte.artista.nome_artistico }})</div>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="small">
+                                                {% if item.personalizacao.texto %}
+                                                    <div><strong>Texto:</strong> "{{ item.personalizacao.texto }}"</div>
+                                                    <div><strong>Fonte:</strong> {{ item.personalizacao.fonte }}</div>
+                                                    <div><strong>Cor:</strong> <span class="badge" style="background-color: {{ item.personalizacao.cor }}; border: 1px solid rgba(255,255,255,0.2);">{{ item.personalizacao.cor }}</span></div>
+                                                {% else %}
+                                                    <span class="text-muted">Apenas a Arte (Sem texto)</span>
+                                                {% endif %}
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <form action="{% url 'cart:carrinho-atualizar' item.id %}" method="post" class="d-flex align-items-center gap-2">
+                                                {% csrf_token %}
+                                                <input type="number" name="quantidade" value="{{ item.quantidade }}" min="1" class="form-control form-control-sm bg-dark text-light border-secondary text-center" style="width: 70px;" required>
+                                                <button type="submit" class="btn btn-sm btn-outline-primary" title="Atualizar quantidade">
+                                                    <i class="fas fa-sync-alt"></i>
+                                                </button>
+                                            </form>
+                                        </td>
+                                        <td class="text-end text-light">R$ {{ item.preco_unitario|floatformat:2 }}</td>
+                                        <td class="text-end fw-bold text-light">R$ {{ item.subtotal|floatformat:2 }}</td>
+                                        <td class="text-center">
+                                            <a href="{% url 'cart:carrinho-remover' item.id %}" class="btn btn-sm btn-danger" onclick="return confirm('Deseja realmente remover este item?')" title="Remover item">
+                                                <i class="fas fa-trash-alt"></i>
+                                            </a>
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <!-- Cart Footer Totals and Actions -->
+                    <div class="row justify-content-between align-items-start gap-4">
+                        <div class="col-md-6">
+                            <a href="{% url 'produto-list' %}" class="btn btn-secondary mb-3">
+                                <i class="fas fa-arrow-left me-2"></i> Continuar Comprando
+                            </a>
+                        </div>
+                        <div class="col-md-5">
+                            <div class="glass-card p-4 rounded" style="background: rgba(255, 255, 255, 0.02); border: 1px solid rgba(255, 255, 255, 0.05);">
+                                <div class="d-flex justify-content-between align-items-center mb-3">
+                                    <span class="text-muted">Total de Itens:</span>
+                                    <span class="fw-bold text-light">{{ carrinho.itens.count }}</span>
+                                </div>
+                                <div class="d-flex justify-content-between align-items-center mb-4">
+                                    <h4 class="mb-0 text-light">Total Geral:</h4>
+                                    <h3 class="mb-0 text-success" style="font-weight: 800;">R$ {{ carrinho.total|floatformat:2 }}</h3>
+                                </div>
+                                <div class="d-grid">
+                                    <a href="{% url 'cart:carrinho-finalizar' %}" class="btn btn-primary btn-lg">
+                                        <i class="fas fa-check-double me-2"></i> Finalizar Pedido
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                {% else %}
+                    <!-- Empty Cart State -->
+                    <div class="text-center py-5">
+                        <div class="text-muted mb-4">
+                            <i class="fas fa-shopping-basket fa-4x text-muted" style="opacity: 0.5;"></i>
+                        </div>
+                        <h3 class="text-light">Seu carrinho está vazio</h3>
+                        <p class="text-muted">Você ainda não adicionou nenhuma capinha personalizada ao seu carrinho.</p>
+                        <a href="{% url 'produto-list' %}" class="btn btn-primary mt-3 btn-lg">
+                            <i class="fas fa-magic me-2"></i> Personalizar um Produto
+                        </a>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

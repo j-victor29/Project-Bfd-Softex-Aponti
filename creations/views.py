@@ -225,8 +225,8 @@ def personalizacao_salvar_view(request):
             preco_extra=preco_extra
         )
         
-        # Redirecionar para a criação de pedido no app orders
-        return redirect(f"/orders/criar-do-item/?personalizacao={personalizacao.id}")
+        # Redirecionar para adicionar ao carrinho
+        return redirect('cart:carrinho-adicionar', personalizacao_id=personalizacao.id)
     
     return redirect('produto-list')
 
