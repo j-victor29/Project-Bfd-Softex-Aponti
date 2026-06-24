@@ -110,11 +110,45 @@
                                     </td>
                                     <td>{{ item.criado_em|date:"d/m/Y H:i" }}</td>
                                     <td>
-                                        {% if item.observacoes %}
-                                            <button class="btn btn-sm btn-info" data-bs-toggle="tooltip" title="{{ item.observacoes }}">
-                                                <i class="fas fa-sticky-note"></i>
-                                            </button>
-                                        {% endif %}
+                                        <div class="d-flex gap-1 align-items-center">
+                                            {% if item.status == 'aguardando' %}
+                                                <form action="{% url 'printing:fila-status-update' item.id %}" method="post" class="d-inline">
+                                                    {% csrf_token %}
+                                                    <input type="hidden" name="status" value="imprimindo">
+                                                    <button type="submit" class="btn btn-sm btn-info text-white">
+                                                        <i class="fas fa-play"></i> Iniciar
+                                                    </button>
+                                                </form>
+                                            {% elif item.status == 'imprimindo' %}
+                                                <form action="{% url 'printing:fila-status-update' item.id %}" method="post" class="d-inline">
+                                                    {% csrf_token %}
+                                                    <input type="hidden" name="status" value="concluido">
+                                                    <button type="submit" class="btn btn-sm btn-success">
+                                                        <i class="fas fa-check"></i> Concluir
+                                                    </button>
+                                                </form>
+                                                <form action="{% url 'printing:fila-status-update' item.id %}" method="post" class="d-inline">
+                                                    {% csrf_token %}
+                                                    <input type="hidden" name="status" value="erro">
+                                                    <button type="submit" class="btn btn-sm btn-danger">
+                                                        <i class="fas fa-exclamation-triangle"></i> Erro
+                                                    </button>
+                                                </form>
+                                            {% elif item.status == 'erro' %}
+                                                <form action="{% url 'printing:fila-status-update' item.id %}" method="post" class="d-inline">
+                                                    {% csrf_token %}
+                                                    <input type="hidden" name="status" value="aguardando">
+                                                    <button type="submit" class="btn btn-sm btn-secondary">
+                                                        <i class="fas fa-redo"></i> Tentar Novamente
+                                                    </button>
+                                                </form>
+                                            {% endif %}
+                                            {% if item.observacoes %}
+                                                <button class="btn btn-sm btn-outline-info" data-bs-toggle="tooltip" title="{{ item.observacoes }}">
+                                                    <i class="fas fa-sticky-note"></i>
+                                                </button>
+                                            {% endif %}
+                                        </div>
                                     </td>
                                 </tr>
                             {% endfor %}

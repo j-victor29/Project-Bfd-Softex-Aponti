@@ -1,4 +1,5 @@
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render, get_object_or_404, redirect
+from django.contrib.auth.decorators import login_required
 from rest_framework import viewsets, status
 from rest_framework.decorators import action
 from rest_framework.response import Response
@@ -38,3 +39,45 @@ def payment_list_view(request):
 def payment_detail_view(request, pk):
     payment = get_object_or_404(Payment, pk=pk)
     return render(request, 'payments/payment_detail.html', {'payment': payment})
+
+
+@login_required
+def simular_pagamento_view(request, pedido_id):
+    from orders.models import Pedido
+    from orders.services import PedidoService
+    from django.contrib import messages
+    
+    pedido = get_object_or_404(Pedido, id=pedido_id, usuario=request.user)
+    
+    if pedido.status_pedido == 'pago':
+        messages.warning(request, "Este pedido já foi pago.")
+        return redirect('orders:pedido-detail', pk=pedido.id)
+        
+    if request.method == 'POST':
+        method = request.POST.get('method', 'pix')
+        
+        # Criar registro de Payment
+        payment, created = Payment.objects.get_or_create(
+            pedido=pedido,
+            defaults={
+                'usuario': request.user,
+                'amount': pedido.valor_total,
+                'method': method,
+                'status': 'paid',
+                'paid_at': now()
+            }
+        )
+        if not created:
+            payment.status = 'paid'
+            payment.paid_at = now()
+            payment.save()
+            
+        # Atualizar status do pedido no serviço
+        PedidoService.confirmar_pagamento(pedido, forma_pagamento=method, status_pagamento='confirmado')
+        
+        messages.success(request, "Pagamento confirmado com sucesso!")
+        return redirect('orders:pedido-detail', pk=pedido.id)
+        
+    return render(request, 'payments/simular_pagamento.html', {
+        'pedido': pedido,
+    })

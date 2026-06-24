@@ -169,3 +169,5 @@ REST_FRAMEWORK = {
 
 # Configura redirecionamento para página de login HTML do aplicativo
 LOGIN_URL = 'login'
+LOGIN_REDIRECT_URL = 'home'
+LOGOUT_REDIRECT_URL = 'home'

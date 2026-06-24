@@ -1,0 +1,72 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Simular Pagamento - Pedido #{{ pedido.id }}{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="glass-card p-4" style="background: rgba(255, 255, 255, 0.05); backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 15px;">
+                <h2 class="text-gradient mb-3"><i class="fas fa-credit-card me-2"></i> Simular Pagamento</h2>
+                <p class="text-muted small">Este é um ambiente simulado para concluir a transação do seu pedido.</p>
+                <hr class="border-secondary">
+
+                <div class="mb-4 text-light">
+                    <div class="d-flex justify-content-between mb-2">
+                        <span><strong>Pedido:</strong></span>
+                        <span>#{{ pedido.id }}</span>
+                    </div>
+                    <div class="d-flex justify-content-between mb-2">
+                        <span><strong>Cliente:</strong></span>
+                        <span>{{ pedido.usuario.nome }}</span>
+                    </div>
+                    <div class="d-flex justify-content-between mb-2">
+                        <span><strong>Itens:</strong></span>
+                        <span>{{ pedido.itens.count }}</span>
+                    </div>
+                    <div class="d-flex justify-content-between mt-3 p-2 bg-dark rounded">
+                        <span class="text-success font-weight-bold"><strong>Total a Pagar:</strong></span>
+                        <span class="text-success font-weight-bold"><strong>R$ {{ pedido.valor_total|floatformat:2 }}</strong></span>
+                    </div>
+                </div>
+
+                <form method="post">
+                    {% csrf_token %}
+                    <h5 class="text-light mb-3">Selecione o método de pagamento simulado:</h5>
+                    
+                    <div class="form-check p-3 rounded mb-3 border border-secondary bg-dark text-light" style="cursor: pointer;">
+                        <input class="form-check-input ms-1" type="radio" name="method" id="method_pix" value="pix" checked>
+                        <label class="form-check-label ms-3" for="method_pix">
+                            <i class="fab fa-pix text-success me-2"></i> <strong>PIX Simulado</strong>
+                        </label>
+                    </div>
+
+                    <div class="form-check p-3 rounded mb-3 border border-secondary bg-dark text-light" style="cursor: pointer;">
+                        <input class="form-check-input ms-1" type="radio" name="method" id="method_cc" value="credit_card">
+                        <label class="form-check-label ms-3" for="method_cc">
+                            <i class="fas fa-credit-card text-primary me-2"></i> <strong>Cartão de Crédito Simulado</strong>
+                        </label>
+                    </div>
+
+                    <div class="form-check p-3 rounded mb-4 border border-secondary bg-dark text-light" style="cursor: pointer;">
+                        <input class="form-check-input ms-1" type="radio" name="method" id="method_db" value="debit_card">
+                        <label class="form-check-label ms-3" for="method_db">
+                            <i class="fas fa-credit-card text-info me-2"></i> <strong>Cartão de Débito Simulado</strong>
+                        </label>
+                    </div>
+
+                    <div class="d-grid gap-2">
+                        <button type="submit" class="btn btn-success btn-lg">
+                            <i class="fas fa-check-circle"></i> Confirmar Pagamento Simulado
+                        </button>
+                        <a href="{% url 'orders:pedido-detail' pedido.id %}" class="btn btn-outline-secondary">
+                            Cancelar e Voltar
+                        </a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -9,7 +9,7 @@ class TipouserAdmin(admin.ModelAdmin):
 
 @admin.register(user)
 class UserAdmin(admin.ModelAdmin):
-    list_display = ('id', 'email', 'nome','senha', 'is_active', 'is_staff')
+    list_display = ('id', 'email', 'nome', 'is_active', 'is_staff', 'data_cadastro')
     list_filter = ('is_active', 'is_staff', 'tipo_usuario')
     search_fields = ('email', 'nome')
 

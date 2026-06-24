@@ -18,10 +18,10 @@ class UsuarioRecompensaSerializer(serializers.ModelSerializer):
         fields = [
             'id',
             'usuario',
-            'recompensa',
-            'data_recompensa',
+            'badge',
+            'data_desbloqueio',
         ]
-        read_only_fields = ['data_recompensa']
+        read_only_fields = ['data_desbloqueio']
 
 
 class RankingSerializer(serializers.ModelSerializer):

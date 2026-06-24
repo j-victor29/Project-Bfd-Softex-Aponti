@@ -93,9 +93,16 @@
                             </div>
 
                             <!-- Botão -->
-                            <button class="btn btn-outline-primary w-100" disabled style="opacity: 0.5;">
-                                <i class="fas fa-eye"></i> Ver Detalhes
-                            </button>
+                            <div class="mt-auto">
+                                <a href="{% url 'produto-detail' produto.id %}" class="btn btn-outline-primary w-100 mb-2">
+                                    <i class="fas fa-eye"></i> Ver Detalhes
+                                </a>
+                                {% if produto.estoque > 0 %}
+                                    <a href="{% url 'arte-list' %}?produto={{ produto.id }}" class="btn btn-primary w-100">
+                                        <i class="fas fa-magic"></i> Personalizar
+                                    </a>
+                                {% endif %}
+                            </div>
                         </div>
                     </div>
                 </div>

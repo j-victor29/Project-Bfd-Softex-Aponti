@@ -1,6 +1,6 @@
 from django.db.models import Q
 from django.views.generic import TemplateView
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required
 from rest_framework import viewsets, status
 from rest_framework.decorators import action
@@ -136,7 +136,7 @@ def impressora_detail_view(request, pk):
 
 @login_required
 def fila_lista_view(request):
-    fila = FilaImpressao.objects.all().order_by('posicao')
+    fila = FilaImpressao.objects.all().order_by('-prioridade', 'criado_em')
     aguardando = fila.filter(status='aguardando').count()
     imprimindo = fila.filter(status='imprimindo').count()
     erro = fila.filter(status='erro').count()
@@ -147,3 +147,29 @@ def fila_lista_view(request):
         'imprimindo': imprimindo,
         'erro': erro,
     })
+
+
+@login_required
+def fila_status_update_view(request, pk):
+    from django.contrib import messages
+    from django.utils import timezone
+    from orders.services import PedidoService
+    
+    item = get_object_or_404(FilaImpressao, pk=pk)
+    
+    if request.method == 'POST':
+        novo_status = request.POST.get('status')
+        if novo_status in ['aguardando', 'imprimindo', 'concluido', 'erro', 'cancelado']:
+            item.status = novo_status
+            if novo_status == 'imprimindo':
+                item.iniciado_em = timezone.now()
+            elif novo_status == 'concluido':
+                item.concluido_em = timezone.now()
+                try:
+                    PedidoService.marcar_como_impresso(item.pedido)
+                except Exception as e:
+                    messages.error(request, f"Erro ao atualizar status do pedido: {str(e)}")
+            item.save()
+            messages.success(request, f"Status da fila atualizado para: {item.get_status_display()}")
+            
+    return redirect('printing:fila-lista')

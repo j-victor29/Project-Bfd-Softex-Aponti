@@ -1,0 +1,121 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Personalizar - {{ produto.nome }}{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="row">
+        <!-- Esquerda: Pré-visualização simples -->
+        <div class="col-lg-6 mb-4">
+            <div class="glass-card p-4 text-center" style="background: rgba(255, 255, 255, 0.05); backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 15px;">
+                <h3 class="mb-4 text-gradient">Pré-visualização</h3>
+                <div class="position-relative mx-auto bg-light rounded shadow-lg overflow-hidden d-flex align-items-center justify-content-center" style="max-width: 350px; height: 500px; border: 4px solid #fff;">
+                    <!-- Imagem do Produto -->
+                    {% if produto.imagem %}
+                        <img src="{{ produto.imagem.url }}" alt="{{ produto.nome }}" class="img-fluid position-absolute w-100 h-100" style="object-fit: cover; opacity: 0.85;">
+                    {% else %}
+                        <div class="text-muted"><i class="fas fa-box fa-3x"></i></div>
+                    {% endif %}
+                    
+                    <!-- Imagem da Arte sobreposta -->
+                    {% if arte.arquivo %}
+                        <img src="{{ arte.arquivo.url }}" alt="{{ arte.nome }}" class="position-absolute" style="max-width: 60%; max-height: 60%; object-fit: contain; z-index: 10; border-radius: 5px; box-shadow: 0 4px 8px rgba(0,0,0,0.3); opacity: 0.9;" id="preview-art">
+                    {% endif %}
+
+                    <!-- Texto dinâmico sobreposto -->
+                    <div class="position-absolute w-100 text-center" style="bottom: 15%; z-index: 15; pointer-events: none;" id="preview-text-container">
+                        <span id="preview-text" style="color: #000; font-size: 1.5rem; font-weight: bold; background: rgba(255,255,255,0.7); padding: 2px 10px; border-radius: 4px; display: none;"></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Direita: Opções de Personalização -->
+        <div class="col-lg-6 mb-4">
+            <div class="glass-card p-4" style="background: rgba(255, 255, 255, 0.05); backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 15px;">
+                <h2 class="text-gradient mb-3">Monte sua Capinha</h2>
+                <p class="text-muted small">Preencha as informações abaixo para criar seu design único.</p>
+                <hr class="border-secondary">
+
+                <div class="mb-3">
+                    <strong>Produto:</strong> <span class="text-light">{{ produto.nome }}</span> <span class="badge bg-primary">R$ {{ produto.preco_base }}</span>
+                </div>
+                <div class="mb-3">
+                    <strong>Arte:</strong> <span class="text-light">{{ arte.nome }}</span> <small class="text-muted">por {{ arte.artista.nome_artistico }}</small>
+                </div>
+
+                <form action="{% url 'personalizacao-salvar' %}" method="post" class="mt-4">
+                    {% csrf_token %}
+                    <input type="hidden" name="produto_id" value="{{ produto.id }}">
+                    <input type="hidden" name="arte_id" value="{{ arte.id }}">
+                    <input type="hidden" name="preco_extra" value="5.00"> <!-- Preço extra simulado para personalização -->
+
+                    <!-- Campo Texto -->
+                    <div class="mb-3">
+                        <label for="id_texto" class="form-label text-light">Nome ou Texto Personalizado (+ R$ 5,00)</label>
+                        <input type="text" name="texto" id="id_texto" class="form-control bg-dark text-light border-secondary" placeholder="Ex: Maria, Amor, 1999" maxlength="50">
+                        <div class="form-text text-muted">Texto opcional impresso no produto.</div>
+                    </div>
+
+                    <!-- Campo Fonte -->
+                    <div class="mb-3">
+                        <label for="id_fonte" class="form-label text-light">Estilo da Fonte</label>
+                        <select name="fonte" id="id_fonte" class="form-select bg-dark text-light border-secondary">
+                            <option value="Arial">Sans-Serif (Arial)</option>
+                            <option value="Georgia">Serif (Georgia)</option>
+                            <option value="Courier New">Monospace (Courier)</option>
+                            <option value="Pacifico">Script / Cursiva (Pacifico)</option>
+                        </select>
+                    </div>
+
+                    <!-- Campo Cor -->
+                    <div class="mb-4">
+                        <label for="id_cor" class="form-label text-light">Cor do Texto</label>
+                        <div class="d-flex align-items-center gap-3">
+                            <input type="color" name="cor" id="id_cor" class="form-control form-control-color bg-dark border-secondary" value="#ffffff" title="Escolha a cor">
+                            <span class="text-muted small">Clique no seletor para escolher.</span>
+                        </div>
+                    </div>
+
+                    <div class="d-grid gap-2">
+                        <button type="submit" class="btn btn-success btn-lg">
+                            <i class="fas fa-check-circle"></i> Salvar e Criar Pedido
+                        </button>
+                        <a href="{% url 'arte-list' %}?produto={{ produto.id }}" class="btn btn-outline-secondary">
+                            <i class="fas fa-arrow-left"></i> Escolher outra arte
+                        </a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const textInput = document.getElementById('id_texto');
+        const fontSelect = document.getElementById('id_fonte');
+        const colorInput = document.getElementById('id_cor');
+        const previewText = document.getElementById('preview-text');
+
+        function updatePreview() {
+            const text = textInput.value.trim();
+            if (text) {
+                previewText.textContent = text;
+                previewText.style.display = 'inline-block';
+                previewText.style.fontFamily = fontSelect.value;
+                previewText.style.color = colorInput.value;
+            } else {
+                previewText.style.display = 'none';
+            }
+        }
+
+        textInput.addEventListener('input', updatePreview);
+        fontSelect.addEventListener('change', updatePreview);
+        colorInput.addEventListener('input', updatePreview);
+    });
+</script>
+{% endblock %}

@@ -10,6 +10,8 @@ from .views import (
     arte_list_view,
     arte_detail_view,
     personalizacao_list_view,
+    personalizacao_criar_view,
+    personalizacao_salvar_view,
 )
 
 router = DefaultRouter()
@@ -27,6 +29,8 @@ urlpatterns = [
     path('artes/', arte_list_view, name='arte-list'),
     path('artes/<int:pk>/', arte_detail_view, name='arte-detail'),
     path('personalizacoes/', personalizacao_list_view, name='personalizacao-list'),
+    path('personalizar/', personalizacao_criar_view, name='personalizacao-criar'),
+    path('personalizar/salvar/', personalizacao_salvar_view, name='personalizacao-salvar'),
     
     # API REST
     path('api/', include(router.urls)),

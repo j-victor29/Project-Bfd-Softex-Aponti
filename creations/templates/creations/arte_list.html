@@ -25,6 +25,7 @@
             <div class="card bg-light">
                 <div class="card-body">
                     <form method="get" class="row g-3">
+                        <input type="hidden" name="produto" value="{{ request.GET.produto|default:'' }}">
                         <div class="col-md-4">
                             <input type="text" name="search" class="form-control" 
                                    placeholder="Buscar arte..." 
@@ -51,6 +52,15 @@
             </div>
         </div>
     </div>
+
+    {% if request.GET.produto %}
+        <div class="alert alert-primary d-flex align-items-center justify-content-between mb-4">
+            <div>
+                <i class="fas fa-magic me-2"></i> Você está personalizando um produto. Escolha uma das artes abaixo para continuar.
+            </div>
+            <a href="{% url 'produto-detail' request.GET.produto %}" class="btn btn-sm btn-outline-primary">Ver Produto</a>
+        </div>
+    {% endif %}
 
     {% if artes %}
         <div class="row">
@@ -102,21 +112,29 @@
                             </div>
 
                             <!-- Botões -->
-                            <div class="btn-group w-100" role="group">
-                                <a href="{% url 'arte-detail' arte.id %}" 
-                                   class="btn btn-sm btn-outline-primary">
-                                    <i class="fas fa-eye"></i> Ver
-                                </a>
-                                {% if user.is_authenticated and user.perfil_artista == arte.artista %}
-                                    <a href="{% url 'arte-update' arte.id %}" 
-                                       class="btn btn-sm btn-outline-warning">
-                                        <i class="fas fa-edit"></i>
-                                    </a>
-                                    <a href="{% url 'arte-delete' arte.id %}" 
-                                       class="btn btn-sm btn-outline-danger">
-                                        <i class="fas fa-trash"></i>
+                            <div class="d-grid gap-2">
+                                {% if request.GET.produto %}
+                                    <a href="{% url 'personalizacao-criar' %}?produto={{ request.GET.produto }}&arte={{ arte.id }}" 
+                                       class="btn btn-success w-100">
+                                        <i class="fas fa-paint-brush"></i> Usar esta arte
                                     </a>
                                 {% endif %}
+                                <div class="btn-group w-100" role="group">
+                                    <a href="{% url 'arte-detail' arte.id %}" 
+                                       class="btn btn-sm btn-outline-primary">
+                                        <i class="fas fa-eye"></i> Ver Detalhes
+                                    </a>
+                                    {% if user.is_authenticated and user.perfil_artista == arte.artista %}
+                                        <a href="{% url 'arte-update' arte.id %}" 
+                                           class="btn btn-sm btn-outline-warning">
+                                            <i class="fas fa-edit"></i>
+                                        </a>
+                                        <a href="{% url 'arte-delete' arte.id %}" 
+                                           class="btn btn-sm btn-outline-danger">
+                                            <i class="fas fa-trash"></i>
+                                        </a>
+                                    {% endif %}
+                                </div>
                             </div>
                         </div>
                     </div>
