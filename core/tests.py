@@ -113,39 +113,39 @@ class NavbarPermissoesTest(TestCase):
     def test_navbar_anonimo_nao_mostra_carrinho(self):
         """Usuário não autenticado não deve ver o link de Carrinho."""
         response = self.client.get(reverse('home'))
-        self.assertNotContains(response, 'Carrinho')
+        self.assertNotContains(response, 'id="nav-carrinho"')
 
     def test_navbar_cliente_mostra_carrinho_e_pedidos(self):
         """Usuário autenticado como cliente deve ver Carrinho e Pedidos."""
         self.client.login(email='cliente_test@capinha.com', password='testpass123')
         response = self.client.get(reverse('home'))
-        self.assertContains(response, 'Carrinho')
-        self.assertContains(response, 'Pedidos')
-        self.assertContains(response, 'Sair')
+        self.assertContains(response, 'id="nav-carrinho"')
+        self.assertContains(response, 'id="nav-pedidos"')
+        self.assertContains(response, 'id="nav-logout"')
 
     def test_navbar_cliente_nao_mostra_painel_artista(self):
         """Usuário cliente sem perfil de artista aprovado não deve ver o link do Painel."""
         self.client.login(email='cliente_test@capinha.com', password='testpass123')
         response = self.client.get(reverse('home'))
-        self.assertNotContains(response, 'Painel do Artista')
+        self.assertNotContains(response, 'id="nav-painel-artista"')
 
     def test_navbar_artista_aprovado_mostra_painel(self):
         """Artista aprovado deve ver o link para o Painel do Artista na navbar."""
         self.client.login(email='artista_test@capinha.com', password='testpass123')
         response = self.client.get(reverse('home'))
-        self.assertContains(response, 'Painel do Artista')
+        self.assertContains(response, 'id="nav-painel-artista"')
 
     def test_navbar_staff_mostra_producao(self):
         """Usuário staff deve ver o menu Produção na navbar."""
         self.client.login(email='staff_test@capinha.com', password='testpass123')
         response = self.client.get(reverse('home'))
-        self.assertContains(response, 'Produção')
+        self.assertContains(response, 'id="navbarPrintingDropdown"')
 
     def test_navbar_cliente_nao_mostra_producao(self):
         """Usuário comum não deve ver o menu Produção."""
         self.client.login(email='cliente_test@capinha.com', password='testpass123')
         response = self.client.get(reverse('home'))
-        self.assertNotContains(response, 'Produção')
+        self.assertNotContains(response, 'id="navbarPrintingDropdown"')
 
 
 class SeedDemoTest(TestCase):

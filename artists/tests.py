@@ -371,8 +371,8 @@ class GerenciamentoArteTest(PainelBaseTestCase):
         self.client.force_login(self.artista_user)
         import tempfile
         from django.core.files.uploadedfile import SimpleUploadedFile
-        with tempfile.NamedTemporaryFile(suffix=".png") as temp_file:
-            img = SimpleUploadedFile("nova_arte.png", b"file_content", content_type="image/png")
+        with tempfile.NamedTemporaryFile(suffix=".gif") as temp_file:
+            img = SimpleUploadedFile("nova_arte.gif", b'GIF89a\x01\x00\x01\x00\x00\x00\x00\x21\xf9\x04\x01\x00\x00\x00\x00\x2c\x00\x00\x00\x00\x01\x00\x01\x00\x00\x02\x02\x4c\x01\x00\x3b', content_type="image/gif")
             data = {
                 'nome': 'Minha Nova Arte Maravilhosa',
                 'descricao': 'Uma arte incrível para capinhas.',
