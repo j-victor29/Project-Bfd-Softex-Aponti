@@ -41,6 +41,12 @@ def adicionar_ao_carrinho_view(request, personalizacao_id):
         status='aberto'
     )
 
+    # Suporta quantidade via query string (ex: ?quantidade=3)
+    try:
+        quantidade = max(1, int(request.GET.get('quantidade', 1)))
+    except (ValueError, TypeError):
+        quantidade = 1
+
     # Verifica se já existe o mesmo item no carrinho
     item_existente = ItemCarrinho.objects.filter(
         carrinho=carrinho,
@@ -48,7 +54,7 @@ def adicionar_ao_carrinho_view(request, personalizacao_id):
     ).first()
 
     if item_existente:
-        item_existente.quantidade += 1
+        item_existente.quantidade += quantidade
         item_existente.save()
     else:
         # Preço unitário = preço base do produto + preço extra da personalização
@@ -56,12 +62,13 @@ def adicionar_ao_carrinho_view(request, personalizacao_id):
         ItemCarrinho.objects.create(
             carrinho=carrinho,
             personalizacao=personalizacao,
-            quantidade=1,
+            quantidade=quantidade,
             preco_unitario=preco_unitario
         )
 
     messages.success(request, "Personalização adicionada ao carrinho com sucesso.")
     return redirect('cart:carrinho-detalhe')
+
 
 
 @login_required

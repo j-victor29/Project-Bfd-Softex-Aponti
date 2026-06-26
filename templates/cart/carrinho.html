@@ -66,12 +66,21 @@
                                                 {% if item.personalizacao.texto %}
                                                     <div><strong>Texto:</strong> "{{ item.personalizacao.texto }}"</div>
                                                     <div><strong>Fonte:</strong> {{ item.personalizacao.fonte }}</div>
-                                                    <div><strong>Cor:</strong> <span class="badge" style="background-color: {{ item.personalizacao.cor }}; border: 1px solid rgba(255,255,255,0.2);">{{ item.personalizacao.cor }}</span></div>
+                                                    <div>
+                                                        <strong>Cor:</strong>
+                                                        <span class="badge" style="background-color: {{ item.personalizacao.cor }}; border: 1px solid rgba(255,255,255,0.2);">{{ item.personalizacao.cor }}</span>
+                                                    </div>
+                                                    <div><strong>Tamanho:</strong> {{ item.personalizacao.tamanho_fonte }}px</div>
+                                                    <div><strong>Posição:</strong> X={{ item.personalizacao.posicao_x }}% / Y={{ item.personalizacao.posicao_y }}%</div>
                                                 {% else %}
                                                     <span class="text-muted">Apenas a Arte (Sem texto)</span>
                                                 {% endif %}
+                                                {% if item.personalizacao.observacoes %}
+                                                    <div class="mt-1 text-muted fst-italic"><i class="fas fa-sticky-note me-1"></i>{{ item.personalizacao.observacoes }}</div>
+                                                {% endif %}
                                             </div>
                                         </td>
+
                                         <td>
                                             <form action="{% url 'cart:carrinho-atualizar' item.id %}" method="post" class="d-flex align-items-center gap-2">
                                                 {% csrf_token %}

@@ -54,9 +54,14 @@ class PersonalizacaoSerializer(serializers.ModelSerializer):
             'id',
             'arte',
             'arte_nome',
+            'produto',
             'texto',
             'fonte',
             'cor',
+            'tamanho_fonte',
+            'posicao_x',
+            'posicao_y',
+            'observacoes',
             'preco_extra',
             'criado_em'
         ]

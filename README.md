@@ -433,3 +433,125 @@ python manage.py test --verbosity=2
 ---
 
 *Projeto desenvolvido como MVP da plataforma Capinha. Todos os pagamentos são simulados e não há integração real com meios de pagamento.*
+
+---
+
+## 🎨 Editor de Personalização
+
+### Descrição
+
+O Editor de Personalização é o coração visual da plataforma. Permite que o cliente veja em tempo real como a capinha vai ficar antes de adicionar ao carrinho.
+
+**URL:** `/creations/personalizar/?produto=<id>&arte=<id>`
+
+### Interface
+
+| Coluna | Conteúdo |
+|---|---|
+| Esquerda | Preview 2D interativo com produto, arte sobreposta e texto dinâmico |
+| Direita | Formulário completo de personalização |
+
+### Campos da Personalização (`Personalizacao`)
+
+| Campo | Tipo | Descrição | Limite |
+|---|---|---|---|
+| `texto` | CharField | Texto personalizado impresso na capinha | max 255 chars |
+| `fonte` | CharField | Família tipográfica do texto | Arial, Georgia, etc. |
+| `cor` | CharField | Cor do texto em formato hexadecimal | `#RRGGBB` ou `#RGB` |
+| `tamanho_fonte` | IntegerField | Tamanho em pixels do texto | 8 a 72 |
+| `posicao_x` | IntegerField | Posição horizontal do texto (%) | 0 a 100 |
+| `posicao_y` | IntegerField | Posição vertical do texto (%) | 0 a 100 |
+| `observacoes` | TextField | Instruções extras para o artista | opcional |
+| `preco_extra` | DecimalField | Valor adicional pela personalização | R$ |
+| `produto` | FK Produto | Produto base da capinha | obrigatório |
+| `arte` | FK Arte | Arte selecionada pelo cliente | obrigatório |
+| `usuario` | FK User | Usuário que criou a personalização | opcional (retrocompat.) |
+
+### Controles do editor
+
+- **Texto:** input de texto livre com preview ao vivo
+- **Fonte:** dropdown com 6 estilos (Arial, Georgia, Courier, Pacifico, Dancing Script, Impact)
+- **Cor:** color picker HTML5 com exibição do código hex
+- **Tamanho (slider):** 8px a 72px com badge de valor
+- **Posição X (slider):** 0% (esquerda) a 100% (direita)
+- **Posição Y (slider):** 0% (topo) a 100% (base)
+- **Observações:** textarea para o artista
+- **Quantidade:** spinner com botões +/−, mínimo 1
+
+### Como testar manualmente
+
+```bash
+# 1. Aplicar migrações
+python manage.py migrate
+
+# 2. Popular dados de demonstração
+python manage.py seed_demo
+
+# 3. Iniciar o servidor
+python manage.py runserver
+
+# 4. Fazer login como cliente
+#    Email: cliente@capinha.com | Senha: capinha123
+
+# 5. Acessar a lista de produtos
+#    http://127.0.0.1:8000/products/
+
+# 6. Escolher um produto → escolher uma arte → editor abre em:
+#    http://127.0.0.1:8000/creations/personalizar/?produto=1&arte=1
+
+# 7. Ajustar sliders, cor, fonte e texto → preview atualiza em tempo real
+
+# 8. Clicar em "Adicionar ao Carrinho" → redireciona para /carrinho/
+```
+
+### Como rodar os testes
+
+```bash
+# Testes do app Creations (inclui editor)
+python manage.py test creations --verbosity=2
+
+# Testes do app Cart (inclui quantidade)
+python manage.py test cart --verbosity=2
+
+# Todos os testes do projeto
+python manage.py test --verbosity=2
+```
+
+### Testes cobertos pelo editor
+
+- Editor carrega com produto e arte válidos
+- Editor bloqueia produto inexistente (404)
+- Editor bloqueia arte inexistente (404)
+- Editor bloqueia produto inativo (404)
+- Editor bloqueia arte inativa (404)
+- Salva texto, fonte, cor, tamanho, posicao_x/y, observações e usuário
+- Bloqueia cor inválida (sem criar Personalizacao)
+- Bloqueia tamanho de fonte < 8 ou > 72
+- Bloqueia posição X ou Y fora de 0-100
+- Bloqueia quantidade < 1
+- Redireciona para `/carrinho/adicionar/` após salvar
+- Carrinho recebe a personalização correta
+- Carrinho recebe a quantidade escolhida (ex: 3)
+- Preview carrega sem imagem (não quebra)
+
+### Limitações atuais (MVP)
+
+- Preview é 2D simplificado — a arte não é curvada ao redor do produto real
+- Não há sobreposição 3D ou renderização WebGL
+- Fonte personalizada (Pacifico, Dancing Script) depende de conexão com Google Fonts
+- A cor hex é validada no servidor mas o color picker já garante o formato correto
+- Não há histórico de personalizações do cliente (apenas do artista)
+
+### Melhorias futuras
+
+- 🔮 **Editor 3D** com three.js ou WebGL para visualizar a arte curvada no produto
+- 📸 **Mockup fotorrealista** com templates de fotos reais do celular
+- 🖼️ **Upload de imagem personalizada** pelo cliente
+- 🎨 **Galeria de fundos** e sobreposições decorativas
+- 💾 **Salvar rascunho** da personalização sem adicionar ao carrinho
+- 🔗 **Compartilhamento social** do design criado
+- 🤖 **IA generativa** para sugestão de texto e paleta de cores
+
+---
+
+*Projeto desenvolvido como MVP da plataforma Capinha. Todos os pagamentos são simulados e não há integração real com meios de pagamento.*

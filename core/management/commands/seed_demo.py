@@ -155,7 +155,16 @@ class Command(BaseCommand):
             produto=produtos[0],
             arte=artes[0],
             texto="João Silva",
-            defaults={"fonte": "Arial", "cor": "#1a73e8", "preco_extra": Decimal("5.00")},
+            defaults={
+                "fonte": "Arial",
+                "cor": "#1a73e8",
+                "tamanho_fonte": 28,
+                "posicao_x": 50,
+                "posicao_y": 80,
+                "observacoes": "Arte de demonstração do editor.",
+                "usuario": usuario_comum,
+                "preco_extra": Decimal("5.00"),
+            },
         )
         self._log("Personalização: iPhone 15 + Flores do Campo + 'João Silva'", created)
 
@@ -176,6 +185,11 @@ class Command(BaseCommand):
                 texto="Meu Carrinho",
                 fonte="Courier New",
                 cor="#ff00ff",
+                tamanho_fonte=20,
+                posicao_x=50,
+                posicao_y=70,
+                observacoes="Personalização gerada pelo seed demo.",
+                usuario=usuario_comum,
                 preco_extra=Decimal("10.00")
             )
             # Adicionar item ao carrinho
@@ -198,7 +212,11 @@ class Command(BaseCommand):
                 arte=artes[2],
                 texto="Finalizado",
                 fonte="Arial",
-                cor="#000000"
+                cor="#000000",
+                tamanho_fonte=18,
+                posicao_x=50,
+                posicao_y=60,
+                usuario=usuario_staff,
             )
             ItemCarrinho.objects.create(
                 carrinho=carrinho_finalizado,
@@ -246,6 +264,10 @@ class Command(BaseCommand):
                     texto="Maria Demo",
                     fonte="Georgia",
                     cor="#34a853",
+                    tamanho_fonte=24,
+                    posicao_x=50,
+                    posicao_y=75,
+                    usuario=usuario_comum,
                 ),
                 quantidade=1,
                 preco_unitario=Decimal("44.90"),
@@ -271,6 +293,11 @@ class Command(BaseCommand):
                     texto="Staff Capinha",
                     fonte="Roboto",
                     cor="#ea4335",
+                    tamanho_fonte=32,
+                    posicao_x=50,
+                    posicao_y=85,
+                    observacoes="Pedido de demonstração do staff.",
+                    usuario=usuario_staff,
                 ),
                 quantidade=1,
                 preco_unitario=Decimal("39.90"),

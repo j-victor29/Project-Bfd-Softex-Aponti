@@ -1,4 +1,5 @@
 # pyright: reportRedeclaration=false
+from django.conf import settings
 from django.db import models
 from artists.models import Artista
 
@@ -91,9 +92,33 @@ class Personalizacao(models.Model):
         blank=True,
         help_text="Produto que esta personalização se aplica"
     )
+    usuario = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name='personalizacoes',
+        help_text="Usuário que criou a personalização"
+    )
     texto = models.CharField(max_length=255, blank=True)
     fonte = models.CharField(max_length=100, blank=True)
     cor = models.CharField(max_length=50, blank=True)
+    tamanho_fonte = models.IntegerField(
+        default=24,
+        help_text="Tamanho da fonte do texto personalizado (8 a 72)"
+    )
+    posicao_x = models.IntegerField(
+        default=50,
+        help_text="Posição horizontal do texto (0 a 100, representa %)"
+    )
+    posicao_y = models.IntegerField(
+        default=50,
+        help_text="Posição vertical do texto (0 a 100, representa %)"
+    )
+    observacoes = models.TextField(
+        blank=True,
+        help_text="Observações adicionais para a personalização"
+    )
     preco_extra = models.DecimalField(
         max_digits=10,
         decimal_places=2,

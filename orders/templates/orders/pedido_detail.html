@@ -177,10 +177,20 @@
                                             <div class="mt-2 p-2 rounded bg-light border text-dark">
                                                 <small class="d-block"><strong>Texto:</strong> {{ item.personalizacao.texto|default:"Sem texto" }}</small>
                                                 <small class="d-block"><strong>Fonte:</strong> {{ item.personalizacao.fonte|default:"Padrão" }}</small>
-                                                <small class="d-block"><strong>Cor:</strong> <span style="display:inline-block; width:12px; height:12px; border-radius:50%; background-color:{{ item.personalizacao.cor }}; border:1px solid #ccc;"></span> {{ item.personalizacao.cor|default:"Padrão" }}</small>
+                                                <small class="d-block">
+                                                    <strong>Cor:</strong>
+                                                    <span style="display:inline-block;width:12px;height:12px;border-radius:50%;background-color:{{ item.personalizacao.cor }};border:1px solid #ccc;vertical-align:middle;"></span>
+                                                    {{ item.personalizacao.cor|default:"Padrão" }}
+                                                </small>
+                                                <small class="d-block"><strong>Tamanho da Fonte:</strong> {{ item.personalizacao.tamanho_fonte }}px</small>
+                                                <small class="d-block"><strong>Posição:</strong> X={{ item.personalizacao.posicao_x }}% / Y={{ item.personalizacao.posicao_y }}%</small>
+                                                {% if item.personalizacao.observacoes %}
+                                                    <small class="d-block fst-italic text-muted"><strong>Obs:</strong> {{ item.personalizacao.observacoes }}</small>
+                                                {% endif %}
                                             </div>
                                         {% endif %}
                                     </td>
+
                                     <td>
                                         {% if item.personalizacao.arte %}
                                             <div class="d-flex align-items-center gap-2">

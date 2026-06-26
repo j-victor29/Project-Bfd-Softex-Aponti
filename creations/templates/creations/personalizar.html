@@ -1,121 +1,529 @@
 {% extends 'base.html' %}
 {% load static %}
 
-{% block title %}Personalizar - {{ produto.nome }}{% endblock %}
+{% block title %}Editor de Personalização — {{ produto.nome }} | Capinha{% endblock %}
+
+{% block extra_css %}
+<style>
+  /* ── Import Google Font ── */
+  @import url('https://fonts.googleapis.com/css2?family=Pacifico&family=Dancing+Script:wght@700&display=swap');
+
+  /* ── Editor Layout ── */
+  .editor-wrapper {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2rem;
+    align-items: start;
+  }
+  @media (max-width: 900px) {
+    .editor-wrapper { grid-template-columns: 1fr; }
+  }
+
+  /* ── Glass Panel ── */
+  .glass-panel {
+    background: rgba(15, 18, 35, 0.75);
+    backdrop-filter: blur(18px);
+    -webkit-backdrop-filter: blur(18px);
+    border: 1px solid rgba(255,255,255,0.09);
+    border-radius: 20px;
+    padding: 2rem;
+    box-shadow: 0 8px 40px rgba(0,0,0,0.45);
+  }
+
+  /* ── Preview Container ── */
+  .preview-container {
+    position: relative;
+    width: 100%;
+    max-width: 380px;
+    margin: 0 auto;
+    aspect-ratio: 9/16;
+    border-radius: 28px;
+    overflow: hidden;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.7), 0 0 0 3px rgba(255,255,255,0.08);
+    background: #1a1a2e;
+  }
+
+  .preview-product-img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    opacity: 0.9;
+  }
+
+  .preview-no-img {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg,#1a1a3e,#2d2d6e);
+    color: rgba(255,255,255,0.3);
+    font-size: 1rem;
+    gap: .5rem;
+  }
+
+  .preview-art-overlay {
+    position: absolute;
+    top: 5%;
+    left: 50%;
+    transform: translateX(-50%);
+    max-width: 80%;
+    max-height: 55%;
+    object-fit: contain;
+    z-index: 5;
+    border-radius: 8px;
+    filter: drop-shadow(0 4px 12px rgba(0,0,0,0.5));
+  }
+
+  #preview-text-node {
+    position: absolute;
+    z-index: 10;
+    white-space: nowrap;
+    transform: translate(-50%, -50%);
+    pointer-events: none;
+    transition: all 0.1s ease;
+    text-shadow: 1px 1px 4px rgba(0,0,0,0.8);
+    display: none;
+  }
+
+  /* ── Gradient title ── */
+  .section-title {
+    font-size: 1.5rem;
+    font-weight: 800;
+    background: linear-gradient(90deg, #a78bfa, #60a5fa, #34d399);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    margin-bottom: 1.5rem;
+  }
+
+  /* ── Form fields ── */
+  .form-control, .form-select, .form-range, textarea.form-control {
+    background: rgba(255,255,255,0.04) !important;
+    border: 1px solid rgba(255,255,255,0.12) !important;
+    color: #e2e8f0 !important;
+    border-radius: 10px;
+    transition: border-color .2s, box-shadow .2s;
+  }
+  .form-control:focus, .form-select:focus {
+    background: rgba(255,255,255,0.07) !important;
+    border-color: #a78bfa !important;
+    box-shadow: 0 0 0 3px rgba(167,139,250,0.15) !important;
+    color: #fff !important;
+  }
+  .form-label {
+    font-size: .8rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: .06em;
+    color: #94a3b8;
+    margin-bottom: .35rem;
+  }
+  .form-text { color: #64748b !important; font-size: .75rem; }
+
+  /* ── Slider track ── */
+  input[type=range] { accent-color: #a78bfa; }
+  .slider-value-badge {
+    background: rgba(167,139,250,0.18);
+    border: 1px solid rgba(167,139,250,0.35);
+    color: #a78bfa;
+    font-size: .75rem;
+    font-weight: 700;
+    border-radius: 6px;
+    padding: 1px 8px;
+    min-width: 44px;
+    text-align: center;
+  }
+
+  /* ── Action buttons ── */
+  .btn-submit {
+    background: linear-gradient(135deg, #7c3aed, #2563eb);
+    border: none;
+    color: #fff;
+    font-weight: 700;
+    border-radius: 12px;
+    padding: .75rem 1.5rem;
+    font-size: 1rem;
+    transition: transform .15s, box-shadow .15s;
+    width: 100%;
+  }
+  .btn-submit:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 25px rgba(124,58,237,.45);
+    color: #fff;
+  }
+  .btn-secondary-action {
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(255,255,255,0.12);
+    color: #94a3b8;
+    border-radius: 10px;
+    font-size: .85rem;
+    padding: .45rem 1rem;
+    transition: background .15s, color .15s;
+  }
+  .btn-secondary-action:hover {
+    background: rgba(255,255,255,0.1);
+    color: #e2e8f0;
+  }
+
+  /* ── Info chips ── */
+  .info-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: .4rem;
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 8px;
+    padding: .35rem .8rem;
+    font-size: .82rem;
+    color: #cbd5e1;
+  }
+  .info-chip strong { color: #e2e8f0; }
+
+  /* ── Error banner ── */
+  .error-banner {
+    background: rgba(239,68,68,.12);
+    border: 1px solid rgba(239,68,68,.35);
+    border-radius: 10px;
+    color: #fca5a5;
+    padding: .7rem 1rem;
+    font-size: .875rem;
+    margin-bottom: 1rem;
+  }
+
+  /* ── Preview label ── */
+  .preview-label {
+    font-size: .7rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: .1em;
+    color: #64748b;
+    text-align: center;
+    margin-top: .75rem;
+  }
+
+  /* ── Separator ── */
+  .editor-sep {
+    border-top: 1px solid rgba(255,255,255,0.07);
+    margin: 1.25rem 0;
+  }
+</style>
+{% endblock %}
 
 {% block content %}
-<div class="container mt-5">
-    <div class="row">
-        <!-- Esquerda: Pré-visualização simples -->
-        <div class="col-lg-6 mb-4">
-            <div class="glass-card p-4 text-center" style="background: rgba(255, 255, 255, 0.05); backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 15px;">
-                <h3 class="mb-4 text-gradient">Pré-visualização</h3>
-                <div class="position-relative mx-auto bg-light rounded shadow-lg overflow-hidden d-flex align-items-center justify-content-center" style="max-width: 350px; height: 500px; border: 4px solid #fff;">
-                    <!-- Imagem do Produto -->
-                    {% if produto.imagem %}
-                        <img src="{{ produto.imagem.url }}" alt="{{ produto.nome }}" class="img-fluid position-absolute w-100 h-100" style="object-fit: cover; opacity: 0.85;">
-                    {% else %}
-                        <div class="text-muted"><i class="fas fa-box fa-3x"></i></div>
-                    {% endif %}
-                    
-                    <!-- Imagem da Arte sobreposta -->
-                    {% if arte.arquivo %}
-                        <img src="{{ arte.arquivo.url }}" alt="{{ arte.nome }}" class="position-absolute" style="max-width: 60%; max-height: 60%; object-fit: contain; z-index: 10; border-radius: 5px; box-shadow: 0 4px 8px rgba(0,0,0,0.3); opacity: 0.9;" id="preview-art">
-                    {% endif %}
+<div class="container my-5">
 
-                    <!-- Texto dinâmico sobreposto -->
-                    <div class="position-absolute w-100 text-center" style="bottom: 15%; z-index: 15; pointer-events: none;" id="preview-text-container">
-                        <span id="preview-text" style="color: #000; font-size: 1.5rem; font-weight: bold; background: rgba(255,255,255,0.7); padding: 2px 10px; border-radius: 4px; display: none;"></span>
-                    </div>
-                </div>
-            </div>
-        </div>
+  {# ─── Breadcrumbs ─── #}
+  <nav class="mb-4" aria-label="breadcrumb">
+    <ol class="breadcrumb" style="background:transparent;padding:0;font-size:.85rem;">
+      <li class="breadcrumb-item"><a href="{% url 'produto-list' %}" class="text-decoration-none" style="color:#a78bfa;">Produtos</a></li>
+      <li class="breadcrumb-item"><a href="{% url 'arte-list' %}" class="text-decoration-none" style="color:#a78bfa;">Artes</a></li>
+      <li class="breadcrumb-item active text-muted">Editor de Personalização</li>
+    </ol>
+  </nav>
 
-        <!-- Direita: Opções de Personalização -->
-        <div class="col-lg-6 mb-4">
-            <div class="glass-card p-4" style="background: rgba(255, 255, 255, 0.05); backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 15px;">
-                <h2 class="text-gradient mb-3">Monte sua Capinha</h2>
-                <p class="text-muted small">Preencha as informações abaixo para criar seu design único.</p>
-                <hr class="border-secondary">
+  {# ─── Page heading ─── #}
+  <h1 class="mb-5" style="font-weight:800;font-size:2rem;background:linear-gradient(90deg,#a78bfa,#60a5fa,#34d399);-webkit-background-clip:text;-webkit-text-fill-color:transparent;">
+    🎨 Monte sua Capinha
+  </h1>
 
-                <div class="mb-3">
-                    <strong>Produto:</strong> <span class="text-light">{{ produto.nome }}</span> <span class="badge bg-primary">R$ {{ produto.preco_base }}</span>
-                </div>
-                <div class="mb-3">
-                    <strong>Arte:</strong> <span class="text-light">{{ arte.nome }}</span> <small class="text-muted">por {{ arte.artista.nome_artistico }}</small>
-                </div>
+  {# ─── Django messages ─── #}
+  {% if messages %}
+    {% for message in messages %}
+      <div class="error-banner mb-3">
+        <i class="fas fa-exclamation-circle me-2"></i>{{ message }}
+      </div>
+    {% endfor %}
+  {% endif %}
 
-                <form action="{% url 'personalizacao-salvar' %}" method="post" class="mt-4">
-                    {% csrf_token %}
-                    <input type="hidden" name="produto_id" value="{{ produto.id }}">
-                    <input type="hidden" name="arte_id" value="{{ arte.id }}">
-                    <input type="hidden" name="preco_extra" value="5.00"> <!-- Preço extra simulado para personalização -->
-
-                    <!-- Campo Texto -->
-                    <div class="mb-3">
-                        <label for="id_texto" class="form-label text-light">Nome ou Texto Personalizado (+ R$ 5,00)</label>
-                        <input type="text" name="texto" id="id_texto" class="form-control bg-dark text-light border-secondary" placeholder="Ex: Maria, Amor, 1999" maxlength="50">
-                        <div class="form-text text-muted">Texto opcional impresso no produto.</div>
-                    </div>
-
-                    <!-- Campo Fonte -->
-                    <div class="mb-3">
-                        <label for="id_fonte" class="form-label text-light">Estilo da Fonte</label>
-                        <select name="fonte" id="id_fonte" class="form-select bg-dark text-light border-secondary">
-                            <option value="Arial">Sans-Serif (Arial)</option>
-                            <option value="Georgia">Serif (Georgia)</option>
-                            <option value="Courier New">Monospace (Courier)</option>
-                            <option value="Pacifico">Script / Cursiva (Pacifico)</option>
-                        </select>
-                    </div>
-
-                    <!-- Campo Cor -->
-                    <div class="mb-4">
-                        <label for="id_cor" class="form-label text-light">Cor do Texto</label>
-                        <div class="d-flex align-items-center gap-3">
-                            <input type="color" name="cor" id="id_cor" class="form-control form-control-color bg-dark border-secondary" value="#ffffff" title="Escolha a cor">
-                            <span class="text-muted small">Clique no seletor para escolher.</span>
-                        </div>
-                    </div>
-
-                    <div class="d-grid gap-2">
-                        <button type="submit" class="btn btn-success btn-lg">
-                            <i class="fas fa-check-circle"></i> Salvar e Criar Pedido
-                        </button>
-                        <a href="{% url 'arte-list' %}?produto={{ produto.id }}" class="btn btn-outline-secondary">
-                            <i class="fas fa-arrow-left"></i> Escolher outra arte
-                        </a>
-                    </div>
-                </form>
-            </div>
-        </div>
+  {% if erro %}
+    <div class="error-banner">
+      <i class="fas fa-times-circle me-2"></i>{{ erro }}
     </div>
-</div>
+  {% endif %}
+
+  <div class="editor-wrapper">
+
+    {# ═══════════════════════════════════════════════════════════
+        LEFT — Live Preview
+    ═══════════════════════════════════════════════════════════ #}
+    <div>
+      <div class="glass-panel">
+        <div class="section-title" style="font-size:1rem;margin-bottom:1rem;">📱 Pré-visualização em Tempo Real</div>
+
+        <div class="preview-container" id="preview-container">
+          {# Product base image #}
+          {% if produto.imagem %}
+            <img src="{{ produto.imagem.url }}" alt="{{ produto.nome }}" class="preview-product-img" id="preview-product-img">
+          {% else %}
+            <div class="preview-no-img" id="preview-product-img">
+              <i class="fas fa-mobile-alt fa-3x"></i>
+              <span>{{ produto.nome }}</span>
+            </div>
+          {% endif %}
+
+          {# Art overlay #}
+          {% if arte.arquivo %}
+            <img src="{{ arte.arquivo.url }}" alt="{{ arte.nome }}" class="preview-art-overlay" id="preview-art">
+          {% endif %}
+
+          {# Dynamic text #}
+          <span id="preview-text-node"></span>
+        </div>
+
+        <p class="preview-label">O preview é uma simulação ilustrativa.</p>
+
+        {# Product & art info chips #}
+        <div class="d-flex flex-wrap gap-2 mt-3">
+          <div class="info-chip">
+            <i class="fas fa-box text-violet" style="color:#a78bfa;"></i>
+            <strong>{{ produto.nome }}</strong>
+            <span class="badge ms-1" style="background:rgba(167,139,250,.2);color:#a78bfa;font-size:.7rem;">R$ {{ produto.preco_base }}</span>
+          </div>
+          <div class="info-chip">
+            <i class="fas fa-palette" style="color:#60a5fa;"></i>
+            <strong>{{ arte.nome }}</strong>
+            <span class="text-muted ms-1" style="font-size:.75rem;">por {{ arte.artista.nome_artistico }}</span>
+          </div>
+        </div>
+
+        {# Quick-change action row #}
+        <div class="d-flex flex-wrap gap-2 mt-3">
+          <a href="{% url 'produto-list' %}" class="btn btn-secondary-action" id="btn-trocar-produto">
+            <i class="fas fa-exchange-alt me-1"></i>Trocar Produto
+          </a>
+          <a href="{% url 'arte-list' %}?produto={{ produto.id }}" class="btn btn-secondary-action" id="btn-trocar-arte">
+            <i class="fas fa-images me-1"></i>Trocar Arte
+          </a>
+          <a href="{% url 'arte-list' %}" class="btn btn-secondary-action" id="btn-voltar-artes">
+            <i class="fas fa-arrow-left me-1"></i>Todas as Artes
+          </a>
+        </div>
+      </div>
+    </div>
+
+    {# ═══════════════════════════════════════════════════════════
+        RIGHT — Customization Form
+    ═══════════════════════════════════════════════════════════ #}
+    <div>
+      <div class="glass-panel">
+        <div class="section-title">✏️ Personalize</div>
+
+        <form action="{% url 'personalizacao-salvar' %}" method="post" id="form-personalizar">
+          {% csrf_token %}
+          <input type="hidden" name="produto_id" value="{{ produto.id }}">
+          <input type="hidden" name="arte_id" value="{{ arte.id }}">
+          <input type="hidden" name="preco_extra" value="5.00">
+
+          {# ── Texto ── #}
+          <div class="mb-3">
+            <label for="id_texto" class="form-label">Texto Personalizado</label>
+            <input type="text" name="texto" id="id_texto"
+                   class="form-control" placeholder="Ex: Maria, Amor, #1999"
+                   maxlength="255" autocomplete="off">
+            <div class="form-text">Texto opcional exibido na capinha. Máx. 255 caracteres.</div>
+          </div>
+
+          {# ── Fonte ── #}
+          <div class="mb-3">
+            <label for="id_fonte" class="form-label">Estilo de Fonte</label>
+            <select name="fonte" id="id_fonte" class="form-select">
+              <option value="Arial">Sans-Serif (Arial)</option>
+              <option value="Georgia">Serif (Georgia)</option>
+              <option value="Courier New">Monospace (Courier)</option>
+              <option value="Pacifico">Script / Cursiva (Pacifico)</option>
+              <option value="Dancing Script">Elegante (Dancing Script)</option>
+              <option value="Impact">Impact / Bold</option>
+            </select>
+          </div>
+
+          {# ── Cor ── #}
+          <div class="mb-3">
+            <label for="id_cor" class="form-label">Cor do Texto</label>
+            <div class="d-flex align-items-center gap-3">
+              <input type="color" name="cor" id="id_cor"
+                     class="form-control form-control-color border-secondary"
+                     value="#ffffff" title="Escolha a cor" style="width:56px;height:38px;padding:3px;">
+              <span class="slider-value-badge" id="cor-hex-label">#ffffff</span>
+              <span class="form-text">Formato hex obrigatório.</span>
+            </div>
+          </div>
+
+          <div class="editor-sep"></div>
+
+          {# ── Tamanho da Fonte ── #}
+          <div class="mb-3">
+            <label for="id_tamanho_fonte" class="form-label d-flex justify-content-between align-items-center">
+              Tamanho do Texto
+              <span class="slider-value-badge" id="tamanho-label">24px</span>
+            </label>
+            <input type="range" name="tamanho_fonte" id="id_tamanho_fonte"
+                   class="form-range" min="8" max="72" step="1" value="24">
+            <div class="d-flex justify-content-between form-text mt-1">
+              <span>8px (mín)</span><span>72px (máx)</span>
+            </div>
+          </div>
+
+          {# ── Posição X ── #}
+          <div class="mb-3">
+            <label for="id_posicao_x" class="form-label d-flex justify-content-between align-items-center">
+              Posição Horizontal
+              <span class="slider-value-badge" id="posicao-x-label">50%</span>
+            </label>
+            <input type="range" name="posicao_x" id="id_posicao_x"
+                   class="form-range" min="0" max="100" step="1" value="50">
+            <div class="d-flex justify-content-between form-text mt-1">
+              <span>← Esquerda</span><span>Direita →</span>
+            </div>
+          </div>
+
+          {# ── Posição Y ── #}
+          <div class="mb-3">
+            <label for="id_posicao_y" class="form-label d-flex justify-content-between align-items-center">
+              Posição Vertical
+              <span class="slider-value-badge" id="posicao-y-label">50%</span>
+            </label>
+            <input type="range" name="posicao_y" id="id_posicao_y"
+                   class="form-range" min="0" max="100" step="1" value="50">
+            <div class="d-flex justify-content-between form-text mt-1">
+              <span>↑ Topo</span><span>Base ↓</span>
+            </div>
+          </div>
+
+          <div class="editor-sep"></div>
+
+          {# ── Observações ── #}
+          <div class="mb-3">
+            <label for="id_observacoes" class="form-label">Observações</label>
+            <textarea name="observacoes" id="id_observacoes"
+                      class="form-control" rows="2"
+                      placeholder="Instruções especiais para o artista…"></textarea>
+            <div class="form-text">Opcional. Não aparece na capinha.</div>
+          </div>
+
+          {# ── Quantidade ── #}
+          <div class="mb-4">
+            <label for="id_quantidade" class="form-label">Quantidade</label>
+            <div class="d-flex align-items-center gap-2">
+              <button type="button" class="btn btn-secondary-action px-3" id="btn-qty-minus">−</button>
+              <input type="number" name="quantidade" id="id_quantidade"
+                     class="form-control text-center" value="1" min="1" max="99"
+                     style="max-width:80px;">
+              <button type="button" class="btn btn-secondary-action px-3" id="btn-qty-plus">+</button>
+            </div>
+            <div class="form-text mt-1">Quantidade mínima: 1.</div>
+          </div>
+
+          {# ── Submit ── #}
+          <button type="submit" class="btn-submit mb-3" id="btn-submit">
+            <i class="fas fa-cart-plus me-2"></i>Adicionar ao Carrinho
+          </button>
+
+        </form>
+      </div>
+    </div>
+
+  </div>{# /editor-wrapper #}
+
+</div>{# /container #}
 {% endblock %}
+
 
 {% block extra_js %}
 <script>
-    document.addEventListener('DOMContentLoaded', function() {
-        const textInput = document.getElementById('id_texto');
-        const fontSelect = document.getElementById('id_fonte');
-        const colorInput = document.getElementById('id_cor');
-        const previewText = document.getElementById('preview-text');
+  (function () {
+    // ── Element refs ──────────────────────────────────────────────────────
+    const elTexto    = document.getElementById('id_texto');
+    const elFonte    = document.getElementById('id_fonte');
+    const elCor      = document.getElementById('id_cor');
+    const elTamanho  = document.getElementById('id_tamanho_fonte');
+    const elPosX     = document.getElementById('id_posicao_x');
+    const elPosY     = document.getElementById('id_posicao_y');
+    const elObs      = document.getElementById('id_observacoes');
+    const elQty      = document.getElementById('id_quantidade');
+    const btnMinus   = document.getElementById('btn-qty-minus');
+    const btnPlus    = document.getElementById('btn-qty-plus');
+    const textNode   = document.getElementById('preview-text-node');
+    const container  = document.getElementById('preview-container');
 
-        function updatePreview() {
-            const text = textInput.value.trim();
-            if (text) {
-                previewText.textContent = text;
-                previewText.style.display = 'inline-block';
-                previewText.style.fontFamily = fontSelect.value;
-                previewText.style.color = colorInput.value;
-            } else {
-                previewText.style.display = 'none';
-            }
-        }
+    // Labels
+    const lbTamanho  = document.getElementById('tamanho-label');
+    const lbPosX     = document.getElementById('posicao-x-label');
+    const lbPosY     = document.getElementById('posicao-y-label');
+    const lbCorHex   = document.getElementById('cor-hex-label');
 
-        textInput.addEventListener('input', updatePreview);
-        fontSelect.addEventListener('change', updatePreview);
-        colorInput.addEventListener('input', updatePreview);
+    // ── Google Font loader (Pacifico / Dancing Script) ────────────────────
+    const fontMap = {
+      'Pacifico':        'Pacifico',
+      'Dancing Script':  'Dancing+Script:wght@700',
+    };
+
+    function loadGoogleFont(family) {
+      const key = fontMap[family];
+      if (!key) return;
+      const id = 'gf-' + family.replace(/\s+/g, '-');
+      if (!document.getElementById(id)) {
+        const link = document.createElement('link');
+        link.id = id;
+        link.rel = 'stylesheet';
+        link.href = `https://fonts.googleapis.com/css2?family=${key}&display=swap`;
+        document.head.appendChild(link);
+      }
+    }
+
+    // ── Core update function ──────────────────────────────────────────────
+    function updatePreview() {
+      const text    = elTexto.value.trim();
+      const font    = elFonte.value;
+      const color   = elCor.value;
+      const size    = parseInt(elTamanho.value, 10);
+      const px      = parseInt(elPosX.value, 10);
+      const py      = parseInt(elPosY.value, 10);
+
+      // Update badge labels
+      lbTamanho.textContent = size + 'px';
+      lbPosX.textContent    = px + '%';
+      lbPosY.textContent    = py + '%';
+      lbCorHex.textContent  = color;
+
+      if (text) {
+        loadGoogleFont(font);
+        textNode.style.display     = 'inline-block';
+        textNode.textContent       = text;
+        textNode.style.fontFamily  = `"${font}", sans-serif`;
+        textNode.style.color       = color;
+        textNode.style.fontSize    = size + 'px';
+        textNode.style.fontWeight  = 'bold';
+        textNode.style.left        = px + '%';
+        textNode.style.top         = py + '%';
+      } else {
+        textNode.style.display = 'none';
+      }
+    }
+
+    // ── Quantity helpers ──────────────────────────────────────────────────
+    btnMinus.addEventListener('click', () => {
+      const v = parseInt(elQty.value, 10);
+      if (v > 1) elQty.value = v - 1;
     });
+    btnPlus.addEventListener('click', () => {
+      const v = parseInt(elQty.value, 10);
+      if (v < 99) elQty.value = v + 1;
+    });
+    elQty.addEventListener('change', () => {
+      if (parseInt(elQty.value, 10) < 1) elQty.value = 1;
+    });
+
+    // ── Bind events ───────────────────────────────────────────────────────
+    [elTexto, elFonte, elCor, elTamanho, elPosX, elPosY].forEach(el => {
+      el.addEventListener('input', updatePreview);
+      el.addEventListener('change', updatePreview);
+    });
+
+    // ── Initial render ────────────────────────────────────────────────────
+    updatePreview();
+  })();
 </script>
 {% endblock %}

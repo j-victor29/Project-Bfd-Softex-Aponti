@@ -157,14 +157,14 @@ def personalizacao_list_view(request):
 def personalizacao_criar_view(request):
     from django.contrib import messages
     from products.models import Produto
-    
+
     produto_id = request.GET.get('produto')
     arte_id = request.GET.get('arte')
-    
+
     if not produto_id or not arte_id:
         messages.error(request, "Produto e Arte devem ser especificados.")
-        return redirect('produto-list') # Or fallback URL
-        
+        return redirect('produto-list')
+
     try:
         produto_id = int(produto_id)
         arte_id = int(arte_id)
@@ -174,7 +174,7 @@ def personalizacao_criar_view(request):
 
     produto = get_object_or_404(Produto, id=produto_id, ativo=True)
     arte = get_object_or_404(Arte, id=arte_id, ativa=True)
-    
+
     return render(request, 'creations/personalizar.html', {
         'produto': produto,
         'arte': arte,
@@ -183,52 +183,126 @@ def personalizacao_criar_view(request):
 
 @login_required
 def personalizacao_salvar_view(request):
+    import re
     from django.contrib import messages
     from products.models import Produto
-    
-    if request.method == 'POST':
-        produto_id = request.POST.get('produto_id')
-        arte_id = request.POST.get('arte_id')
-        texto = request.POST.get('texto', '')
-        fonte = request.POST.get('fonte', '')
-        cor = request.POST.get('cor', '')
-        preco_extra_str = request.POST.get('preco_extra', '0')
-        
-        if not produto_id or not arte_id:
-            messages.error(request, "Dados insuficientes para criar personalização.")
-            return redirect('produto-list')
-            
-        try:
-            produto_id = int(produto_id)
-            arte_id = int(arte_id)
-        except ValueError:
-            messages.error(request, "Identificadores inválidos.")
-            return redirect('produto-list')
-            
-        produto = get_object_or_404(Produto, id=produto_id, ativo=True)
-        arte = get_object_or_404(Arte, id=arte_id, ativa=True)
-        
-        from decimal import Decimal
-        try:
-            preco_extra = Decimal(preco_extra_str)
-            if preco_extra < 0:
-                preco_extra = Decimal('0.00')
-        except:
+
+    if request.method != 'POST':
+        return redirect('produto-list')
+
+    produto_id = request.POST.get('produto_id')
+    arte_id = request.POST.get('arte_id')
+
+    if not produto_id or not arte_id:
+        messages.error(request, "Dados insuficientes para criar personalização.")
+        return redirect('produto-list')
+
+    try:
+        produto_id = int(produto_id)
+        arte_id = int(arte_id)
+    except ValueError:
+        messages.error(request, "Identificadores inválidos.")
+        return redirect('produto-list')
+
+    produto = get_object_or_404(Produto, id=produto_id, ativo=True)
+    arte = get_object_or_404(Arte, id=arte_id, ativa=True)
+
+    texto = request.POST.get('texto', '').strip()
+    fonte = request.POST.get('fonte', '').strip()
+    cor = request.POST.get('cor', '#ffffff').strip()
+    preco_extra_str = request.POST.get('preco_extra', '0')
+    observacoes = request.POST.get('observacoes', '').strip()
+
+    # Validate texto length
+    if len(texto) > 255:
+        messages.error(request, "Texto personalizado não pode ultrapassar 255 caracteres.")
+        return render(request, 'creations/personalizar.html', {
+            'produto': produto, 'arte': arte,
+            'erro': 'Texto muito longo.',
+        })
+
+    # Validate cor (hex color)
+    if cor and not re.match(r'^#(?:[0-9a-fA-F]{3}){1,2}$', cor):
+        messages.error(request, "Cor inválida. Use formato hexadecimal, ex: #FF0000.")
+        return render(request, 'creations/personalizar.html', {
+            'produto': produto, 'arte': arte,
+            'erro': 'Cor inválida.',
+        })
+
+    # Validate tamanho_fonte
+    try:
+        tamanho_fonte = int(request.POST.get('tamanho_fonte', 24))
+        if not (8 <= tamanho_fonte <= 72):
+            raise ValueError
+    except (ValueError, TypeError):
+        messages.error(request, "Tamanho de fonte deve estar entre 8 e 72.")
+        return render(request, 'creations/personalizar.html', {
+            'produto': produto, 'arte': arte,
+            'erro': 'Tamanho de fonte inválido.',
+        })
+
+    # Validate posicao_x
+    try:
+        posicao_x = int(request.POST.get('posicao_x', 50))
+        if not (0 <= posicao_x <= 100):
+            raise ValueError
+    except (ValueError, TypeError):
+        messages.error(request, "Posição horizontal deve estar entre 0 e 100.")
+        return render(request, 'creations/personalizar.html', {
+            'produto': produto, 'arte': arte,
+            'erro': 'Posição horizontal inválida.',
+        })
+
+    # Validate posicao_y
+    try:
+        posicao_y = int(request.POST.get('posicao_y', 50))
+        if not (0 <= posicao_y <= 100):
+            raise ValueError
+    except (ValueError, TypeError):
+        messages.error(request, "Posição vertical deve estar entre 0 e 100.")
+        return render(request, 'creations/personalizar.html', {
+            'produto': produto, 'arte': arte,
+            'erro': 'Posição vertical inválida.',
+        })
+
+    # Validate quantidade
+    try:
+        quantidade = int(request.POST.get('quantidade', 1))
+        if quantidade < 1:
+            raise ValueError
+    except (ValueError, TypeError):
+        messages.error(request, "Quantidade deve ser pelo menos 1.")
+        return render(request, 'creations/personalizar.html', {
+            'produto': produto, 'arte': arte,
+            'erro': 'Quantidade inválida.',
+        })
+
+    from decimal import Decimal
+    try:
+        preco_extra = Decimal(preco_extra_str)
+        if preco_extra < 0:
             preco_extra = Decimal('0.00')
-            
-        personalizacao = Personalizacao.objects.create(
-            produto=produto,
-            arte=arte,
-            texto=texto,
-            fonte=fonte,
-            cor=cor,
-            preco_extra=preco_extra
-        )
-        
-        # Redirecionar para adicionar ao carrinho
-        return redirect('cart:carrinho-adicionar', personalizacao_id=personalizacao.id)
-    
-    return redirect('produto-list')
+    except Exception:
+        preco_extra = Decimal('0.00')
+
+    personalizacao = Personalizacao.objects.create(
+        produto=produto,
+        arte=arte,
+        usuario=request.user,
+        texto=texto,
+        fonte=fonte,
+        cor=cor,
+        tamanho_fonte=tamanho_fonte,
+        posicao_x=posicao_x,
+        posicao_y=posicao_y,
+        observacoes=observacoes,
+        preco_extra=preco_extra,
+    )
+
+    # Redirect to cart with quantidade as query param
+    return redirect(
+        f"{'/carrinho/adicionar/' + str(personalizacao.id) + '/'}?quantidade={quantidade}"
+    )
 
 
 # ============================================================================
