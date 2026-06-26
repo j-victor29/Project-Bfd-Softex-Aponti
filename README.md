@@ -133,27 +133,27 @@ Abaixo estão as principais telas do sistema em funcionamento:
    ![Home](docs/screenshots/home.png)
 2. **Sobre o Projeto**: Detalhes do escopo e arquitetura.
    ![Sobre](docs/screenshots/sobre.png)
-3. **Como Testar**: Instruções passo a passo com credenciais de demonstração.
+3. **Fluxo Completo do Sistema (Passo a Passo)**: Instruções passo a passo com credenciais de demonstração.
    ![Como Testar](docs/screenshots/como_testar.png)
 4. **Catálogo de Produtos**: Seleção de modelos de capinha de celular.
    ![Catálogo de Produtos](docs/screenshots/catalogo_produtos.png)
-5. **Galeria de Artes**: Navegação por estampas e criações dos artistas.
+5. **Galeria de Artistas**: Navegação das criações dos artistas.
    ![Galeria de Artes](docs/screenshots/galeria_artes.png)
-6. **Editor de Personalização**: Edição em tempo real de texto, cores e posicionamento da estampa.
+6. **Coleções de Artes**: Edição em tempo real das coleções dos artistas.
    ![Editor de Personalização](docs/screenshots/editor_personalizacao.png)
-7. **Carrinho de Compras**: Detalhamento dos produtos personalizados prontos para checkout.
+7. **Galeria de Artes**: Navegação por estampas e criações dos artistas.
    ![Carrinho de Compras](docs/screenshots/carrinho.png)
-8. **Detalhe do Pedido**: Acompanhamento do status do pedido realizado.
+8. **Carrinho de Compras**: Detalhamento dos produtos personalizados prontos para checkout.
    ![Detalhe do Pedido](docs/screenshots/detalhe_pedido.png)
-9. **Pagamento Simulado**: Confirmação simulada de Pix ou Cartão de Crédito.
+9. **Detalhe do Pedido**: Acompanhamento do status do pedido realizado.
    ![Pagamento Simulado](docs/screenshots/pagamento_simulado.png)
 10. **Fila de Impressão**: Gestão do status de produção dos pedidos pela equipe de Staff.
     ![Fila de Impressão](docs/screenshots/fila_impressao.png)
-11. **Painel do Artista**: Gráficos de vendas, faturamento e ranking de gamificação.
+11. **Fila de Impressão**: Fila de Impressão: Gestão do status de produção dos pedidos
     ![Painel do Artista](docs/screenshots/painel_artista.png)
-12. **Gerenciamento de Artes**: Formulário de criação e edição (CRUD) de estampas pelo artista.
+12. **Pagamento Simulado**: Confirmação simulada de Pix ou Cartão de Crédito.
     ![Gerenciamento de Artes](docs/screenshots/gerenciamento_artes.png)
-13. **Gerenciamento de Coleções**: Organização de estampas em coleções temáticas pelo artista.
+13. **Gerenciamento de Premiações e Recompensas para Clientes**: Organização de Premiações e Recompensas para Clientes com dashboard completo integrado.
     ![Gerenciamento de Coleções](docs/screenshots/gerenciamento_colecoes.png)
 
 ---
