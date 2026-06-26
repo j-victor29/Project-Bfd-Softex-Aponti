@@ -6,7 +6,7 @@
 ![SQLite](https://img.shields.io/badge/SQLite-Database-blue?style=flat&logo=sqlite)
 ![Bootstrap](https://img.shields.io/badge/Bootstrap-5.3-7952B3?style=flat&logo=bootstrap&logoColor=white)
 ![Tests](https://img.shields.io/badge/Tests-Automatizados-success?style=flat&logo=pytest)
-![MVP](https://img.shields.io/badge/Status-MVP%20Portfolio-informational?style=flat)
+![MVP](https://img.shields.io/badge/Status-MVP%20v1.0%20Finalizado-success?style=flat)
 
 > **Projeto de portfólio** demonstrando um sistema web completo com Django. O objetivo é mostrar domínio de arquitetura modular, fluxo de e-commerce completo, testes automatizados, segurança por permissões e organização de código profissional.
 
@@ -20,6 +20,7 @@
 - [Arquitetura por Apps](#arquitetura-por-apps)
 - [Fluxo do Sistema](#fluxo-do-sistema)
 - [Perfis de Usuário](#perfis-de-usuário)
+- [Capturas de Tela](#-capturas-de-tela)
 - [Como Instalar](#como-instalar)
 - [Como Rodar](#como-rodar)
 - [Usuários de Demonstração](#usuários-de-demonstração)
@@ -120,6 +121,39 @@ capinha/
 | **Artista** | Tudo do Cliente + Painel do Artista (CRUD de artes/coleções, métricas) |
 | **Staff** | Tudo do Cliente + Produção (Fila de Impressão, Impressoras, Todos os Pedidos) |
 | **Admin** | Acesso total ao Django Admin |
+
+---
+
+## 📸 Capturas de Tela
+
+Esta seção contém imagens das principais interfaces do sistema. Para adicionar as imagens reais do seu próprio teste, salve-as na pasta `docs/screenshots/` com os nomes correspondentes:
+
+1. **Página Inicial (Landing Page)**: Apresentação moderna do sistema e atalhos rápidos.
+   ![Home](docs/screenshots/home.png)
+2. **Sobre o Projeto**: Detalhes do escopo e arquitetura.
+   ![Sobre](docs/screenshots/sobre.png)
+3. **Como Testar**: Instruções passo a passo com credenciais de demonstração.
+   ![Como Testar](docs/screenshots/como_testar.png)
+4. **Catálogo de Produtos**: Seleção de modelos de capinha de celular.
+   ![Catálogo de Produtos](docs/screenshots/catalogo_produtos.png)
+5. **Galeria de Artes**: Navegação por estampas e criações dos artistas.
+   ![Galeria de Artes](docs/screenshots/galeria_artes.png)
+6. **Editor de Personalização**: Edição em tempo real de texto, cores e posicionamento da estampa.
+   ![Editor de Personalização](docs/screenshots/editor_personalizacao.png)
+7. **Carrinho de Compras**: Detalhamento dos produtos personalizados prontos para checkout.
+   ![Carrinho de Compras](docs/screenshots/carrinho.png)
+8. **Detalhe do Pedido**: Acompanhamento do status do pedido realizado.
+   ![Detalhe do Pedido](docs/screenshots/detalhe_pedido.png)
+9. **Pagamento Simulado**: Confirmação simulada de Pix ou Cartão de Crédito.
+   ![Pagamento Simulado](docs/screenshots/pagamento_simulado.png)
+10. **Fila de Impressão**: Gestão do status de produção dos pedidos pela equipe de Staff.
+    ![Fila de Impressão](docs/screenshots/fila_impressao.png)
+11. **Painel do Artista**: Gráficos de vendas, faturamento e ranking de gamificação.
+    ![Painel do Artista](docs/screenshots/painel_artista.png)
+12. **Gerenciamento de Artes**: Formulário de criação e edição (CRUD) de estampas pelo artista.
+    ![Gerenciamento de Artes](docs/screenshots/gerenciamento_artes.png)
+13. **Gerenciamento de Coleções**: Organização de estampas em coleções temáticas pelo artista.
+    ![Gerenciamento de Coleções](docs/screenshots/gerenciamento_colecoes.png)
 
 ---
 
