@@ -33,15 +33,21 @@
 
 ## 📖 Sobre o Projeto
 
-**Capinha** é um MVP de plataforma de personalização e venda de capinhas para celular, desenvolvido como projeto de portfólio para demonstrar habilidades full-stack em Django.
+**Capinha** é um MVP de plataforma de personalização e venda de capinhas para celular, desenvolvido como **projeto institucional real** durante o curso de capacitação em **Back-End com Python**, realizado pelo programa **Bolsa Futuro Digital (BFD)**, em parceria com a **Softex/Aponti**, em Pernambuco.
+
+O projeto foi construído a partir de uma demanda real apresentada pela empresa **Greencase**, que trouxe uma necessidade relacionada à personalização, organização e comercialização de produtos personalizados. A partir desse contexto, a proposta do sistema foi transformar uma necessidade empresarial em uma solução web funcional, estruturada e demonstrável.
+
+Diferente de um projeto puramente fictício, o **Capinha** foi desenvolvido com base em um cenário real de negócio, considerando dados, fluxos e necessidades reais da empresa parceira. O objetivo foi aplicar, na prática, os conhecimentos adquiridos no curso — como modelagem de dados, arquitetura modular, autenticação, permissões, regras de negócio, testes automatizados e organização profissional de código.
 
 O sistema simula o ciclo completo de um e-commerce de produtos personalizados:
 
 1. Artistas independentes cadastram suas artes e coleções no sistema
 2. Clientes navegam pelo catálogo, escolhem produtos e personalizam via editor 2D
-3. A equipe de produção (staff) gerencia a fila de impressão dos pedidos pagos
+3. O pedido é adicionado ao carrinho e segue para checkout
+4. O pagamento é confirmado de forma simulada
+5. A equipe de produção gerencia a fila de impressão dos pedidos pagos
 
-> ⚠️ O pagamento neste MVP é **simulado** (sem API real) para fins de portfólio. O foco é demonstrar a arquitetura do sistema, não integrar gateways de pagamento.
+> ⚠️ O pagamento neste MVP é **simulado** e os dados públicos do repositório devem ser tratados como dados de demonstração. O foco do projeto é demonstrar a arquitetura, os fluxos de negócio e a aplicação prática de uma solução desenvolvida a partir de uma necessidade empresarial real.
 
 ---
 
@@ -161,8 +167,16 @@ Abaixo estão as principais telas do sistema em funcionamento:
 ## ⚙️ Como Instalar
 
 ### Pré-requisitos
-- Python 3.11+
-- pip
+
+Antes de começar, instale as ferramentas necessárias:
+
+| Ferramenta | Versão mínima | Download |
+|------------|:-------------:|----------|
+| **Python** | 3.11+ | [python.org/downloads](https://www.python.org/downloads/) |
+| **Git** | qualquer | [git-scm.com/downloads](https://git-scm.com/downloads) |
+| **pip** | incluso no Python | (já vem junto com o Python 3.11+) |
+
+> 💡 Verifique as instalações com `python --version` e `git --version` no terminal.
 
 ### Instalação
 
@@ -179,9 +193,15 @@ venv\Scripts\activate
 # Linux/Mac
 source venv/bin/activate
 
-# 3. Instale as dependências
+# 3. Instale as dependências do projeto
 pip install -r requirements.txt
 ```
+
+> **Dependências instaladas automaticamente** pelo `requirements.txt`:
+> - `Django` — framework web
+> - `djangorestframework` — API REST
+> - `python-decouple` — variáveis de ambiente
+> - `Pillow` — processamento de imagens
 
 ---
 
