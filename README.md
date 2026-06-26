@@ -167,8 +167,8 @@ Abaixo estão as principais telas do sistema em funcionamento:
 
 ```bash
 # 1. Clone o repositório
-git clone https://github.com/seu-usuario/capinha.git
-cd capinha
+git clone https://github.com/j-victor29/Project-Bfd-Softex-Aponti.git
+cd Project-Bfd-Softex-Aponti
 
 # 2. Crie e ative o ambiente virtual
 python -m venv venv
