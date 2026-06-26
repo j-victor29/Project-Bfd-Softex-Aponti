@@ -51,7 +51,7 @@ O sistema simula o ciclo completo de um e-commerce de produtos personalizados:
 |--------|-----------|
 | 🛍️ Catálogo de Produtos | Listagem, busca e filtro por categoria |
 | 🎨 Artes e Estampas | Biblioteca de designs criados por artistas parceiros |
-| ✏️ Editor 2D | Personalização visual com texto, cor, fonte e posicionamento |
+| ✏️ Editor 2D e 3D | Personalização visual com texto, cor, fonte e posicionamento |
 | 🛒 Carrinho de Compras | Carrinho persistente com personalização detalhada |
 | 📦 Pedidos | Ciclo de vida completo: criado → pago → em produção → impresso |
 | 💳 Pagamento Simulado | Confirmação de pagamento por método (Pix/Cartão) sem API real |
@@ -65,7 +65,7 @@ O sistema simula o ciclo completo de um e-commerce de produtos personalizados:
 ## 🛠️ Tecnologias Utilizadas
 
 - **Backend:** Django 5.x, Django REST Framework, Python 3.11+
-- **Banco de Dados:** SQLite (facilmente substituível por PostgreSQL)
+- **Banco de Dados:** SQLite
 - **Frontend:** Bootstrap 5, HTML/CSS customizado, JavaScript vanilla
 - **Autenticação:** `django.contrib.auth` com modelo de usuário customizado
 - **Gerenciamento de dependências:** pip / requirements.txt
@@ -108,6 +108,7 @@ capinha/
          
 [Artista]→ Painel do Artista
          → Métricas de vendas / faturamento
+         → Posta suas artes no sistema
          → CRUD de Artes e Coleções
 ```
 
@@ -117,7 +118,7 @@ capinha/
 
 | Perfil | Acesso |
 |--------|--------|
-| **Cliente** | Produtos, Editor, Carrinho, Pedidos, Pagamento Simulado |
+| **Cliente** | Produtos, Editagem do seu Produto (Personalização), Carrinho, Pedidos, Pagamento Simulado |
 | **Artista** | Tudo do Cliente + Painel do Artista (CRUD de artes/coleções, métricas) |
 | **Staff** | Tudo do Cliente + Produção (Fila de Impressão, Impressoras, Todos os Pedidos) |
 | **Admin** | Acesso total ao Django Admin |
@@ -184,58 +185,11 @@ pip install -r requirements.txt
 
 ---
 
-## 🔑 Como Configurar o `.env`
-
-Crie um arquivo `.env` na raiz do projeto:
-
-```env
-SECRET_KEY=sua-chave-secreta-aqui
-DEBUG=True
-ALLOWED_HOSTS=127.0.0.1,localhost
-```
-
-> Um `.env.example` já está incluído no repositório como referência.
-
----
-
 ## 🗄️ Como Rodar Migrations
 
 ```bash
 python manage.py makemigrations
 python manage.py migrate
-```
-
----
-
-## 🌱 Como Popular Dados Demo
-
-```bash
-python manage.py seed_demo
-```
-
-Isso criará automaticamente (de forma idempotente):
-- 3 usuários (cliente, artista aprovado, staff)
-- Produtos, artes e coleções de exemplo
-- Pedidos em diferentes estados (criado, pago, em produção)
-- Fila de impressão e impressora
-- Pagamento simulado
-
----
-
-## 🧪 Como Rodar os Testes
-
-```bash
-# Todos os testes
-python manage.py test --verbosity=2
-
-# Apenas os testes do core (páginas e navbar)
-python manage.py test core --verbosity=2
-
-# Apenas os testes do carrinho
-python manage.py test cart --verbosity=2
-
-# Apenas os testes de criações
-python manage.py test creations --verbosity=2
 ```
 
 ---
@@ -247,30 +201,6 @@ python manage.py runserver
 ```
 
 Acesse: [http://127.0.0.1:8000/](http://127.0.0.1:8000/)
-
----
-
-## 🔑 Usuários de Demonstração
-
-Após rodar `seed_demo`, os seguintes usuários estarão disponíveis:
-
-| E-mail | Senha | Perfil |
-|--------|-------|--------|
-| `cliente@capinha.com` | `capinha123` | Cliente (usuário comum) |
-| `artista@capinha.com` | `capinha123` | Artista aprovado |
-| `staff@capinha.com` | `capinha123` | Staff / Produção |
-
----
-
-## 📋 Checklist de Teste Manual
-
-- [ ] Acessar `/` e ler a landing page do projeto
-- [ ] Acessar `/sobre/` e `/como-testar/`
-- [ ] Login como **cliente** → Produtos → Escolher produto → Editor 2D → Carrinho → Checkout → Pagamento Simulado
-- [ ] Login como **staff** → Produção → Fila de Impressão → Avançar status do pedido
-- [ ] Login como **artista** → Painel do Artista → Ver métricas → Cadastrar nova arte → Criar coleção
-- [ ] Verificar que links de `Produção` não aparecem para cliente
-- [ ] Verificar que `Painel do Artista` não aparece para cliente comum
 
 ---
 
@@ -307,43 +237,4 @@ As seguintes melhorias estão planejadas para versões futuras, mas **não foram
 
 ---
 
-## 🎙️ Roteiro de Apresentação
-
-Para apresentar o projeto em entrevistas técnicas, siga este roteiro sugerido:
-
-### 1. Introdução (30s)
-> "Construí o Capinha para simular o back-end de um e-commerce de personalização. A ideia é mostrar como organizar um sistema Django modular com fluxo de compra completo."
-
-### 2. Mostrar a Home e as páginas institucionais
-- Acesse `/` e explique os módulos
-- Mostre `/sobre/` para explicar a arquitetura
-- Mostre `/como-testar/` para orientar o avaliador
-
-### 3. Demonstrar o fluxo de cliente
-- Login como `cliente@capinha.com`
-- Produtos → Escolher → Editor 2D → Carrinho → Checkout → Pagamento Simulado
-
-### 4. Demonstrar o fluxo de staff
-- Login como `staff@capinha.com`
-- Menu Produção → Fila de Impressão → Avançar status
-
-### 5. Demonstrar o painel do artista
-- Login como `artista@capinha.com`
-- Painel do Artista → Métricas → CRUD de artes
-
-### 6. Mostrar os testes
-```bash
-python manage.py test --verbosity=2
-```
-
-### 7. Mostrar a organização do código
-- Estrutura de apps, services.py, models.py, tests.py
-- Destacar o uso de `transaction.atomic` no `PedidoService`
-- Mostrar as permissões nos decorators das views
-
-### 8. Fechar com o roadmap
-> "Para produção, eu adicionaria Mercado Pago, notificações por WhatsApp e faria o deploy no Railway. O sistema já está estruturado para receber essas integrações sem refatoração maior."
-
----
-
-*Desenvolvido por João Victor — 2026*
+*Desenvolvido por João Victor — 2025/2026*
