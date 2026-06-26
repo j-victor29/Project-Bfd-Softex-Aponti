@@ -335,3 +335,156 @@ class PainelComissaoTest(PainelBaseTestCase):
         response = self.client.get(reverse('painel-principal'))
         # 2 itens (um em cada pedido)
         self.assertEqual(response.context['total_vendas'], 2)
+
+
+# ─── 5. Testes de Gerenciamento de Artes e Coleções ────────────────────────────
+
+class GerenciamentoArteTest(PainelBaseTestCase):
+
+    def setUp(self):
+        super().setUp()
+        # Outro artista para testar isolamento/permissões
+        self.outro_user = criar_usuario("outro_artist@test.com", "Outro Artista")
+        self.outro_artista = criar_artista(self.outro_user, status="aprovado")
+        self.arte_outro = Arte.objects.create(
+            artista=self.outro_artista,
+            nome="Arte de Outro",
+            arquivo="artes/outro.jpg",
+            ativa=True
+        )
+
+    def test_anonimo_nao_acessa_criacao_arte(self):
+        response = self.client.get(reverse('painel-arte-nova'))
+        self.assertEqual(response.status_code, 302)
+
+    def test_usuario_comum_nao_acessa_criacao_arte(self):
+        self.client.force_login(self.usuario_comum)
+        response = self.client.get(reverse('painel-arte-nova'))
+        self.assertEqual(response.status_code, 403)
+
+    def test_artista_pendente_nao_acessa_criacao_arte(self):
+        self.client.force_login(self.pendente_user)
+        response = self.client.get(reverse('painel-arte-nova'))
+        self.assertEqual(response.status_code, 403)
+
+    def test_artista_aprovado_cria_arte_com_sucesso(self):
+        self.client.force_login(self.artista_user)
+        import tempfile
+        from django.core.files.uploadedfile import SimpleUploadedFile
+        with tempfile.NamedTemporaryFile(suffix=".png") as temp_file:
+            img = SimpleUploadedFile("nova_arte.png", b"file_content", content_type="image/png")
+            data = {
+                'nome': 'Minha Nova Arte Maravilhosa',
+                'descricao': 'Uma arte incrível para capinhas.',
+                'arquivo': img,
+                'colecao': self.colecao.pk,
+                'ativa': True,
+            }
+            response = self.client.post(reverse('painel-arte-nova'), data=data)
+            self.assertEqual(response.status_code, 302) # Redirect to painel-artes
+            self.assertTrue(Arte.objects.filter(nome='Minha Nova Arte Maravilhosa', artista=self.artista).exists())
+
+    def test_artista_edita_propria_arte(self):
+        self.client.force_login(self.artista_user)
+        data = {
+            'nome': 'Arte Principal Editada',
+            'descricao': 'Descrição alterada.',
+            'colecao': self.colecao.pk,
+            'ativa': True,
+        }
+        # arquivo é opcional na edição se já tiver
+        response = self.client.post(reverse('painel-arte-editar', args=[self.arte.pk]), data=data)
+        self.assertEqual(response.status_code, 302)
+        self.arte.refresh_from_db()
+        self.assertEqual(self.arte.nome, 'Arte Principal Editada')
+
+    def test_artista_nao_edita_arte_de_outro_artista(self):
+        self.client.force_login(self.artista_user)
+        data = {
+            'nome': 'Tentando Hackear',
+            'ativa': True,
+        }
+        response = self.client.post(reverse('painel-arte-editar', args=[self.arte_outro.pk]), data=data)
+        self.assertEqual(response.status_code, 403)
+
+    def test_artista_ativa_inativa_propria_arte(self):
+        self.client.force_login(self.artista_user)
+        self.assertTrue(self.arte.ativa)
+        response = self.client.post(reverse('painel-arte-status', args=[self.arte.pk]))
+        self.assertEqual(response.status_code, 302)
+        self.arte.refresh_from_db()
+        self.assertFalse(self.arte.ativa)
+
+    def test_artista_filtra_artes_por_colecao(self):
+        self.client.force_login(self.artista_user)
+        colecao_extra = Colecao.objects.create(
+            artista=self.artista,
+            nome="Coleção Extra",
+            ativa=True
+        )
+        arte_extra = Arte.objects.create(
+            artista=self.artista,
+            colecao=colecao_extra,
+            nome="Arte Extra",
+            arquivo="artes/extra.jpg",
+            ativa=True
+        )
+        response = self.client.get(reverse('painel-artes') + f'?colecao={self.colecao.pk}')
+        self.assertEqual(response.status_code, 200)
+        artes_list = list(response.context['artes'])
+        self.assertIn(self.arte, artes_list)
+        self.assertNotIn(arte_extra, artes_list)
+
+
+class GerenciamentoColecaoTest(PainelBaseTestCase):
+
+    def setUp(self):
+        super().setUp()
+        self.outro_user = criar_usuario("outro_artist2@test.com", "Outro Artista 2")
+        self.outro_artista = criar_artista(self.outro_user, status="aprovado")
+        self.colecao_outro = Colecao.objects.create(
+            artista=self.outro_artista,
+            nome="Colecao de Outro",
+            ativa=True
+        )
+
+    def test_artista_aprovado_cria_colecao_com_sucesso(self):
+        self.client.force_login(self.artista_user)
+        data = {
+            'nome': 'Minha Nova Colecao',
+            'descricao': 'Minha colecao especial.',
+            'ativa': True,
+        }
+        response = self.client.post(reverse('painel-colecao-nova'), data=data)
+        self.assertEqual(response.status_code, 302)
+        self.assertTrue(Colecao.objects.filter(nome='Minha Nova Colecao', artista=self.artista).exists())
+
+    def test_artista_edita_propria_colecao(self):
+        self.client.force_login(self.artista_user)
+        data = {
+            'nome': 'Coleção Principal Editada',
+            'descricao': 'Descrição nova.',
+            'ativa': True,
+        }
+        response = self.client.post(reverse('painel-colecao-editar', args=[self.colecao.pk]), data=data)
+        self.assertEqual(response.status_code, 302)
+        self.colecao.refresh_from_db()
+        self.assertEqual(self.colecao.nome, 'Coleção Principal Editada')
+
+    def test_artista_nao_edita_colecao_de_outro_artista(self):
+        self.client.force_login(self.artista_user)
+        data = {
+            'nome': 'Colecao Invadida',
+            'ativa': True,
+        }
+        response = self.client.post(reverse('painel-colecao-editar', args=[self.colecao_outro.pk]), data=data)
+        self.assertEqual(response.status_code, 403)
+
+    def test_artista_ativa_inativa_propria_colecao(self):
+        self.client.force_login(self.artista_user)
+        self.assertTrue(self.colecao.ativa)
+        response = self.client.post(reverse('painel-colecao-status', args=[self.colecao.pk]))
+        self.assertEqual(response.status_code, 302)
+        self.colecao.refresh_from_db()
+        self.assertFalse(self.colecao.ativa)
+

@@ -133,6 +133,7 @@ class Command(BaseCommand):
             {"nome": "Floresta Tropical",   "arquivo": "artes/floresta_tropical.jpg","ativa": True, "colecao": colecao},
             {"nome": "Cidade Neon",         "arquivo": "artes/cidade_neon.jpg",      "ativa": True, "colecao": colecao2},
             {"nome": "Linhas Geométricas",  "arquivo": "artes/linhas_geometricas.jpg","ativa": True, "colecao": colecao2},
+            {"nome": "Esboço Rústico",      "arquivo": "artes/esboco_rustico.jpg",    "ativa": False, "colecao": colecao},
         ]
         artes = []
         for data in artes_data:

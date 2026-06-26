@@ -376,8 +376,14 @@ O **Painel do Artista** é uma área restrita que permite ao artista acompanhar 
 | Rota | Descrição |
 |---|---|
 | `/artists/painel/` | Painel principal com métricas e últimos pedidos |
-| `/artists/painel/artes/` | Gerenciamento de artes cadastradas |
+| `/artists/painel/artes/` | Gerenciamento de artes cadastradas (permite filtro `?colecao=<id>`) |
+| `/artists/painel/artes/nova/` | Cadastro de nova arte |
+| `/artists/painel/artes/<id>/editar/` | Edição de arte cadastrada |
+| `/artists/painel/artes/<id>/status/` | Ativação/Inativação de arte (POST) |
 | `/artists/painel/colecoes/` | Gerenciamento de coleções |
+| `/artists/painel/colecoes/nova/` | Cadastro de nova coleção |
+| `/artists/painel/colecoes/<id>/editar/` | Edição de coleção |
+| `/artists/painel/colecoes/<id>/status/` | Ativação/Inativação de coleção (POST) |
 
 ### Permissões
 
