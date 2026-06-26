@@ -126,34 +126,34 @@ capinha/
 
 ## 📸 Capturas de Tela
 
-Esta seção contém imagens das principais interfaces do sistema. Para adicionar as imagens reais do seu próprio teste, salve-as na pasta `docs/screenshots/` com os nomes correspondentes:
+Abaixo estão as principais telas do sistema em funcionamento:
 
 1. **Página Inicial (Landing Page)**: Apresentação moderna do sistema e atalhos rápidos.
-   ![Home](docs/screenshots/home.png)
+   ![Home](docs/screenshots/home.webp)
 2. **Sobre o Projeto**: Detalhes do escopo e arquitetura.
-   ![Sobre](docs/screenshots/sobre.png)
+   ![Sobre](docs/screenshots/sobre.webp)
 3. **Como Testar**: Instruções passo a passo com credenciais de demonstração.
-   ![Como Testar](docs/screenshots/como_testar.png)
+   ![Como Testar](docs/screenshots/como_testar.webp)
 4. **Catálogo de Produtos**: Seleção de modelos de capinha de celular.
-   ![Catálogo de Produtos](docs/screenshots/catalogo_produtos.png)
+   ![Catálogo de Produtos](docs/screenshots/catalogo_produtos.webp)
 5. **Galeria de Artes**: Navegação por estampas e criações dos artistas.
-   ![Galeria de Artes](docs/screenshots/galeria_artes.png)
+   ![Galeria de Artes](docs/screenshots/galeria_artes.webp)
 6. **Editor de Personalização**: Edição em tempo real de texto, cores e posicionamento da estampa.
-   ![Editor de Personalização](docs/screenshots/editor_personalizacao.png)
+   ![Editor de Personalização](docs/screenshots/editor_personalizacao.webp)
 7. **Carrinho de Compras**: Detalhamento dos produtos personalizados prontos para checkout.
-   ![Carrinho de Compras](docs/screenshots/carrinho.png)
+   ![Carrinho de Compras](docs/screenshots/carrinho.webp)
 8. **Detalhe do Pedido**: Acompanhamento do status do pedido realizado.
-   ![Detalhe do Pedido](docs/screenshots/detalhe_pedido.png)
+   ![Detalhe do Pedido](docs/screenshots/detalhe_pedido.webp)
 9. **Pagamento Simulado**: Confirmação simulada de Pix ou Cartão de Crédito.
-   ![Pagamento Simulado](docs/screenshots/pagamento_simulado.png)
+   ![Pagamento Simulado](docs/screenshots/pagamento_simulado.webp)
 10. **Fila de Impressão**: Gestão do status de produção dos pedidos pela equipe de Staff.
-    ![Fila de Impressão](docs/screenshots/fila_impressao.png)
+    ![Fila de Impressão](docs/screenshots/fila_impressao.webp)
 11. **Painel do Artista**: Gráficos de vendas, faturamento e ranking de gamificação.
-    ![Painel do Artista](docs/screenshots/painel_artista.png)
+    ![Painel do Artista](docs/screenshots/painel_artista.webp)
 12. **Gerenciamento de Artes**: Formulário de criação e edição (CRUD) de estampas pelo artista.
-    ![Gerenciamento de Artes](docs/screenshots/gerenciamento_artes.png)
+    ![Gerenciamento de Artes](docs/screenshots/gerenciamento_artes.webp)
 13. **Gerenciamento de Coleções**: Organização de estampas em coleções temáticas pelo artista.
-    ![Gerenciamento de Coleções](docs/screenshots/gerenciamento_colecoes.png)
+    ![Gerenciamento de Coleções](docs/screenshots/gerenciamento_colecoes.webp)
 
 ---
 
