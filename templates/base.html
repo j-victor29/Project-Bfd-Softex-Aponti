@@ -3,7 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% block title %}Capinha - Custom Marketplace{% endblock %}</title>
+    <title>{% block title %}Capinha - Plataforma de Personalização{% endblock %}</title>
+    <meta name="description" content="Capinha MVP: plataforma completa de personalização e venda de capinhas com editor 2D, carrinho, painel do artista e fila de impressão.">
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -38,16 +39,16 @@
 
         /* Glassmorphism Navbar */
         .navbar {
-            background: rgba(11, 15, 25, 0.8) !important;
+            background: rgba(11, 15, 25, 0.9) !important;
             backdrop-filter: blur(12px);
             -webkit-backdrop-filter: blur(12px);
             border-bottom: 1px solid var(--border-color);
-            padding: 0.8rem 0;
+            padding: 0.6rem 0;
         }
 
         .navbar-brand {
             font-weight: 800;
-            font-size: 1.6rem;
+            font-size: 1.5rem;
             letter-spacing: -0.5px;
             background: var(--primary-gradient);
             -webkit-background-clip: text;
@@ -56,15 +57,31 @@
 
         .nav-link {
             font-weight: 500;
+            font-size: 0.9rem;
             color: #d1d5db !important;
             transition: all 0.3s ease;
-            padding: 0.5rem 1rem !important;
+            padding: 0.45rem 0.85rem !important;
             border-radius: 8px;
         }
 
         .nav-link:hover, .nav-link.active {
             color: #ffffff !important;
-            background: rgba(255, 255, 255, 0.05);
+            background: rgba(255, 255, 255, 0.06);
+        }
+
+        .nav-divider {
+            width: 1px;
+            height: 24px;
+            background: var(--border-color);
+            margin: 0 8px;
+            align-self: center;
+        }
+
+        /* Badge pill no link do carrinho */
+        .cart-badge {
+            font-size: 0.65rem;
+            top: -2px;
+            right: -6px;
         }
 
         /* Dropdown Menu styling */
@@ -79,7 +96,8 @@
         .dropdown-item {
             color: #d1d5db;
             font-weight: 500;
-            padding: 0.6rem 1.2rem;
+            font-size: 0.88rem;
+            padding: 0.55rem 1.1rem;
             border-radius: 8px;
             transition: all 0.2s ease;
         }
@@ -87,6 +105,10 @@
         .dropdown-item:hover {
             background: var(--primary-gradient);
             color: #ffffff;
+        }
+
+        .dropdown-divider {
+            border-color: var(--border-color);
         }
 
         /* Footer */
@@ -108,7 +130,7 @@
         }
 
         .card:hover {
-            transform: translateY(-5px);
+            transform: translateY(-4px);
             box-shadow: 0 12px 30px rgba(99, 102, 241, 0.2);
             border-color: rgba(99, 102, 241, 0.3) !important;
         }
@@ -150,101 +172,195 @@
             background: rgba(255, 255, 255, 0.15) !important;
         }
 
+        /* Empty state utility */
+        .empty-state {
+            text-align: center;
+            padding: 4rem 2rem;
+            color: var(--text-muted);
+        }
+        .empty-state i {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+            opacity: 0.4;
+        }
+        .empty-state h5 {
+            font-weight: 600;
+            color: #9ca3af;
+            margin-bottom: 0.5rem;
+        }
+        .empty-state p {
+            font-size: 0.9rem;
+        }
+
         /* Custom scrollbar */
-        ::-webkit-scrollbar {
-            width: 8px;
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: var(--bg-color); }
+        ::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.1); border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: rgba(255, 255, 255, 0.2); }
+
+        /* Navbar toggler */
+        .navbar-toggler {
+            border-color: var(--border-color) !important;
         }
-        ::-webkit-scrollbar-track {
-            background: var(--bg-color);
+        .navbar-toggler-icon {
+            filter: invert(1);
         }
-        ::-webkit-scrollbar-thumb {
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 4px;
+
+        /* Role badges na navbar */
+        .role-badge {
+            font-size: 0.7rem;
+            padding: 2px 7px;
+            border-radius: 20px;
+            vertical-align: middle;
         }
-        ::-webkit-scrollbar-thumb:hover {
-            background: rgba(255, 255, 255, 0.2);
+
+        /* Alert messages */
+        .alert-glass {
+            background: rgba(22, 28, 45, 0.9);
+            border: 1px solid var(--border-color);
+            color: var(--text-main);
+            border-radius: 12px;
         }
     </style>
 </head>
 <body>
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <nav class="navbar navbar-expand-lg navbar-dark">
         <div class="container">
-            <a class="navbar-brand" href="/"><i class="fas fa-mobile-alt me-2"></i>Capinha</a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+            <a class="navbar-brand" href="{% url 'home' %}">
+                <i class="fas fa-mobile-alt me-2"></i>Capinha
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+                    aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav me-auto mb-2 mb-lg-0 ms-lg-4">
+
+                <!-- Links Institucionais -->
+                <ul class="navbar-nav mb-2 mb-lg-0 ms-lg-2">
                     <li class="nav-item">
-                        <a class="nav-link" href="/products/"><i class="fas fa-tags me-1"></i> Produtos</a>
+                        <a class="nav-link" href="{% url 'home' %}" id="nav-inicio">
+                            <i class="fas fa-home me-1"></i>Início
+                        </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="/artists/"><i class="fas fa-palette me-1"></i> Artistas</a>
+                        <a class="nav-link" href="{% url 'sobre' %}" id="nav-sobre">
+                            <i class="fas fa-info-circle me-1"></i>Sobre
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'como-testar' %}" id="nav-como-testar">
+                            <i class="fas fa-route me-1"></i>Como Testar
+                        </a>
+                    </li>
+                </ul>
+
+                <div class="nav-divider d-none d-lg-block"></div>
+
+                <!-- Links de Loja -->
+                <ul class="navbar-nav mb-2 mb-lg-0">
+                    <li class="nav-item">
+                        <a class="nav-link" href="/products/" id="nav-produtos">
+                            <i class="fas fa-store me-1"></i>Produtos
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/artists/" id="nav-artistas">
+                            <i class="fas fa-user-tie me-1"></i>Artistas
+                        </a>
                     </li>
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" href="#" id="navbarCreations" role="button" data-bs-toggle="dropdown">
-                            <i class="fas fa-paint-brush me-1"></i> Criações
+                            <i class="fas fa-paint-brush me-1"></i>Criações
                         </a>
                         <ul class="dropdown-menu">
-                            <li><a class="dropdown-item" href="/creations/colecoes/">Coleções</a></li>
-                            <li><a class="dropdown-item" href="/creations/artes/">Artes</a></li>
-                            <li><a class="dropdown-item" href="/creations/personalizacoes/">Personalizações</a></li>
+                            <li><a class="dropdown-item" href="/creations/colecoes/" id="nav-colecoes"><i class="fas fa-layer-group me-2 text-muted"></i>Coleções</a></li>
+                            <li><a class="dropdown-item" href="/creations/artes/" id="nav-artes"><i class="fas fa-palette me-2 text-muted"></i>Artes</a></li>
+                            <li><a class="dropdown-item" href="/creations/personalizacoes/" id="nav-personalizacoes"><i class="fas fa-edit me-2 text-muted"></i>Personalizações</a></li>
                         </ul>
                     </li>
                 </ul>
+
+                <!-- Links Autenticados (lado direito) -->
                 <ul class="navbar-nav ms-auto align-items-lg-center">
                     {% if user.is_authenticated %}
+
+                        <!-- Carrinho -->
                         <li class="nav-item">
-                            <a class="nav-link" href="{% url 'cart:carrinho-detalhe' %}">
-                                <i class="fas fa-shopping-cart me-1"></i> Carrinho
+                            <a class="nav-link position-relative" href="{% url 'cart:carrinho-detalhe' %}" id="nav-carrinho">
+                                <i class="fas fa-shopping-cart me-1"></i>Carrinho
                             </a>
                         </li>
+
+                        <!-- Pedidos -->
+                        <li class="nav-item">
+                            <a class="nav-link" href="/orders/" id="nav-pedidos">
+                                <i class="fas fa-box-open me-1"></i>Pedidos
+                            </a>
+                        </li>
+
+                        <!-- Painel do Artista (somente artistas aprovados) -->
                         {% with perfil=request.user.perfil_artista %}
                         {% if perfil and perfil.status_aprovacao == 'aprovado' %}
                         <li class="nav-item">
-                            <a class="nav-link" href="{% url 'painel-principal' %}">
-                                <i class="fas fa-chart-line me-1"></i> Painel do Artista
+                            <a class="nav-link" href="{% url 'painel-principal' %}" id="nav-painel-artista">
+                                <i class="fas fa-chart-line me-1"></i>Painel do Artista
+                                <span class="badge bg-warning text-dark role-badge ms-1">Artista</span>
                             </a>
                         </li>
                         {% endif %}
                         {% endwith %}
-                        <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown">
-                                <i class="fas fa-box-open me-1"></i> Pedidos
-                            </a>
-                            <ul class="dropdown-menu">
-                                <li><a class="dropdown-item" href="/orders/">Meus Pedidos</a></li>
-                                <li><a class="dropdown-item" href="/admin/orders/pedido/add/">Novo Pedido</a></li>
-                            </ul>
-                        </li>
-                        <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle" href="#" id="navbarGameDropdown" role="button" data-bs-toggle="dropdown">
-                                <i class="fas fa-trophy me-1"></i> Gamificação
-                            </a>
-                            <ul class="dropdown-menu">
-                                <li><a class="dropdown-item" href="/gamification/">Dashboard</a></li>
-                                <li><a class="dropdown-item" href="/gamification/badges/">Badges</a></li>
-                                <li><a class="dropdown-item" href="/gamification/ranking/">Ranking</a></li>
-                            </ul>
-                        </li>
+
+                        <!-- Produção/Impressão (somente staff ou superusuário) -->
+                        {% if user.is_staff or user.is_superuser %}
                         <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle" href="#" id="navbarPrintingDropdown" role="button" data-bs-toggle="dropdown">
-                                <i class="fas fa-print me-1"></i> Impressão
+                                <i class="fas fa-print me-1"></i>Produção
+                                <span class="badge bg-success role-badge ms-1">Staff</span>
                             </a>
                             <ul class="dropdown-menu">
-                                <li><a class="dropdown-item" href="/printing/">Impressoras</a></li>
-                                <li><a class="dropdown-item" href="/printing/fila/">Fila de Impressão</a></li>
+                                <li><a class="dropdown-item" href="/printing/" id="nav-impressoras"><i class="fas fa-server me-2 text-muted"></i>Impressoras</a></li>
+                                <li><a class="dropdown-item" href="/printing/fila/" id="nav-fila-impressao"><i class="fas fa-list-ol me-2 text-muted"></i>Fila de Impressão</a></li>
+                                <li><hr class="dropdown-divider"></li>
+                                <li><a class="dropdown-item" href="/orders/" id="nav-todos-pedidos"><i class="fas fa-box me-2 text-muted"></i>Todos os Pedidos</a></li>
                             </ul>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="/admin/"><i class="fas fa-cog me-1"></i> Admin</a>
+                        {% endif %}
+
+                        <!-- Gamificação -->
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" id="navbarGameDropdown" role="button" data-bs-toggle="dropdown">
+                                <i class="fas fa-trophy me-1"></i>Ranking
+                            </a>
+                            <ul class="dropdown-menu dropdown-menu-end">
+                                <li><a class="dropdown-item" href="/gamification/" id="nav-gamification"><i class="fas fa-star me-2 text-muted"></i>Dashboard</a></li>
+                                <li><a class="dropdown-item" href="/gamification/badges/" id="nav-badges"><i class="fas fa-medal me-2 text-muted"></i>Badges</a></li>
+                                <li><a class="dropdown-item" href="/gamification/ranking/" id="nav-ranking"><i class="fas fa-crown me-2 text-muted"></i>Ranking</a></li>
+                            </ul>
                         </li>
-                        <li class="nav-item ms-lg-2">
-                            <a class="nav-link btn btn-secondary py-1 px-3 text-white" href="/logout/"><i class="fas fa-sign-out-alt me-1"></i> Sair</a>
+
+                        <!-- Admin (somente superusuário) -->
+                        {% if user.is_superuser %}
+                        <li class="nav-item">
+                            <a class="nav-link" href="/admin/" id="nav-admin">
+                                <i class="fas fa-cog me-1"></i>Admin
+                                <span class="badge bg-danger role-badge ms-1">Super</span>
+                            </a>
+                        </li>
+                        {% endif %}
+
+                        <div class="nav-divider d-none d-lg-block"></div>
+
+                        <!-- Usuário Logado -->
+                        <li class="nav-item ms-lg-1">
+                            <a class="nav-link btn btn-secondary py-1 px-3" href="/logout/" id="nav-logout">
+                                <i class="fas fa-sign-out-alt me-1"></i>Sair
+                            </a>
                         </li>
                     {% else %}
                         <li class="nav-item">
-                            <a class="nav-link btn btn-primary py-1 px-4 text-white" href="/login/"><i class="fas fa-sign-in-alt me-1"></i> Login</a>
+                            <a class="nav-link btn btn-primary py-1 px-4 text-white" href="/login/" id="nav-login">
+                                <i class="fas fa-sign-in-alt me-1"></i>Login
+                            </a>
                         </li>
                     {% endif %}
                 </ul>
@@ -252,13 +368,39 @@
         </div>
     </nav>
 
+    <!-- Mensagens flash -->
+    {% if messages %}
+    <div class="container mt-3">
+        {% for message in messages %}
+        <div class="alert alert-glass alert-dismissible fade show" role="alert"
+             style="border-left: 4px solid {% if message.tags == 'success' %}#22c55e{% elif message.tags == 'error' %}#ef4444{% elif message.tags == 'warning' %}#f59e0b{% else %}#6366f1{% endif %}">
+            <i class="fas {% if message.tags == 'success' %}fa-check-circle text-success{% elif message.tags == 'error' %}fa-exclamation-circle text-danger{% elif message.tags == 'warning' %}fa-exclamation-triangle text-warning{% else %}fa-info-circle text-primary{% endif %} me-2"></i>
+            {{ message }}
+            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="alert"></button>
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+
     <main class="flex-grow-1">
         {% block content %}{% endblock %}
     </main>
 
     <footer class="bg-dark text-white mt-5 py-4">
-        <div class="container text-center">
-            <p class="mb-0 text-muted">&copy; 2026 Capinha. Todos os direitos reservados. Feito com <i class="fas fa-heart text-danger"></i> para você.</p>
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-md-6 text-center text-md-start mb-2 mb-md-0">
+                    <span class="fw-bold" style="background: var(--primary-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">
+                        <i class="fas fa-mobile-alt me-1"></i>Capinha
+                    </span>
+                    <span class="text-muted small ms-2">MVP de Portfólio | Django + DRF</span>
+                </div>
+                <div class="col-md-6 text-center text-md-end">
+                    <a href="{% url 'sobre' %}" class="text-muted small me-3 text-decoration-none">Sobre</a>
+                    <a href="{% url 'como-testar' %}" class="text-muted small me-3 text-decoration-none">Como Testar</a>
+                    <span class="text-muted small">&copy; 2026 Capinha</span>
+                </div>
+            </div>
         </div>
     </footer>
 

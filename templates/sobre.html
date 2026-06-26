@@ -1,0 +1,125 @@
+{% extends "base.html" %}
+
+{% block title %}Sobre o Projeto - Capinha{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row mb-5">
+        <div class="col-lg-8 mx-auto text-center">
+            <h1 class="display-4 fw-bold mb-3 text-gradient">
+                <i class="fas fa-info-circle me-2 text-primary"></i>Sobre o Capinha
+            </h1>
+            <p class="lead text-muted">
+                Um MVP completo para personalização e venda de capinhas, focado em demonstrar arquitetura e habilidades de desenvolvimento full-stack.
+            </p>
+        </div>
+    </div>
+
+    <!-- O Problema & A Solução -->
+    <div class="row g-4 mb-5">
+        <div class="col-md-6">
+            <div class="card h-100 p-4">
+                <div class="d-flex align-items-center mb-3">
+                    <div class="bg-danger bg-opacity-10 p-3 rounded-circle me-3">
+                        <i class="fas fa-exclamation-triangle fa-2x text-danger"></i>
+                    </div>
+                    <h3 class="h4 mb-0 fw-bold">O Desafio</h3>
+                </div>
+                <p class="text-muted mb-0">
+                    O mercado de personalização sob demanda costuma enfrentar atrito no processo de checkout, falta de transparência na fila de produção, e pouca motivação para artistas independentes publicarem seus designs exclusivos.
+                </p>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="card h-100 p-4">
+                <div class="d-flex align-items-center mb-3">
+                    <div class="bg-success bg-opacity-10 p-3 rounded-circle me-3">
+                        <i class="fas fa-check-circle fa-2x text-success"></i>
+                    </div>
+                    <h3 class="h4 mb-0 fw-bold">A Solução Capinha</h3>
+                </div>
+                <p class="text-muted mb-0">
+                    Uma plataforma integrada onde clientes customizam suas capinhas usando um editor visual interativo, artistas cadastram e monetizam suas artes divididas por coleções, e a equipe de produção gerencia uma fila de impressão automatizada.
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Perfis de Usuário -->
+    <div class="row mb-5">
+        <div class="col-12">
+            <h2 class="text-center mb-4 fw-bold">Perfis de Acesso</h2>
+        </div>
+        <div class="col-md-4">
+            <div class="card h-100 p-4 text-center">
+                <i class="fas fa-shopping-bag fa-3x text-info mb-3"></i>
+                <h4 class="fw-bold text-info">Cliente</h4>
+                <p class="text-muted small">
+                    Navega pelo catálogo de produtos, escolhe estampas exclusivas de artistas, personaliza com texto e formatação customizados via editor 2D, gerencia o carrinho de compras e acompanha seus pedidos.
+                </p>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card h-100 p-4 text-center">
+                <i class="fas fa-palette fa-3x text-warning mb-3"></i>
+                <h4 class="fw-bold text-warning">Artista</h4>
+                <p class="text-muted small">
+                    Possui um painel exclusivo com gráficos de desempenho, vendas e faturamento. Gerencia seu próprio catálogo de criações (Artes e Coleções), solicitando aprovação para novas artes.
+                </p>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card h-100 p-4 text-center">
+                <i class="fas fa-print fa-3x text-success mb-3"></i>
+                <h4 class="fw-bold text-success">Staff / Produção</h4>
+                <p class="text-muted small">
+                    Visualiza a fila de impressão dos pedidos pagos, gerencia as impressoras conectadas e acompanha o status de produção desde a preparação até a finalização da impressão física da capinha.
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Escopo do MVP -->
+    <div class="row">
+        <div class="col-lg-10 mx-auto">
+            <div class="card p-5">
+                <h3 class="fw-bold mb-4 text-center text-gradient">Objetivo Tecnológico e Arquitetura</h3>
+                <p class="text-muted text-center mb-4">
+                    Este sistema foi projetado para demonstrar boas práticas de engenharia de software no ecossistema Django, com alto índice de testes, separação limpa de conceitos e modularidade.
+                </p>
+                <div class="row g-4 text-start">
+                    <div class="col-md-6">
+                        <h5 class="fw-bold text-primary"><i class="fas fa-cubes me-2"></i>Estrutura Modular</h5>
+                        <p class="text-muted small">Módulos independentes por funcionalidade (`users`, `products`, `artists`, `creations`, `cart`, `orders`, `payments`, `printing`, `gamification`).</p>
+                    </div>
+                    <div class="col-md-6">
+                        <h5 class="fw-bold text-primary"><i class="fas fa-shield-alt me-2"></i>Segurança e Permissões</h5>
+                        <p class="text-muted small">Controle de acesso granular baseado em decorators de grupo/perfil, validações de transação segura e proteção de uploads de arquivos.</p>
+                    </div>
+                    <div class="col-md-6">
+                        <h5 class="fw-bold text-primary"><i class="fas fa-vial me-2"></i>Testes Integrados</h5>
+                        <p class="text-muted small">Testes unitários e de integração automatizados, cobrindo fluxos de carrinho, permissões de artista e controle de estoque de produtos.</p>
+                    </div>
+                    <div class="col-md-6">
+                        <h5 class="fw-bold text-primary"><i class="fas fa-wallet me-2"></i>Foco em Portfólio</h5>
+                        <p class="text-muted small">O pagamento e envio são simulados com fluxos determinísticos, eliminando a necessidade de credenciais de APIs externas para validação rápida por recrutadores.</p>
+                    </div>
+                </div>
+                <div class="text-center mt-4">
+                    <a href="{% url 'como-testar' %}" class="btn btn-primary btn-lg px-4">
+                        <i class="fas fa-play-circle me-2"></i>Ver Guia de Teste
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .text-gradient {
+        background: var(--primary-gradient);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+    }
+</style>
+{% endblock %}

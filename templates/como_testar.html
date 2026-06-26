@@ -1,0 +1,148 @@
+{% extends "base.html" %}
+
+{% block title %}Como Testar o Sistema - Capinha{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row mb-5">
+        <div class="col-lg-8 mx-auto text-center">
+            <h1 class="display-4 fw-bold mb-3 text-gradient">
+                <i class="fas fa-route me-2 text-primary"></i>Guia de Teste Manual
+            </h1>
+            <p class="lead text-muted">
+                Siga este roteiro estruturado para testar todos os papéis e recursos do MVP Capinha.
+            </p>
+        </div>
+    </div>
+
+    <!-- Credenciais Demo -->
+    <div class="row g-4 mb-5">
+        <div class="col-12">
+            <h3 class="fw-bold mb-3 text-center"><i class="fas fa-key me-2 text-warning"></i>Credenciais de Acesso Rápido</h3>
+            <p class="text-muted text-center small">Os dados abaixo são inseridos automaticamente ao rodar o comando <code>python manage.py seed_demo</code>.</p>
+        </div>
+        <div class="col-md-4">
+            <div class="card h-100 p-4 border-info">
+                <div class="card-header text-info text-center border-0 bg-transparent pb-0">
+                    <h5 class="fw-bold"><i class="fas fa-shopping-bag me-2"></i>Cliente</h5>
+                </div>
+                <div class="card-body text-center">
+                    <p class="mb-1 text-muted">E-mail:</p>
+                    <p class="fw-bold text-white mb-3">cliente@capinha.com</p>
+                    <p class="mb-1 text-muted">Senha:</p>
+                    <p class="fw-bold text-white">capinha123</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card h-100 p-4 border-warning">
+                <div class="card-header text-warning text-center border-0 bg-transparent pb-0">
+                    <h5 class="fw-bold"><i class="fas fa-palette me-2"></i>Artista</h5>
+                </div>
+                <div class="card-body text-center">
+                    <p class="mb-1 text-muted">E-mail:</p>
+                    <p class="fw-bold text-white mb-3">artista@capinha.com</p>
+                    <p class="mb-1 text-muted">Senha:</p>
+                    <p class="fw-bold text-white">capinha123</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card h-100 p-4 border-success">
+                <div class="card-header text-success text-center border-0 bg-transparent pb-0">
+                    <h5 class="fw-bold"><i class="fas fa-print me-2"></i>Staff / Produção</h5>
+                </div>
+                <div class="card-body text-center">
+                    <p class="mb-1 text-muted">E-mail:</p>
+                    <p class="fw-bold text-white mb-3">staff@capinha.com</p>
+                    <p class="mb-1 text-muted">Senha:</p>
+                    <p class="fw-bold text-white">capinha123</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Roteiro de Teste -->
+    <div class="row">
+        <div class="col-lg-10 mx-auto">
+            <h3 class="fw-bold mb-4"><i class="fas fa-clipboard-list me-2 text-primary"></i>Fluxo Completo do Sistema (Passo a Passo)</h3>
+            
+            <div class="timeline">
+                
+                <div class="timeline-item mb-4">
+                    <div class="card p-4">
+                        <h5 class="fw-bold text-gradient"><span class="badge bg-primary me-2">Passo 1</span> Navegação e Escolha do Produto</h5>
+                        <p class="text-muted mb-0">
+                            Faça login com a conta de <strong>Cliente</strong> (cliente@capinha.com). Vá em <strong>Produtos</strong> na barra de navegação, selecione um produto disponível (como o <em>iPhone 15 Pro</em>) e clique para personalizá-lo.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="timeline-item mb-4">
+                    <div class="card p-4">
+                        <h5 class="fw-bold text-gradient"><span class="badge bg-primary me-2">Passo 2</span> O Editor Visual 2D</h5>
+                        <p class="text-muted mb-0">
+                            Na tela do editor, selecione uma estampa (Arte) de fundo. Insira seu nome ou frase no campo de texto, escolha a cor da fonte, o tamanho e posicione o texto ajustando as coordenadas. Defina também observações extras e clique em <strong>Adicionar ao Carrinho</strong>.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="timeline-item mb-4">
+                    <div class="card p-4">
+                        <h5 class="fw-bold text-gradient"><span class="badge bg-primary me-2">Passo 3</span> Checkout e Pagamento Simulado</h5>
+                        <p class="text-muted mb-0">
+                            Vá para a página do <strong>Carrinho</strong>, confira os dados da personalização e o preço final. Prossiga para o Checkout. Na tela de pagamento simulado, escolha o método (ex. Pix ou Cartão) para concluir a simulação do pagamento.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="timeline-item mb-4">
+                    <div class="card p-4">
+                        <h5 class="fw-bold text-gradient"><span class="badge bg-success me-2">Passo 4</span> Produção e Fila de Impressão</h5>
+                        <p class="text-muted mb-0">
+                            Faça logout e entre com o perfil de <strong>Staff</strong> (staff@capinha.com). Acesse a aba <strong>Impressão > Fila de Impressão</strong> no menu. Você verá o pedido que acabou de pagar aguardando na fila. Gerencie o status da produção alterando para "imprimindo" e depois "concluído".
+                        </p>
+                    </div>
+                </div>
+
+                <div class="timeline-item mb-4">
+                    <div class="card p-4">
+                        <h5 class="fw-bold text-gradient"><span class="badge bg-warning me-2">Passo 5</span> Painel do Artista</h5>
+                        <p class="text-muted mb-0">
+                            Faça logout e entre com o perfil do <strong>Artista</strong> (artista@capinha.com). Clique em <strong>Painel do Artista</strong> no menu. Veja os gráficos de vendas, faturamento geral e métricas de desempenho. Aproveite para cadastrar uma nova arte ou coleção de teste.
+                        </p>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .text-gradient {
+        background: var(--primary-gradient);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+    }
+    .timeline {
+        border-left: 2px solid var(--border-color);
+        padding-left: 20px;
+        position: relative;
+    }
+    .timeline-item {
+        position: relative;
+    }
+    .timeline-item::before {
+        content: '';
+        position: absolute;
+        left: -31px;
+        top: 20px;
+        width: 20px;
+        height: 20px;
+        border-radius: 50%;
+        background-color: var(--bg-color);
+        border: 4px solid #6366f1;
+    }
+</style>
+{% endblock %}

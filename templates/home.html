@@ -1,293 +1,249 @@
 {% extends "base.html" %}
 {% load static %}
 
-{% block title %}Home - Capinha{% endblock %}
+{% block title %}Home - Capinha MVP{% endblock %}
 
 {% block content %}
-<div class="container-fluid min-vh-100 d-flex align-items-center">
-    <div class="container">
-        
-        <!-- Seção Hero -->
-        <div class="row mb-5 pb-5">
-            <div class="col-lg-10 mx-auto text-center">
-                <div class="hero-content">
-                    <h1 class="display-3 fw-bold mb-4 text-gradient">
-                        <i class="fas fa-paint-brush me-3 text-primary"></i>
-                        Bem-vindo ao Capinha!
-                    </h1>
-                    <p class="lead text-muted mb-4">
-                        Plataforma completa para criação, personalização e impressão de produtos personalizados
-                    </p>
-                    <div class="d-flex gap-3 justify-content-center">
-                        <a href="{% url 'creations-home' %}" class="btn btn-primary btn-lg">
-                            <i class="fas fa-palette me-2"></i>Explorar Criações
-                        </a>
-                        <a href="{% url 'colecao-list' %}" class="btn btn-outline-primary btn-lg">
-                            <i class="fas fa-images me-2"></i>Ver Coleções
-                        </a>
-                    </div>
-                </div>
+<div class="container py-5">
+    
+    <!-- Hero Section -->
+    <div class="row align-items-center mb-5 pb-4">
+        <div class="col-lg-7 text-start">
+            <span class="badge bg-primary px-3 py-2 rounded-pill mb-3 fs-6">MVP de Portfólio</span>
+            <h1 class="display-3 fw-bold mb-3 text-gradient">
+                <i class="fas fa-mobile-alt me-2 text-primary"></i>Capinha
+            </h1>
+            <h2 class="h3 fw-semibold text-white mb-4">
+                Plataforma de Personalização e Venda de Capinhas 2D
+            </h2>
+            <p class="lead text-muted mb-4">
+                Uma solução robusta construída em Django para simular a operação completa de um e-commerce de produtos personalizados: desde a arte criada por artistas independentes até a fila de produção da fábrica.
+            </p>
+            <div class="d-flex flex-wrap gap-3">
+                <a href="{% url 'como-testar' %}" class="btn btn-primary btn-lg">
+                    <i class="fas fa-play-circle me-2"></i>Como Testar
+                </a>
+                <a href="/products/" class="btn btn-secondary btn-lg">
+                    <i class="fas fa-store me-2"></i>Ver Produtos
+                </a>
+                {% if not user.is_authenticated %}
+                <a href="/login/" class="btn btn-outline-info btn-lg">
+                    <i class="fas fa-sign-in-alt me-2"></i>Login Rápido
+                </a>
+                {% endif %}
             </div>
         </div>
-
-        <!-- Grid de Módulos -->
-        <div class="row g-4 mb-5">
-            
-            <!-- Card: Creations -->
-            <div class="col-md-6 col-lg-4">
-                <div class="module-card h-100 shadow-sm border-0 rounded-lg overflow-hidden">
-                    <div class="module-header bg-primary bg-opacity-10 p-4 text-center">
-                        <i class="fas fa-palette fa-3x text-primary"></i>
-                    </div>
-                    <div class="card-body p-4">
-                        <h5 class="card-title fw-bold mb-3">Criações</h5>
-                        <p class="card-text text-muted small mb-4">
-                            Explore coleções de artes, veja designs e personalize seus produtos favoritos.
-                        </p>
-                        <a href="{% url 'creations-home' %}" class="btn btn-sm btn-primary w-100">
-                            <i class="fas fa-arrow-right me-2"></i>Acessar
-                        </a>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Card: Produtos -->
-            <div class="col-md-6 col-lg-4">
-                <div class="module-card h-100 shadow-sm border-0 rounded-lg overflow-hidden">
-                    <div class="module-header bg-success bg-opacity-10 p-4 text-center">
-                        <i class="fas fa-box fa-3x text-success"></i>
-                    </div>
-                    <div class="card-body p-4">
-                        <h5 class="card-title fw-bold mb-3">Produtos</h5>
-                        <p class="card-text text-muted small mb-4">
-                            Conheça nossa linha de produtos disponíveis para personalização.
-                        </p>
-                        <a href="/products/" class="btn btn-sm btn-success w-100">
-                            <i class="fas fa-arrow-right me-2"></i>Acessar
-                        </a>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Card: Pedidos -->
-            <div class="col-md-6 col-lg-4">
-                <div class="module-card h-100 shadow-sm border-0 rounded-lg overflow-hidden">
-                    <div class="module-header bg-info bg-opacity-10 p-4 text-center">
-                        <i class="fas fa-shopping-cart fa-3x text-info"></i>
-                    </div>
-                    <div class="card-body p-4">
-                        <h5 class="card-title fw-bold mb-3">Pedidos</h5>
-                        <p class="card-text text-muted small mb-4">
-                            Gerencie seus pedidos, acompanhe o status e histórico de compras.
-                        </p>
-                        <a href="/orders/" class="btn btn-sm btn-info w-100">
-                            <i class="fas fa-arrow-right me-2"></i>Acessar
-                        </a>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Card: Artistas -->
-            <div class="col-md-6 col-lg-4">
-                <div class="module-card h-100 shadow-sm border-0 rounded-lg overflow-hidden">
-                    <div class="module-header bg-warning bg-opacity-10 p-4 text-center">
-                        <i class="fas fa-user-tie fa-3x text-warning"></i>
-                    </div>
-                    <div class="card-body p-4">
-                        <h5 class="card-title fw-bold mb-3">Artistas</h5>
-                        <p class="card-text text-muted small mb-4">
-                            Explore artistas incríveis e suas criações exclusivas.
-                        </p>
-                        <a href="/artists/" class="btn btn-sm btn-warning w-100">
-                            <i class="fas fa-arrow-right me-2"></i>Acessar
-                        </a>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Card: Pagamentos -->
-            <div class="col-md-6 col-lg-4">
-                <div class="module-card h-100 shadow-sm border-0 rounded-lg overflow-hidden">
-                    <div class="module-header bg-danger bg-opacity-10 p-4 text-center">
-                        <i class="fas fa-credit-card fa-3x text-danger"></i>
-                    </div>
-                    <div class="card-body p-4">
-                        <h5 class="card-title fw-bold mb-3">Pagamentos</h5>
-                        <p class="card-text text-muted small mb-4">
-                            Gerencie pagamentos, faturas e métodos de pagamento.
-                        </p>
-                        <a href="/payments/" class="btn btn-sm btn-danger w-100">
-                            <i class="fas fa-arrow-right me-2"></i>Acessar
-                        </a>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Card: Gamificação -->
-            <div class="col-md-6 col-lg-4">
-                <div class="module-card h-100 shadow-sm border-0 rounded-lg overflow-hidden">
-                    <div class="module-header bg-success bg-opacity-10 p-4 text-center">
-                        <i class="fas fa-trophy fa-3x text-success"></i>
-                    </div>
-                    <div class="card-body p-4">
-                        <h5 class="card-title fw-bold mb-3">Gamificação</h5>
-                        <p class="card-text text-muted small mb-4">
-                            Ganhe pontos, desbloqueie badges e suba no ranking!
-                        </p>
-                        <a href="/gamification/" class="btn btn-sm btn-success w-100">
-                            <i class="fas fa-arrow-right me-2"></i>Acessar
-                        </a>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Card: Usuários -->
-            <div class="col-md-6 col-lg-4">
-                <div class="module-card h-100 shadow-sm border-0 rounded-lg overflow-hidden">
-                    <div class="module-header bg-primary bg-opacity-10 p-4 text-center">
-                        <i class="fas fa-users fa-3x text-primary"></i>
-                    </div>
-                    <div class="card-body p-4">
-                        <h5 class="card-title fw-bold mb-3">Usuários</h5>
-                        <p class="card-text text-muted small mb-4">
-                            Gerencie seu perfil, preferências e informações pessoais.
-                        </p>
-                        <a href="/users/" class="btn btn-sm btn-primary w-100">
-                            <i class="fas fa-arrow-right me-2"></i>Acessar
-                        </a>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Card: Impressão -->
-            <div class="col-md-6 col-lg-4">
-                <div class="module-card h-100 shadow-sm border-0 rounded-lg overflow-hidden">
-                    <div class="module-header bg-info bg-opacity-10 p-4 text-center">
-                        <i class="fas fa-print fa-3x text-info"></i>
-                    </div>
-                    <div class="card-body p-4">
-                        <h5 class="card-title fw-bold mb-3">Impressão</h5>
-                        <p class="card-text text-muted small mb-4">
-                            Controle impressoras, fila de impressão e status de produção.
-                        </p>
-                        <a href="/printing/" class="btn btn-sm btn-info w-100">
-                            <i class="fas fa-arrow-right me-2"></i>Acessar
-                        </a>
-                    </div>
-                </div>
-            </div>
-
-        </div>
-
-        <!-- Seção de Features -->
-        <div class="row mt-5 pt-5">
-            <div class="col-lg-10 mx-auto">
-                <h2 class="text-center mb-4 fw-bold">Recursos da Plataforma</h2>
-                
-                <div class="row g-3">
-                    <div class="col-md-4">
-                        <div class="feature-box p-4 text-center rounded-lg">
-                            <i class="fas fa-check-circle fa-2x text-success mb-3"></i>
-                            <h6 class="fw-bold">100% Responsivo</h6>
-                            <p class="text-muted small">Funciona perfeitamente em qualquer dispositivo</p>
-                        </div>
-                    </div>
-                    <div class="col-md-4">
-                        <div class="feature-box p-4 text-center rounded-lg">
-                            <i class="fas fa-lock fa-2x text-primary mb-3"></i>
-                            <h6 class="fw-bold">Seguro e Confiável</h6>
-                            <p class="text-muted small">Autenticação e proteção de dados garantidas</p>
-                        </div>
-                    </div>
-                    <div class="col-md-4">
-                        <div class="feature-box p-4 text-center rounded-lg">
-                            <i class="fas fa-bolt fa-2x text-warning mb-3"></i>
-                            <h6 class="fw-bold">Super Rápido</h6>
-                            <p class="text-muted small">Otimizado para melhor performance</p>
-                        </div>
-                    </div>
-                </div>
+        <div class="col-lg-5 d-none d-lg-block text-center">
+            <div class="hero-graphic p-5 rounded-circle shadow-lg d-inline-block">
+                <i class="fas fa-paint-brush fa-8x text-primary animate-pulse"></i>
             </div>
         </div>
-
     </div>
+
+    <!-- Fluxo Operacional Section -->
+    <div class="row mb-5 py-4">
+        <div class="col-12 text-center mb-4">
+            <h3 class="fw-bold"><i class="fas fa-exchange-alt me-2 text-primary"></i>Fluxo Completo do Sistema</h3>
+            <p class="text-muted">Acompanhe a jornada completa da capinha desde a escolha até a produção</p>
+        </div>
+        <div class="col-12">
+            <div class="card p-4">
+                <div class="row g-3 text-center justify-content-center">
+                    <div class="col-6 col-md-3 col-lg-1-5">
+                        <div class="p-3 bg-dark bg-opacity-50 rounded border border-secondary">
+                            <i class="fas fa-box fa-2x text-primary mb-2"></i>
+                            <h6 class="fw-bold mb-0">1. Produto</h6>
+                            <span class="text-muted small">Escolha o modelo</span>
+                        </div>
+                    </div>
+                    <div class="col-auto d-none d-md-flex align-items-center">
+                        <i class="fas fa-chevron-right text-muted"></i>
+                    </div>
+                    <div class="col-6 col-md-3 col-lg-1-5">
+                        <div class="p-3 bg-dark bg-opacity-50 rounded border border-secondary">
+                            <i class="fas fa-palette fa-2x text-warning mb-2"></i>
+                            <h6 class="fw-bold mb-0">2. Arte</h6>
+                            <span class="text-muted small">Selecione o design</span>
+                        </div>
+                    </div>
+                    <div class="col-auto d-none d-md-flex align-items-center">
+                        <i class="fas fa-chevron-right text-muted"></i>
+                    </div>
+                    <div class="col-6 col-md-3 col-lg-1-5">
+                        <div class="p-3 bg-dark bg-opacity-50 rounded border border-secondary">
+                            <i class="fas fa-edit fa-2x text-info mb-2"></i>
+                            <h6 class="fw-bold mb-0">3. Customização</h6>
+                            <span class="text-muted small">Personalize no 2D</span>
+                        </div>
+                    </div>
+                    <div class="col-auto d-none d-md-flex align-items-center">
+                        <i class="fas fa-chevron-right text-muted"></i>
+                    </div>
+                    <div class="col-6 col-md-3 col-lg-1-5">
+                        <div class="p-3 bg-dark bg-opacity-50 rounded border border-secondary">
+                            <i class="fas fa-shopping-cart fa-2x text-success mb-2"></i>
+                            <h6 class="fw-bold mb-0">4. Carrinho</h6>
+                            <span class="text-muted small">Finalize a compra</span>
+                        </div>
+                    </div>
+                    <div class="col-auto d-none d-md-flex align-items-center">
+                        <i class="fas fa-chevron-right text-muted"></i>
+                    </div>
+                    <div class="col-6 col-md-3 col-lg-1-5">
+                        <div class="p-3 bg-dark bg-opacity-50 rounded border border-secondary">
+                            <i class="fas fa-print fa-2x text-danger mb-2"></i>
+                            <h6 class="fw-bold mb-0">5. Produção</h6>
+                            <span class="text-muted small">Fila de impressão</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modules Grid -->
+    <div class="row g-4 mb-5">
+        <div class="col-12">
+            <h3 class="fw-bold text-center mb-4"><i class="fas fa-cubes me-2 text-primary"></i>Explorar Módulos</h3>
+        </div>
+
+        <!-- Módulo 1: Catálogo de Produtos -->
+        <div class="col-md-6 col-lg-4">
+            <div class="card h-100 p-4 d-flex flex-column justify-content-between">
+                <div>
+                    <div class="d-flex align-items-center mb-3">
+                        <i class="fas fa-box text-primary fa-2x me-3"></i>
+                        <h4 class="h5 fw-bold mb-0">Produtos</h4>
+                    </div>
+                    <p class="text-muted small">Catálogo de cases e capinhas disponíveis (como iPhone, Galaxy, Xiaomi) que servem de base para a personalização.</p>
+                </div>
+                <a href="/products/" class="btn btn-sm btn-outline-primary mt-3 w-100">Acessar Produtos</a>
+            </div>
+        </div>
+
+        <!-- Módulo 2: Artes e Estampas -->
+        <div class="col-md-6 col-lg-4">
+            <div class="card h-100 p-4 d-flex flex-column justify-content-between">
+                <div>
+                    <div class="d-flex align-items-center mb-3">
+                        <i class="fas fa-palette text-warning fa-2x me-3"></i>
+                        <h4 class="h5 fw-bold mb-0">Artes e Estampas</h4>
+                    </div>
+                    <p class="text-muted small">Biblioteca de estampas criadas por artistas parceiros, prontas para serem aplicadas em qualquer capinha.</p>
+                </div>
+                <a href="/creations/artes/" class="btn btn-sm btn-outline-warning mt-3 w-100">Acessar Artes</a>
+            </div>
+        </div>
+
+        <!-- Módulo 3: Editor Visual 2D -->
+        <div class="col-md-6 col-lg-4">
+            <div class="card h-100 p-4 d-flex flex-column justify-content-between">
+                <div>
+                    <div class="d-flex align-items-center mb-3">
+                        <i class="fas fa-edit text-info fa-2x me-3"></i>
+                        <h4 class="h5 fw-bold mb-0">Editor 2D</h4>
+                    </div>
+                    <p class="text-muted small">Editor em tempo real onde o usuário escolhe a estampa, adiciona texto, edita cor, tamanho e fonte e salva a posição do design.</p>
+                </div>
+                <a href="/products/" class="btn btn-sm btn-outline-info mt-3 w-100">Criar Customização</a>
+            </div>
+        </div>
+
+        <!-- Módulo 4: Carrinho e Checkout -->
+        <div class="col-md-6 col-lg-4">
+            <div class="card h-100 p-4 d-flex flex-column justify-content-between">
+                <div>
+                    <div class="d-flex align-items-center mb-3">
+                        <i class="fas fa-shopping-cart text-success fa-2x me-3"></i>
+                        <h4 class="h5 fw-bold mb-0">Carrinho & Pedidos</h4>
+                    </div>
+                    <p class="text-muted small">Gerenciamento dinâmico de compras com persistência da customização detalhada no banco de dados.</p>
+                </div>
+                <a href="{% url 'cart:carrinho-detalhe' %}" class="btn btn-sm btn-outline-success mt-3 w-100">Ver Carrinho</a>
+            </div>
+        </div>
+
+        <!-- Módulo 5: Painel do Artista -->
+        <div class="col-md-6 col-lg-4">
+            <div class="card h-100 p-4 d-flex flex-column justify-content-between">
+                <div>
+                    <div class="d-flex align-items-center mb-3">
+                        <i class="fas fa-chart-line text-info fa-2x me-3"></i>
+                        <h4 class="h5 fw-bold mb-0">Painel do Artista</h4>
+                    </div>
+                    <p class="text-muted small">Dashboard exclusivo do criador, exibindo faturamento, vendas das artes e gerenciador de novas coleções e estampas.</p>
+                </div>
+                <a href="{% url 'painel-principal' %}" class="btn btn-sm btn-outline-info mt-3 w-100">Painel do Artista</a>
+            </div>
+        </div>
+
+        <!-- Módulo 6: Fila de Impressão -->
+        <div class="col-md-6 col-lg-4">
+            <div class="card h-100 p-4 d-flex flex-column justify-content-between">
+                <div>
+                    <div class="d-flex align-items-center mb-3">
+                        <i class="fas fa-print text-danger fa-2x me-3"></i>
+                        <h4 class="h5 fw-bold mb-0">Fila de Impressão</h4>
+                    </div>
+                    <p class="text-muted small">Fila de produção em tempo real que monitora os pedidos pagos e permite gerenciar as impressoras industriais.</p>
+                </div>
+                <a href="/printing/fila/" class="btn btn-sm btn-outline-danger mt-3 w-100">Fila de Impressão</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Quick Actions / Demos -->
+    <div class="row pt-4">
+        <div class="col-12">
+            <div class="card p-5 text-center bg-gradient-dark">
+                <h3 class="fw-bold mb-3">Ações de Apresentação</h3>
+                <p class="text-muted mb-4">Escolha uma ação rápida para apresentar o MVP aos recrutadores.</p>
+                <div class="d-flex flex-wrap justify-content-center gap-3">
+                    <a href="/login/?next=/products/" class="btn btn-info px-4">
+                        <i class="fas fa-shopping-cart me-2"></i>Testar como Cliente
+                    </a>
+                    <a href="/login/?next=/artists/painel/" class="btn btn-warning px-4 text-dark">
+                        <i class="fas fa-palette me-2"></i>Painel do Artista
+                    </a>
+                    <a href="/login/?next=/printing/fila/" class="btn btn-success px-4">
+                        <i class="fas fa-print me-2"></i>Produção (Staff)
+                    </a>
+                    <a href="{% url 'sobre' %}" class="btn btn-secondary px-4">
+                        <i class="fas fa-file-alt me-2"></i>Conhecer Arquitetura
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
 </div>
 
-<!-- Estilos customizados -->
 <style>
-    .min-vh-100 {
-        min-height: 100vh;
+    .col-lg-1-5 {
+        flex: 0 0 auto;
+        width: 18%;
     }
-
+    @media (max-width: 768px) {
+        .col-lg-1-5 {
+            width: 100%;
+        }
+    }
     .text-gradient {
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        background: var(--primary-gradient);
         -webkit-background-clip: text;
         -webkit-text-fill-color: transparent;
-        background-clip: text;
     }
-
-    .module-card {
-        transition: all 0.3s ease;
-        border-radius: 12px;
+    .hero-graphic {
+        background: linear-gradient(135deg, rgba(99, 102, 241, 0.2) 0%, rgba(168, 85, 247, 0.2) 100%);
+        border: 2px solid var(--border-color);
+        box-shadow: 0 0 50px rgba(99, 102, 241, 0.3);
     }
-
-    .module-card:hover {
-        transform: translateY(-8px);
-        box-shadow: 0 1.5rem 3rem rgba(0, 0, 0, 0.15) !important;
+    .animate-pulse {
+        animation: pulse 2.5s infinite alternate;
     }
-
-    .module-header {
-        background-size: 200% 200%;
-        transition: all 0.3s ease;
-        border-radius: 12px 12px 0 0;
-    }
-
-    .module-card:hover .module-header {
-        transform: scale(1.05);
-    }
-
-    .hero-content {
-        animation: fadeInDown 0.8s ease;
-    }
-
-    .feature-box {
-        background: linear-gradient(135deg, rgba(102, 126, 234, 0.05) 0%, rgba(118, 75, 162, 0.05) 100%);
-        border: 1px solid rgba(102, 126, 234, 0.1);
-        transition: all 0.3s ease;
-        border-radius: 8px;
-    }
-
-    .feature-box:hover {
-        background: linear-gradient(135deg, rgba(102, 126, 234, 0.1) 0%, rgba(118, 75, 162, 0.1) 100%);
-        border-color: rgba(102, 126, 234, 0.2);
-        transform: translateY(-4px);
-    }
-
-    .rounded-lg {
-        border-radius: 8px;
-    }
-
-    .btn {
-        border-radius: 6px;
-        font-weight: 500;
-        transition: all 0.3s ease;
-    }
-
-    .btn:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
-    }
-
-    @keyframes fadeInDown {
-        from {
-            opacity: 0;
-            transform: translateY(-20px);
-        }
-        to {
-            opacity: 1;
-            transform: translateY(0);
-        }
+    @keyframes pulse {
+        0% { transform: scale(1); opacity: 0.9; }
+        100% { transform: scale(1.05); opacity: 1; filter: drop-shadow(0 0 15px rgba(99, 102, 241, 0.8)); }
     }
 </style>
-
 {% endblock %}

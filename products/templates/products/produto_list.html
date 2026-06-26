@@ -109,13 +109,16 @@
             {% endfor %}
         </div>
     {% else %}
-        <div class="alert alert-info text-center">
-            <i class="fas fa-inbox"></i>
-            <p class="mb-0">Nenhum produto encontrado nesta categoria.</p>
+        <div class="empty-state">
+            <i class="fas fa-box-open text-muted"></i>
+            <h5>Nenhum produto encontrado</h5>
             {% if busca or categoria_selecionada %}
-                <a href="{% url 'produto-list' %}" class="btn btn-sm btn-primary mt-3">
-                    Limpar Filtros
+                <p>Nenhum resultado para os filtros aplicados. Tente ajustar sua busca.</p>
+                <a href="{% url 'produto-list' %}" class="btn btn-outline-primary mt-2">
+                    <i class="fas fa-times me-2"></i>Limpar Filtros
                 </a>
+            {% else %}
+                <p>O catálogo está sendo preparado. Volte em breve!</p>
             {% endif %}
         </div>
     {% endif %}
