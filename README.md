@@ -37,7 +37,7 @@
 
 O projeto foi construído a partir de uma demanda real apresentada pela empresa **Greencase**, que trouxe uma necessidade relacionada à personalização, organização e comercialização de produtos personalizados. A partir desse contexto, a proposta do sistema foi transformar uma necessidade empresarial em uma solução web funcional, estruturada e demonstrável.
 
-Diferente de um projeto puramente fictício, o **Capinha** foi desenvolvido com base em um cenário real de negócio, considerando dados, fluxos e necessidades reais da empresa parceira. O objetivo foi aplicar, na prática, os conhecimentos adquiridos no curso — como modelagem de dados, arquitetura modular, autenticação, permissões, regras de negócio, testes automatizados e organização profissional de código.
+Diferente de um projeto puramente fictício, o **Capinha** foi desenvolvido com base em um cenário real de negócio, considerando dados, fluxos e necessidades reais da empresa parceira. O objetivo foi aplicar, na prática, os conhecimentos adquiridos no curso como modelagem de dados, arquitetura modular, autenticação, permissões, regras de negócio, testes automatizados e organização profissional de código.
 
 O sistema simula o ciclo completo de um e-commerce de produtos personalizados:
 
