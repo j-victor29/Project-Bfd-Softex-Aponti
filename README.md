@@ -14,20 +14,18 @@
 
 ## 📋 Sumário
 
-- [Sobre o Projeto](#sobre-o-projeto)
-- [Funcionalidades](#funcionalidades)
-- [Tecnologias](#tecnologias)
-- [Arquitetura por Apps](#arquitetura-por-apps)
-- [Fluxo do Sistema](#fluxo-do-sistema)
-- [Perfis de Usuário](#perfis-de-usuário)
+- [Sobre o Projeto](#-sobre-o-projeto)
+- [Funcionalidades](#-funcionalidades)
+- [Tecnologias Utilizadas](#️-tecnologias-utilizadas)
+- [Arquitetura por Apps](#-arquitetura-por-apps)
+- [Fluxo do Sistema](#-fluxo-do-sistema)
+- [Perfis de Usuário](#-perfis-de-usuário)
 - [Capturas de Tela](#-capturas-de-tela)
-- [Como Instalar](#como-instalar)
-- [Como Rodar](#como-rodar)
-- [Usuários de Demonstração](#usuários-de-demonstração)
-- [Checklist de Teste Manual](#checklist-de-teste-manual)
-- [Diferenciais Técnicos](#diferenciais-técnicos)
-- [Roadmap Futuro](#roadmap-futuro)
-- [Roteiro de Apresentação](#roteiro-de-apresentação)
+- [Como Instalar](#️-como-instalar)
+- [Como Rodar Migrations](#️-como-rodar-migrations)
+- [Como Iniciar o Servidor](#-como-iniciar-o-servidor)
+- [Diferenciais Técnicos](#-diferenciais-técnicos)
+- [Roadmap Futuro](#️-roadmap-futuro)
 
 ---
 
