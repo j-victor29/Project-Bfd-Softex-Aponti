@@ -17,7 +17,7 @@ class Migration(migrations.Migration):
                 ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('nome', models.CharField(max_length=200)),
                 ('descricao', models.TextField(blank=True, null=True)),
-                ('categoria', models.CharField(choices=[('capinha', 'Capinha'), ('case', 'Case'), ('protetor', 'Protetor de Tela'), ('acessorio', 'Acessório')], default='capinha', max_length=20)),
+                ('categoria', models.CharField(choices=[('capinha', 'GreenCase'), ('case', 'Case'), ('protetor', 'Protetor de Tela'), ('acessorio', 'Acessório')], default='capinha', max_length=20)),
                 ('preco_base', models.DecimalField(decimal_places=2, max_digits=10)),
                 ('estoque', models.PositiveIntegerField(default=0)),
                 ('ativo', models.BooleanField(default=True)),

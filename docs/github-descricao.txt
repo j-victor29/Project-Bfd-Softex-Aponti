@@ -1,1 +1,1 @@
-MVP Django/DRF de uma plataforma de personalização e venda de capinhas, com carrinho, editor visual, painel do artista, pagamento simulado, fila de produção, seed demo e testes automatizados.
+MVP Django/DRF de uma plataforma de personalização e venda de GreenCases, com carrinho, editor visual, painel do artista, pagamento simulado, fila de produção, seed demo e testes automatizados.

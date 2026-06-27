@@ -25,7 +25,7 @@ def criar_artista(usuario):
     )
 
 
-def criar_produto(nome="Capinha Teste", preco_base="49.90", ativo=True):
+def criar_produto(nome="GreenCase Teste", preco_base="49.90", ativo=True):
     return Produto.objects.create(
         nome=nome,
         categoria="capinha",
@@ -44,7 +44,7 @@ class CarrinhoTestCase(TestCase):
         self.artista_user = criar_usuario("artista@teste.com", "Artista Teste")
         self.artista = criar_artista(self.artista_user)
         
-        self.produto = criar_produto("Capinha Top", "50.00")
+        self.produto = criar_produto("GreenCase Top", "50.00")
         self.arte = Arte.objects.create(
             artista=self.artista,
             nome="Arte Massa",

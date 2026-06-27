@@ -4,9 +4,9 @@
 
 ---
 
-🚀 **Novo Projeto no Portfólio: Capinha — MVP de E-commerce & Personalização**
+🚀 **Novo Projeto no Portfólio: GreenCase — MVP de E-commerce & Personalização**
 
-Desenvolvi recentemente o **Capinha**, um sistema web completo que simula uma plataforma de e-commerce e personalização de capinhas de celular. 
+Desenvolvi recentemente o **GreenCase**, um sistema web completo que simula uma plataforma de e-commerce e personalização de GreenCases de celular. 
 
 O foco deste projeto foi ir além de uma interface simples ou um CRUD básico: criei uma arquitetura modular real com fluxos operacionais completos, cobrindo o ciclo de ponta a ponta desde a criação artística até a fila de produção final.
 

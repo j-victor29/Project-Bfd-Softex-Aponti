@@ -25,7 +25,7 @@ def criar_artista(usuario):
     )
 
 
-def criar_produto(nome="Capinha Teste", ativo=True):
+def criar_produto(nome="GreenCase Teste", ativo=True):
     return Produto.objects.create(
         nome=nome,
         categoria="capinha",

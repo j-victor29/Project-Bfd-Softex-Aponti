@@ -1,4 +1,4 @@
-# 🎨 Capinha — Plataforma de Personalização de Capinhas
+# 🎨 GreenCase — Plataforma de Personalização de GreenCases
 
 ![Python](https://img.shields.io/badge/Python-3.11+-3776AB?style=flat&logo=python&logoColor=white)
 ![Django](https://img.shields.io/badge/Django-5.x-092E20?style=flat&logo=django&logoColor=white)
@@ -31,11 +31,11 @@
 
 ## 📖 Sobre o Projeto
 
-**Capinha** é um MVP de plataforma de personalização e venda de capinhas para celular, desenvolvido como **projeto institucional real** durante o curso de capacitação em **Back-End com Python**, realizado pelo programa **Bolsa Futuro Digital (BFD)**, em parceria com a **Softex/Aponti**, em Pernambuco.
+**GreenCase** é um MVP de plataforma de personalização e venda de GreenCases para celular, desenvolvido como **projeto institucional real** durante o curso de capacitação em **Back-End com Python**, realizado pelo programa **Bolsa Futuro Digital (BFD)**, em parceria com a **Softex/Aponti**, em Pernambuco.
 
 O projeto foi construído a partir de uma demanda real apresentada pela empresa **Greencase**, que trouxe uma necessidade relacionada à personalização, organização e comercialização de produtos personalizados. A partir desse contexto, a proposta do sistema foi transformar uma necessidade empresarial em uma solução web funcional, estruturada e demonstrável.
 
-Diferente de um projeto puramente fictício, o **Capinha** foi desenvolvido com base em um cenário real de negócio, considerando dados, fluxos e necessidades reais da empresa parceira. O objetivo foi aplicar, na prática, os conhecimentos adquiridos no curso como modelagem de dados, arquitetura modular, autenticação, permissões, regras de negócio, testes automatizados e organização profissional de código.
+Diferente de um projeto puramente fictício, o **GreenCase** foi desenvolvido com base em um cenário real de negócio, considerando dados, fluxos e necessidades reais da empresa parceira. O objetivo foi aplicar, na prática, os conhecimentos adquiridos no curso como modelagem de dados, arquitetura modular, autenticação, permissões, regras de negócio, testes automatizados e organização profissional de código.
 
 O sistema simula o ciclo completo de um e-commerce de produtos personalizados:
 
@@ -82,7 +82,7 @@ O sistema simula o ciclo completo de um e-commerce de produtos personalizados:
 O projeto segue o princípio de responsabilidade única, com cada app tendo escopo bem definido:
 
 ```
-capinha/
+greencase/
 ├── core/           # Configurações, URLs raiz, views institucionais, seed_demo
 ├── users/          # Modelo de usuário customizado (AUTH_USER_MODEL)
 ├── products/       # Catálogo de produtos (Produto)
@@ -139,7 +139,7 @@ Abaixo estão as principais telas do sistema em funcionamento:
    ![Sobre](docs/screenshots/sobre.png)
 3. **Fluxo Completo do Sistema (Passo a Passo)**: Instruções passo a passo com credenciais de demonstração.
    ![Como Testar](docs/screenshots/como_testar.png)
-4. **Catálogo de Produtos**: Seleção de modelos de capinha de celular.
+4. **Catálogo de Produtos**: Seleção de modelos de GreenCase de celular.
    ![Catálogo de Produtos](docs/screenshots/catalogo_produtos.png)
 5. **Galeria de Artistas**: Navegação das criações dos artistas.
    ![Galeria de Artes](docs/screenshots/galeria_artes.png)

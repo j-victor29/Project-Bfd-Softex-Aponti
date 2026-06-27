@@ -1,5 +1,5 @@
 """
-Testes automatizados para o app core do projeto Capinha.
+Testes automatizados para o app core do projeto GreenCase.
 
 Cobre:
 - Retorno HTTP 200 das páginas institucionais (home, sobre, como-testar)
@@ -52,7 +52,7 @@ class PaginasInstitucionaisTest(TestCase):
     def test_home_contem_nome_projeto(self):
         """A home deve exibir o nome do projeto."""
         response = self.client.get(reverse('home'))
-        self.assertContains(response, 'Capinha')
+        self.assertContains(response, 'GreenCase')
 
     def test_sobre_contem_descricao_projeto(self):
         """A página sobre deve conter informações do projeto."""
@@ -62,9 +62,9 @@ class PaginasInstitucionaisTest(TestCase):
     def test_como_testar_contem_credenciais(self):
         """A página como-testar deve conter as credenciais de acesso demo."""
         response = self.client.get(reverse('como-testar'))
-        self.assertContains(response, 'cliente@capinha.com')
-        self.assertContains(response, 'artista@capinha.com')
-        self.assertContains(response, 'staff@capinha.com')
+        self.assertContains(response, 'cliente@greencase.com')
+        self.assertContains(response, 'artista@greencase.com')
+        self.assertContains(response, 'staff@greencase.com')
 
 
 class NavbarPermissoesTest(TestCase):
@@ -75,14 +75,14 @@ class NavbarPermissoesTest(TestCase):
 
         # Usuário comum (cliente)
         self.cliente = User.objects.create_user(
-            email='cliente_test@capinha.com',
+            email='cliente_test@greencase.com',
             password='testpass123',
             nome='Cliente Teste',
         )
 
         # Usuário staff
         self.staff = User.objects.create_user(
-            email='staff_test@capinha.com',
+            email='staff_test@greencase.com',
             password='testpass123',
             nome='Staff Teste',
             is_staff=True,
@@ -90,7 +90,7 @@ class NavbarPermissoesTest(TestCase):
 
         # Usuário artista (com perfil aprovado)
         self.artista_user = User.objects.create_user(
-            email='artista_test@capinha.com',
+            email='artista_test@greencase.com',
             password='testpass123',
             nome='Artista Teste',
         )
@@ -117,7 +117,7 @@ class NavbarPermissoesTest(TestCase):
 
     def test_navbar_cliente_mostra_carrinho_e_pedidos(self):
         """Usuário autenticado como cliente deve ver Carrinho e Pedidos."""
-        self.client.login(email='cliente_test@capinha.com', password='testpass123')
+        self.client.login(email='cliente_test@greencase.com', password='testpass123')
         response = self.client.get(reverse('home'))
         self.assertContains(response, 'id="nav-carrinho"')
         self.assertContains(response, 'id="nav-pedidos"')
@@ -125,25 +125,25 @@ class NavbarPermissoesTest(TestCase):
 
     def test_navbar_cliente_nao_mostra_painel_artista(self):
         """Usuário cliente sem perfil de artista aprovado não deve ver o link do Painel."""
-        self.client.login(email='cliente_test@capinha.com', password='testpass123')
+        self.client.login(email='cliente_test@greencase.com', password='testpass123')
         response = self.client.get(reverse('home'))
         self.assertNotContains(response, 'id="nav-painel-artista"')
 
     def test_navbar_artista_aprovado_mostra_painel(self):
         """Artista aprovado deve ver o link para o Painel do Artista na navbar."""
-        self.client.login(email='artista_test@capinha.com', password='testpass123')
+        self.client.login(email='artista_test@greencase.com', password='testpass123')
         response = self.client.get(reverse('home'))
         self.assertContains(response, 'id="nav-painel-artista"')
 
     def test_navbar_staff_mostra_producao(self):
         """Usuário staff deve ver o menu Produção na navbar."""
-        self.client.login(email='staff_test@capinha.com', password='testpass123')
+        self.client.login(email='staff_test@greencase.com', password='testpass123')
         response = self.client.get(reverse('home'))
         self.assertContains(response, 'id="navbarPrintingDropdown"')
 
     def test_navbar_cliente_nao_mostra_producao(self):
         """Usuário comum não deve ver o menu Produção."""
-        self.client.login(email='cliente_test@capinha.com', password='testpass123')
+        self.client.login(email='cliente_test@greencase.com', password='testpass123')
         response = self.client.get(reverse('home'))
         self.assertNotContains(response, 'id="navbarPrintingDropdown"')
 

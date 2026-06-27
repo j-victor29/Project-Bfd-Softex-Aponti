@@ -9,11 +9,11 @@ Este roteiro ajuda você a gravar um vídeo dinâmico e direto ao ponto para pre
 | Tempo | Tela / Ação | O que mostrar / Destacar |
 |---|---|---|
 | **0:00 - 0:05** | **Home (Landing Page)** | Abra o navegador na página inicial. Role rapidamente para baixo mostrando o visual dark/glassmorphic moderno e os módulos explicados na tela. |
-| **0:05 - 0:10** | **Catálogo de Produtos & Arte** | Vá para a página de **Produtos**, selecione um modelo de capinha (ex: iPhone 14) e clique em uma arte disponível na galeria. |
+| **0:05 - 0:10** | **Catálogo de Produtos & Arte** | Vá para a página de **Produtos**, selecione um modelo de GreenCase (ex: iPhone 14) e clique em uma arte disponível na galeria. |
 | **0:10 - 0:25** | **Editor de Personalização 2D** | Digite um texto no editor (ex: "Dev 2026"), altere a cor do texto, escolha uma fonte e mude o alinhamento. Mostre o preview 2D atualizando em tempo real. Clique em **Adicionar ao Carrinho**. |
 | **0:25 - 0:35** | **Carrinho & Checkout** | No carrinho, verifique o produto personalizado e clique em **Finalizar Compra**. Escolha Pix ou Cartão na tela de pagamento simulado e clique em **Pagar**. Mostre o status mudando para "Pago". |
 | **0:35 - 0:45** | **Fila de Impressão (Staff)** | Faça login como staff (ou já tenha outra aba aberta) e vá em **Produção → Fila de Impressão**. Mostre o pedido que você acabou de fazer aparecendo lá. Avance o status do pedido para "Imprimindo" e depois "Concluído". |
-| **0:45 - 0:55** | **Painel do Artista** | Mude para a conta de artista (`artista@capinha.com`). Vá para o **Painel do Artista** e aponte para os gráficos/métricas de faturamento atualizados e o ranking de gamificação. |
+| **0:45 - 0:55** | **Painel do Artista** | Mude para a conta de artista (`artista@greencase.com`). Vá para o **Painel do Artista** e aponte para os gráficos/métricas de faturamento atualizados e o ranking de gamificação. |
 | **0:55 - 1:00** | **Testes Automatizados (Terminal)** | Termine mostrando brevemente o terminal com a suite de testes passando (`python manage.py test`) mostrando que a aplicação é robusta por trás da interface gráfica. |
 
 ---

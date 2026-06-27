@@ -35,7 +35,7 @@ def criar_artista(usuario):
 
 def criar_produto():
     return Produto.objects.create(
-        nome="Capinha Print",
+        nome="GreenCase Print",
         categoria="capinha",
         preco_base=Decimal("49.90"),
         estoque=10,
@@ -65,7 +65,7 @@ def criar_setup_pedido_pago():
     personalizacao = Personalizacao.objects.create(
         produto=produto,
         arte=arte,
-        texto="Capinha Print",
+        texto="GreenCase Print",
     )
     pedido = PedidoService.criar_pedido(usuario, artista)
     PedidoService.adicionar_item(

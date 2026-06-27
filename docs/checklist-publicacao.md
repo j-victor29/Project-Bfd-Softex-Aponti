@@ -1,6 +1,6 @@
-# 🚀 Checklist Final de Publicação - Capinha MVP
+# 🚀 Checklist Final de Publicação - GreenCase MVP
 
-Este documento serve como guia de verificação final para a publicação do projeto **Capinha** no GitHub, LinkedIn e preparação para entrevistas.
+Este documento serve como guia de verificação final para a publicação do projeto **GreenCase** no GitHub, LinkedIn e preparação para entrevistas.
 
 ## 📁 1. Preparação de Arquivos e Git
 - [ ] **Testes Passando:** Garantir que todos os 130+ testes automatizados rodem sem erros (`python manage.py test`).
@@ -34,6 +34,6 @@ Este documento serve como guia de verificação final para a publicação do pro
 ## 🌐 3. Presença Online e Portfólio
 - [ ] **Repositório Público:** Garantir que o repositório no GitHub está configurado como **Público**.
 - [ ] **Descrição do Repositório (About):** Atualizar a descrição curta do repositório no GitHub para:
-  > *MVP Django/DRF de uma plataforma de personalização e venda de capinhas, com carrinho, editor visual, painel do artista, pagamento simulado, fila de produção, seed demo e testes automatizados.*
+  > *MVP Django/DRF de uma plataforma de personalização e venda de GreenCases, com carrinho, editor visual, painel do artista, pagamento simulado, fila de produção, seed demo e testes automatizados.*
 - [ ] **Fixar Projeto:** Adicionar o repositório à seção de **Pinned Projects (Fixados)** no perfil do GitHub.
 - [ ] **Publicar no LinkedIn:** Fazer o post de apresentação com o texto sugerido e anexar o vídeo ou screenshots.

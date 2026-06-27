@@ -15,7 +15,7 @@ User = get_user_model()
 
 
 class Command(BaseCommand):
-    help = "Popula o banco de dados com dados de demonstração do MVP Capinha."
+    help = "Popula o banco de dados com dados de demonstração do MVP GreenCase."
 
     def _log(self, msg, created=True):
         if created:
@@ -24,37 +24,37 @@ class Command(BaseCommand):
             self.stdout.write(self.style.WARNING(f"  [JÁ EXISTE] {msg}"))
 
     def handle(self, *args, **options):
-        self.stdout.write(self.style.HTTP_INFO("\n=== 🌱 Seed Demo: Capinha MVP ===\n"))
+        self.stdout.write(self.style.HTTP_INFO("\n=== 🌱 Seed Demo: GreenCase MVP ===\n"))
 
         # ─── 1. Usuários ───────────────────────────────────────────────────────
         self.stdout.write("👤 Criando usuários...")
 
         usuario_comum, created = User.objects.get_or_create(
-            email="cliente@capinha.com",
+            email="cliente@greencase.com",
             defaults={"nome": "Cliente Demo", "is_staff": False, "is_active": True},
         )
         if created:
-            usuario_comum.set_password("capinha123")
+            usuario_comum.set_password("greencase123")
             usuario_comum.save()
-        self._log("Usuário comum: cliente@capinha.com / capinha123", created)
+        self._log("Usuário comum: cliente@greencase.com / greencase123", created)
 
         usuario_staff, created = User.objects.get_or_create(
-            email="staff@capinha.com",
+            email="staff@greencase.com",
             defaults={"nome": "Staff Demo", "is_staff": True, "is_active": True},
         )
         if created:
-            usuario_staff.set_password("capinha123")
+            usuario_staff.set_password("greencase123")
             usuario_staff.save()
-        self._log("Usuário staff: staff@capinha.com / capinha123", created)
+        self._log("Usuário staff: staff@greencase.com / greencase123", created)
 
         artista_user, created = User.objects.get_or_create(
-            email="artista@capinha.com",
+            email="artista@greencase.com",
             defaults={"nome": "Artista Demo", "is_staff": False, "is_active": True},
         )
         if created:
-            artista_user.set_password("capinha123")
+            artista_user.set_password("greencase123")
             artista_user.save()
-        self._log("Usuário artista: artista@capinha.com / capinha123", created)
+        self._log("Usuário artista: artista@greencase.com / greencase123", created)
 
         # ─── 2. Artista ────────────────────────────────────────────────────────
         self.stdout.write("\n🎨 Criando artista...")
@@ -63,13 +63,13 @@ class Command(BaseCommand):
         artista, created = Artista.objects.get_or_create(
             usuario=artista_user,
             defaults={
-                "nome_artistico": "Studio Capinha",
-                "biografia": "Estúdio de arte personalizada para capinhas.",
+                "nome_artistico": "Studio GreenCase",
+                "biografia": "Estúdio de arte personalizada para GreenCases.",
                 "status_aprovacao": "aprovado",
                 "ativo": True,
             },
         )
-        self._log("Artista: Studio Capinha (aprovado)", created)
+        self._log("Artista: Studio GreenCase (aprovado)", created)
 
         # ─── 3. Produtos ───────────────────────────────────────────────────────
         self.stdout.write("\n📦 Criando produtos...")
@@ -77,16 +77,16 @@ class Command(BaseCommand):
 
         produtos_data = [
             {
-                "nome": "Capinha iPhone 15 Pro",
-                "descricao": "Capinha de silicone premium para iPhone 15 Pro.",
+                "nome": "GreenCase iPhone 15 Pro",
+                "descricao": "GreenCase de silicone premium para iPhone 15 Pro.",
                 "categoria": "capinha",
                 "preco_base": Decimal("49.90"),
                 "estoque": 50,
                 "ativo": True,
             },
             {
-                "nome": "Capinha Samsung Galaxy S24",
-                "descricao": "Capinha resistente para Samsung Galaxy S24.",
+                "nome": "GreenCase Samsung Galaxy S24",
+                "descricao": "GreenCase resistente para Samsung Galaxy S24.",
                 "categoria": "capinha",
                 "preco_base": Decimal("44.90"),
                 "estoque": 30,
@@ -199,7 +199,7 @@ class Command(BaseCommand):
                 quantidade=2,
                 preco_unitario=produtos[1].preco_base + pers_cart.preco_extra
             )
-        self._log(f"Carrinho aberto para cliente@capinha.com (Total: R$ {carrinho_aberto.total:.2f})", created)
+        self._log(f"Carrinho aberto para cliente@greencase.com (Total: R$ {carrinho_aberto.total:.2f})", created)
 
         # Carrinho finalizado para o staff
         carrinho_finalizado, created = Carrinho.objects.get_or_create(
@@ -224,7 +224,7 @@ class Command(BaseCommand):
                 quantidade=1,
                 preco_unitario=produtos[2].preco_base + pers_cart_finalizado.preco_extra
             )
-        self._log(f"Carrinho finalizado para staff@capinha.com", created)
+        self._log(f"Carrinho finalizado para staff@greencase.com", created)
 
 
         # ─── 6. Impressora ─────────────────────────────────────────────────────
@@ -290,7 +290,7 @@ class Command(BaseCommand):
                 personalizacao=Personalizacao.objects.create(
                     produto=produtos[2],
                     arte=artes[2],
-                    texto="Staff Capinha",
+                    texto="Staff GreenCase",
                     fonte="Roboto",
                     cor="#ea4335",
                     tamanho_fonte=32,
@@ -358,7 +358,7 @@ class Command(BaseCommand):
         self.stdout.write(f"  - Impressoras: 1")
         self.stdout.write(f"  - Itens na fila: 1")
         self.stdout.write("\n🔑 Credenciais de acesso:")
-        self.stdout.write("  cliente@capinha.com  /  capinha123  (usuário comum)")
-        self.stdout.write("  staff@capinha.com    /  capinha123  (staff/produção)")
-        self.stdout.write("  artista@capinha.com  /  capinha123  (artista aprovado)")
+        self.stdout.write("  cliente@greencase.com  /  greencase123  (usuário comum)")
+        self.stdout.write("  staff@greencase.com    /  greencase123  (staff/produção)")
+        self.stdout.write("  artista@greencase.com  /  greencase123  (artista aprovado)")
         self.stdout.write(self.style.SUCCESS("\n🚀 Acesse http://127.0.0.1:8000/ e faça login!\n"))

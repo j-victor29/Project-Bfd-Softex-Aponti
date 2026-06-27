@@ -43,7 +43,7 @@ def criar_artista(usuario, status="aprovado"):
     )
 
 
-def criar_produto(nome="Capinha Padrão"):
+def criar_produto(nome="GreenCase Padrão"):
     return Produto.objects.create(
         nome=nome,
         categoria="capinha",
@@ -375,7 +375,7 @@ class GerenciamentoArteTest(PainelBaseTestCase):
             img = SimpleUploadedFile("nova_arte.gif", b'GIF89a\x01\x00\x01\x00\x00\x00\x00\x21\xf9\x04\x01\x00\x00\x00\x00\x2c\x00\x00\x00\x00\x01\x00\x01\x00\x00\x02\x02\x4c\x01\x00\x3b', content_type="image/gif")
             data = {
                 'nome': 'Minha Nova Arte Maravilhosa',
-                'descricao': 'Uma arte incrível para capinhas.',
+                'descricao': 'Uma arte incrível para GreenCases.',
                 'arquivo': img,
                 'colecao': self.colecao.pk,
                 'ativa': True,

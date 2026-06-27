@@ -32,7 +32,7 @@ def criar_artista(usuario):
 
 def criar_produto():
     return Produto.objects.create(
-        nome="Capinha Pag",
+        nome="GreenCase Pag",
         categoria="capinha",
         preco_base=Decimal("49.90"),
         estoque=10,

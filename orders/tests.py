@@ -32,7 +32,7 @@ def criar_artista(usuario):
     )
 
 
-def criar_produto(nome="Capinha Teste"):
+def criar_produto(nome="GreenCase Teste"):
     return Produto.objects.create(
         nome=nome,
         categoria="capinha",
@@ -57,7 +57,7 @@ def criar_setup_base():
     personalizacao = Personalizacao.objects.create(
         produto=produto,
         arte=arte,
-        texto="Minha capinha",
+        texto="Minha GreenCase",
         fonte="Arial",
         cor="#FF0000",
     )
